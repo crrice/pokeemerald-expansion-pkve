@@ -1,0 +1,83 @@
+
+# TODO
+
+---
+
+- Find a better name.
+
+---
+
+I have settled on using the flying/fighting/rock trio as the starter types.
+Therefore a lot is needed to really enable that.
+
+Because for a starter trio they should have:
+Symmetric type matchups in all directions. Only the traditional trio and the above satisfy this.
+Three-stage pokemon (evolves twice).
+No evolution gimmicks (level up evo).
+Similar evo levels.
+Have a mega-evolution (well, either all have it or none).
+
+For fighting type, we can only choose from the Mankey, Machop, and Timbur lines, as only these are three-stage.
+However both the Timbur and Machop lines use a trade for the final evo.
+And then Primeape evolving however the fuck it wants (which ofc is use rage fist 20x).
+
+For rock, the variety of stage 2 is quite large:
+Geodude, classic, but has evo gimmick.
+Rhyhorn, awesome but Rhyperior has evo gimmick and also is just meh (was better as a stage 2 only imo, hot take).
+Roggenrola, which remains as pure rock.
+Rolycoly, which picks up fire type when it evolves.
+Larvitar, which gets dark on the final evo but has ground subtype till then. But also everyone loves Tyranitar.
+Aron, which I personally love but I want non gen-3 pkmn for starters.
+
+And for flying the motherlode of options:
+Pidgey, has a mega-evo and is classic AF.
+Zubat, which I love and everyone I know loves and would be super cool.
+Fletchling, great pokemon and it gets fire type!
+Pikipek, toucannon is epic and will get pure flying...
+
+So given all that, the todos are:
+
+- Change the starter trio! Lets use...: (Pikipek) > (Machop) > (Roggenrola)
+
+This gives a final trio of (TalonFlame (Flying)) > (Machamp (Fighting)) > (Roggenrola (Rock))
+Is good because I like the pure types. Other notes:
+
+So with this combo, the other tasks are:
+
+- Change Machop to evolve at level 18, and again at 36 (instead of trade).
+- Change Roggenrola to evolve at level 16, and again at 34 (instead of trade).
+
+Pikipek already evolves at levels 14 and 28 which I like.
+
+Since most flying types also are normal type, it kinda ruins the advantage
+gimmick of the starters. And cause I think it would be cool anyway:
+- Change normal/flying pkmn types to be pure flying where appropriate (which is most of them lmao rofl),
+
+Also I understand that roost removes the flying type from a pkmn for that turn which I think
+is just kind of odd so I think this change fits thematically while still keeping a type on that turn:
+- Change effect of 'roost' so when used it applies effect of 'gravity' for 1 turn instead of removing flying type.
+
+Anyway I guess it should handle type-less pkmn just fine but like isn't it kind of a buff for roost?
+Like yeah I heal and nothing is super effective this turn. Nah. That move don't need no buffs.
+And I just like the idea of like, if a bird is roosting it's grounded in a way so ground moves should hit it.
+
+And as some final touches:
+- Give Roggenrola line some buffs.
+- Give Pikipek line some buffs.
+- Give Machop line some buffs.
+
+They should feel like starters... Generally speaking: early powerhouses that remain potent yet taper off toward the endgame.
+Take into account their evo levels and midgame balance but make them overall feel good to use throughout a run. Yet no so good
+that you feel like you can't box them. Take a look at their abilities and stats and make it have a decent strat for the whole
+run, not something that kicks in (too) late.
+
+Ability notes:
+Machop (Guts, No Guard) default abilities (look good).
+       (Steadfast) hidden (looks not so good, but what do I know).
+Roggenrola (Sturdy, No Guard > Sand Stream) default abilities (look good).
+           (Sand Force) hidden (looks iffy, maybe weak, but what do I know).
+Pikipek (Keen Eye, Skill Link) default abilities (Keen Eye maybe needs replaced, Skill Link OP for sure).
+        (Pickup) hidden (fuck no).
+
+And their base stats are gunna need changed too.
+Yay! Many things for much later (aka probably never).
