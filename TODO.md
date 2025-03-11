@@ -59,6 +59,9 @@ gimmick of the starters. And cause I think it would be cool anyway:
 Also I understand that roost removes the flying type from a pkmn for that turn which I think
 is just kind of odd so I think this change fits thematically while still keeping a type on that turn:
 - Change effect of 'roost' so when used it applies effect of 'gravity' for 1 turn instead of removing flying type.
+NOTES: L12054, remove this code to disable the type removal effect of roost. But then how to apply the effect of smack down instead?
+Basically search for `roostActive` and you will find all the things for that but there is still the question of how apply other effect.
+Something something battleStruct thingy IDKTHBWTF.
 
 Anyway I guess it should handle type-less pkmn just fine but like isn't it kind of a buff for roost?
 Like yeah I heal and nothing is super effective this turn. Nah. That move don't need no buffs.
