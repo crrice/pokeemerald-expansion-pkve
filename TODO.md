@@ -38,6 +38,7 @@ Pikipek, toucannon is epic and will get pure flying...
 So given all that, the todos are:
 
 - Change the starter trio! Lets use...: (Pikipek) > (Machop) > (Roggenrola)
+**DONE**
 
 This gives a final trio of (TalonFlame (Flying)) > (Machamp (Fighting)) > (Roggenrola (Rock))
 Is good because I like the pure types. Other notes:
@@ -81,3 +82,11 @@ Pikipek (Keen Eye, Skill Link) default abilities (Keen Eye maybe needs replaced,
 
 And their base stats are gunna need changed too.
 Yay! Many things for much later (aka probably never).
+
+Okay, so noting that since the starter trio changed we have to change the starter the rival uses, so:
+- Redo rival teams (brendan/may)
+
+I think it would be fun if the two rivals had differing battle styles.
+Brendan should be a hyper-aggro glass cannon sweeper edgelord.
+And May should favor bulkier mons.
+- Separate rivals into two battle styles.
