@@ -102,3 +102,40 @@ balance will be pretty fucked so:
   - Learnset.
   - BST.
   - Abilities.
+
+Because this is Emerald and I also believe it would be fun AF, lets try:
+- Change weather to its OG. The weather tyranny returns, it has no automatic turn limit.
+
+Might have to change it back later but lets give it a go.
+
+## Littleroot Town
+
+Here we will use this town as a training ground, I guess. So, lets make these changes:
+
+- Add a tree.
+- Add a sign.
+- Change the assistants dialog when he says the prof isn't there at the start.
+
+And more advanced:
+
+- Make a small new area.
+  - Link it to littleroot town behind a cut tree.
+  - Add a small grass patch with an encounter.
+  - Add a small pond with a fishing encounter (but no surf, is peaceful here).
+
+And finally:
+
+- Make that fishing encounter Aevian Magikarp.
+
+And for that matter lets add the Aevian variants that are seabound, so Magikarp and:
+
+- Add Aevian Feebas
+- Add Aevian Shellos (Both forms? They do a live/dying reef theme)
+
+They're both kind of reef themed maybe something can be done with that. Throw in that ghost type corsola for fun too.
+We need a polluted reef environment or something cool like that.
+Right outside slateport or mauville maybe.
+
+## Route 101
+
+- Add a trainer with a top percentage zigzagoon (and actually give it cracked IVs).
