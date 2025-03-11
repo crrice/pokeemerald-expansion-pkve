@@ -46,7 +46,9 @@ Is good because I like the pure types. Other notes:
 So with this combo, the other tasks are:
 
 - Change Machop to evolve at level 18, and again at 36 (instead of trade).
+**DONE**
 - Change Roggenrola to evolve at level 16, and again at 34 (instead of trade).
+**DONE**
 
 Pikipek already evolves at levels 14 and 28 which I like.
 
@@ -90,3 +92,10 @@ I think it would be fun if the two rivals had differing battle styles.
 Brendan should be a hyper-aggro glass cannon sweeper edgelord.
 And May should favor bulkier mons.
 - Separate rivals into two battle styles.
+
+Alright so I changed the evolution level and method for the new starters but it occurs to me that their
+balance will be pretty fucked so:
+- Review starter line configs.
+  - Learnset.
+  - BST.
+  - Abilities.
