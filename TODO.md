@@ -40,6 +40,16 @@ So given all that, the todos are:
 - Change the starter trio! Lets use...: (Pikipek) > (Machop) > (Roggenrola)
 **DONE**
 
+--- WOAH BIG NOTE ---
+HMMMMM Maybe I actually want to use Primeape...
+AND GOD FORBID MAYBE I DONT WANT TO CHANGE THEIR EVO METHODS
+
+WHAT IF IT WAS PART OF THE STORY
+HOLY SHIT
+IM ON TO SOMETHING
+but it will be a lot of work...
+---
+
 This gives a final trio of (TalonFlame (Flying)) > (Machamp (Fighting)) > (Roggenrola (Rock))
 Is good because I like the pure types. Other notes:
 
@@ -138,4 +148,33 @@ Right outside slateport or mauville maybe.
 
 ## Route 101
 
-- Add a trainer with a top percentage zigzagoon (and actually give it cracked IVs).
+This needs spiced up somehow...
+Just something more than grass.
+
+This is supposed to be a nice village path or something idk.
+Doesn't feel like shit.
+Feels like fucking weeds.
+
+--- DEFAULT NOTES ONLY ---
+
+This route is small as hell.
+It's like just a tiny connector from Littleroot to Oldale.
+With some grass.
+
+The DexNav is received in this route in ORAS with like a tutorial from the rival.
+
+Default encounter table:
+- 45% Poochyena
+- 45% Wurmple
+- 10% Zigzagoon
+
+Actually in RS the poochy and ziggy have their chances swapped.
+
+## Maybe One Day
+
+- Allow player to customize the PC to some extent.
+  - Choosing the sprite from a list is easier.
+  - Allowing for a mix is harder. (Like Unbound, I want my dark skinned PC god dammit)
+
+- Add a 'Remote Pokemon Center' item.
+  - Limit it to one use, refills when you use a Pokemon Center.
