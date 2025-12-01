@@ -27,6 +27,7 @@ enum TrainerSlideType
     TRAINER_SLIDE_MEGA_EVOLUTION,
     TRAINER_SLIDE_Z_MOVE,
     TRAINER_SLIDE_DYNAMAX,
+    TRAINER_SLIDE_BATTLE_WON,  // For scripted battles - announcer message on victory
     TRAINER_SLIDE_COUNT,
 };
 

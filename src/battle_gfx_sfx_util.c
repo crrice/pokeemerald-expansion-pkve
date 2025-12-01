@@ -1071,8 +1071,14 @@ void ClearBehindSubstituteBit(u8 battler)
 
 void HandleLowHpMusicChange(struct Pokemon *mon, u8 battler)
 {
-    u16 hp = GetMonData(mon, MON_DATA_HP);
-    u16 maxHP = GetMonData(mon, MON_DATA_MAX_HP);
+    u16 hp, maxHP;
+
+    // No low HP beeping for scripted battles (TV replays, etc.)
+    if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
+        return;
+
+    hp = GetMonData(mon, MON_DATA_HP);
+    maxHP = GetMonData(mon, MON_DATA_MAX_HP);
 
     if (GetHPBarLevel(hp, maxHP) == HP_BAR_RED)
     {

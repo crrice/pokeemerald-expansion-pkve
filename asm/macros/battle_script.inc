@@ -2585,3 +2585,9 @@
 	printstring STRINGID_EMPTYSTRING3
 	waitmessage 1
 	.endm
+
+	@ For scripted battles - shows announcer message when battle is won
+	.macro tryscriptedbattlewonslide normalwinptr:req
+	callnative BS_TryScriptedBattleWonSlide
+	.4byte \normalwinptr
+	.endm

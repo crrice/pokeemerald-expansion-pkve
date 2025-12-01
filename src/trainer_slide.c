@@ -36,6 +36,7 @@
 #include "constants/weather.h"
 #include "trainer_slide.h"
 #include "battle_message.h"
+#include "scripted_battle.h"
 
 static u32 BattlerHPPercentage(u32 battler, u32 operation, u32 threshold);
 static u32 GetEnemyMonCount(u32 firstId, u32 lastId, bool32 onlyAlive);
@@ -243,13 +244,42 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
     if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) || GetBattlerSide(battler) != B_SIDE_OPPONENT)
         return TRAINER_SLIDE_TARGET_NONE;
 
-    SetTrainerSlideParamters(battler, &firstId, &lastId, &trainerId, &retValue);
-    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
-
     gBattleScripting.battler = battler;
 
     if (IsTrainerSlidePlayed(slideId))
         return TRAINER_SLIDE_TARGET_NONE;
+
+    // Handle scripted battle announcer messages
+    if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
+    {
+        const u8 *announcerMsg = GetScriptedBattleAnnouncerMsg(slideId);
+        if (announcerMsg != NULL)
+        {
+            // For scripted battles, only run specific slide types
+            switch (slideId)
+            {
+            case TRAINER_SLIDE_BEFORE_FIRST_TURN:
+                shouldRun = TRUE;
+                break;
+            case TRAINER_SLIDE_LAST_SWITCHIN:
+                shouldRun = ShouldRunTrainerSlideLastSwitchIn(battler);
+                break;
+            default:
+                return TRAINER_SLIDE_TARGET_NONE;
+            }
+
+            if (shouldRun)
+            {
+                MarkTrainerSlideAsPlayed(slideId);
+                gBattleStruct->trainerSlideMsg = announcerMsg;
+                return TRAINER_SLIDE_TARGET_TRAINER_A;
+            }
+        }
+        return TRAINER_SLIDE_TARGET_NONE;
+    }
+
+    SetTrainerSlideParamters(battler, &firstId, &lastId, &trainerId, &retValue);
+    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
 
     if (!DoesTrainerHaveSlideMessage(difficulty,trainerId,slideId))
         return TRAINER_SLIDE_TARGET_NONE;

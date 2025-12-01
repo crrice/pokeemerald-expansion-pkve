@@ -17,6 +17,7 @@
 #include "palette.h"
 #include "party_menu.h"
 #include "recorded_battle.h"
+#include "scripted_battle.h"
 #include "string_util.h"
 #include "sound.h"
 #include "task.h"
@@ -194,7 +195,13 @@ static void InitSinglePlayerBtlControllers(void)
 
         gBattlersCount = 2;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
+        {
+            // Both sides controlled by script
+            gBattlerControllerFuncs[0] = SetControllerToScripted;
+            gBattlerControllerFuncs[1] = SetControllerToScripted;
+        }
+        else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
             {

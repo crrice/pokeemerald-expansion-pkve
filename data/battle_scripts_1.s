@@ -5570,6 +5570,7 @@ BattleScript_HandleFaintedMonMultipleEnd::
 	end2
 
 BattleScript_LocalTrainerBattleWon::
+	jumpifbattletype BATTLE_TYPE_SCRIPTED, BattleScript_ScriptedBattleWon
 	jumpifbattletype BATTLE_TYPE_TWO_OPPONENTS, BattleScript_LocalTwoTrainersDefeated
 	printstring STRINGID_PLAYERDEFEATEDTRAINER1
 	goto BattleScript_LocalBattleWonLoseTexts
@@ -5594,6 +5595,20 @@ BattleScript_PayDayMoneyAndPickUpItems::
 	pickup
 	end2
 
+@ Scripted battle victory (challenger wins) - show announcer message if available
+BattleScript_ScriptedBattleWon::
+	tryscriptedbattlewonslide BattleScript_ScriptedBattleWonEnd
+	@ If we get here, there's an announcer message to show
+	handletrainerslidemsg BS_SCRIPTING, 0
+	trainerslidein BS_OPPONENT1
+	handletrainerslidemsg BS_SCRIPTING, 1
+	waitstate
+	trainerslideout BS_OPPONENT1
+	waitstate
+	handletrainerslidemsg BS_SCRIPTING, 2
+BattleScript_ScriptedBattleWonEnd::
+	end2
+
 BattleScript_LocalBattleLost::
 	jumpifbattletype BATTLE_TYPE_INGAME_PARTNER, BattleScript_LocalBattleLostPrintWhiteOut
 	jumpifbattletype BATTLE_TYPE_DOME, BattleScript_CheckDomeDrew
@@ -5611,10 +5626,25 @@ BattleScript_LocalBattleLostPrintWhiteOut::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 BattleScript_LocalBattleLostEnd::
+	jumpifbattletype BATTLE_TYPE_SCRIPTED, BattleScript_ScriptedBattleLostEnd
 	printstring STRINGID_PLAYERLOSTTOENEMYTRAINER
 	waitmessage B_WAIT_TIME_LONG
 	getmoneyreward
 	printstring STRINGID_PLAYERPAIDPRIZEMONEY
+	waitmessage B_WAIT_TIME_LONG
+	end2
+BattleScript_ScriptedBattleLostEnd::
+	tryscriptedbattlewonslide BattleScript_ScriptedBattleLostEndNoSlide
+	@ If we get here, there's an announcer message to show
+	handletrainerslidemsg BS_SCRIPTING, 0
+	trainerslidein BS_OPPONENT1
+	handletrainerslidemsg BS_SCRIPTING, 1
+	waitstate
+	trainerslideout BS_OPPONENT1
+	waitstate
+	handletrainerslidemsg BS_SCRIPTING, 2
+BattleScript_ScriptedBattleLostEndNoSlide::
+	printstring STRINGID_CHALLENGERLOSTTOENEMYTRAINER
 	waitmessage B_WAIT_TIME_LONG
 	end2
 .else

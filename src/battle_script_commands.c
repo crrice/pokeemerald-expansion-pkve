@@ -62,6 +62,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_slide.h"
 #include "constants/trainers.h"
+#include "scripted_battle.h"
 #include "battle_util.h"
 #include "constants/pokemon.h"
 #include "config/battle.h"
@@ -4978,7 +4979,8 @@ static bool32 BattleTypeAllowsExp(void)
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_SAFARI
               | BATTLE_TYPE_BATTLE_TOWER
-              | BATTLE_TYPE_EREADER_TRAINER))
+              | BATTLE_TYPE_EREADER_TRAINER
+              | BATTLE_TYPE_SCRIPTED))
         return FALSE;
     else
         return TRUE;
@@ -18646,5 +18648,32 @@ void BS_RestoreSavedMove(void)
     gCurrentMove = gBattleStruct->savedMove;
     gBattleStruct->savedMove = MOVE_NONE;
     gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+// For scripted battles - do trainer slide and show battle end announcer message
+void BS_TryScriptedBattleWonSlide(void)
+{
+    NATIVE_ARGS(const u8 *noMsgScript);
+
+    // Only for scripted battles (safety check, should already be checked in battle script)
+    if (!(gBattleTypeFlags & BATTLE_TYPE_SCRIPTED))
+    {
+        gBattlescriptCurrInstr = cmd->noMsgScript;
+        return;
+    }
+
+    const u8 *announcerMsg = GetScriptedBattleAnnouncerMsg(TRAINER_SLIDE_BATTLE_WON);
+    if (announcerMsg != NULL)
+    {
+        // Set up the message for printstring STRINGID_TRAINERSLIDE
+        gBattleStruct->trainerSlideMsg = announcerMsg;
+        // Set battler for BS_SCRIPTING to reference in handletrainerslidemsg
+        gBattleScripting.battler = B_POSITION_OPPONENT_LEFT;
+        gBattlescriptCurrInstr = cmd->nextInstr;  // Continue to slide-in script
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->noMsgScript;  // No message, skip to end
+    }
 }
 

@@ -375,6 +375,18 @@ PlayersHouse_1F_Text_ReportFromPetalburgGym:
 	.string "INTERVIEWER: …We brought you this\n"
 	.string "report from in front of PETALBURG GYM.$"
 
+PlayersHouse_1F_Text_WatchTheBroadcast:
+	.string "MOM: Look! It's PETALBURG GYM!\n"
+	.string "Maybe DAD will be on! Want to watch?$"
+
+PlayersHouse_1F_Text_HighlightsIntro:
+	.string "INTERVIEWER: …Now for the highlights\n"
+	.string "from today's battle at PETALBURG GYM!$"
+
+PlayersHouse_1F_Text_WatchedBroadcast:
+	.string "MOM: Funny how DAD's SLAKING never\n"
+	.string "slacks off when it matters…$"
+
 PlayersHouse_1F_Text_TheresAMovieOnTV:
 	.string "There is a movie on TV.\p"
 	.string "Two men are dancing on a big piano\n"

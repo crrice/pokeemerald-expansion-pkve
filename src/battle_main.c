@@ -2956,7 +2956,11 @@ static void ClearSetBScriptingStruct(void)
     memset(&gBattleScripting, 0, sizeof(gBattleScripting));
 
     gBattleScripting.windowsType = temp;
-    gBattleScripting.battleStyle = gSaveBlock2Ptr->optionsBattleStyle;
+    // Scripted battles always use "Set" mode to suppress switch prompts
+    if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
+        gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
+    else
+        gBattleScripting.battleStyle = gSaveBlock2Ptr->optionsBattleStyle;
     gBattleScripting.expOnCatch = (B_EXP_CATCH >= GEN_6);
     gBattleScripting.specialTrainerBattleType = specialBattleType;
 }

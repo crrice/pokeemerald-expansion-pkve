@@ -22,6 +22,7 @@
 #include "text.h"
 #include "trainer_hill.h"
 #include "trainer_slide.h"
+#include "scripted_battle.h"
 #include "window.h"
 #include "line_break.h"
 #include "constants/abilities.h"
@@ -84,6 +85,7 @@ static const u8 sText_LegendaryPkmnAppeared[] = _("You encountered a wild {B_OPP
 static const u8 sText_WildPkmnAppearedPause[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!{PAUSE 127}");
 static const u8 sText_TwoWildPkmnAppeared[] = _("Oh! A wild {B_OPPONENT_MON1_NAME} and {B_OPPONENT_MON2_NAME} appeared!\p");
 static const u8 sText_Trainer1WantsToBattle[] = _("You are challenged by {B_TRAINER1_NAME_WITH_CLASS}!\p");
+static const u8 sText_ScriptedBattleIntro[] = _("The challenger faces {B_TRAINER1_NAME_WITH_CLASS}!\p");
 static const u8 sText_LinkTrainerWantsToBattle[] = _("You are challenged by {B_LINK_OPPONENT1_NAME}!");
 static const u8 sText_TwoLinkTrainersWantToBattle[] = _("You are challenged by {B_LINK_OPPONENT1_NAME} and {B_LINK_OPPONENT2_NAME}!");
 static const u8 sText_Trainer1SentOutPkmn[] = _("{B_TRAINER1_NAME_WITH_CLASS} sent out {B_OPPONENT_MON1_NAME}!");
@@ -893,6 +895,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_ITDOESNTAFFECTTWOFOES]                = COMPOUND_STRING("It doesn't affect {B_DEF_NAME_WITH_PREFIX2} and {B_DEF_PARTNER_NAME}…"),
     [STRINGID_SENDCAUGHTMONPARTYORBOX]              = COMPOUND_STRING("Add {B_DEF_NAME} to your party?"),
     [STRINGID_PKMNSENTTOPCAFTERCATCH]               = gText_PkmnSentToPCAfterCatch,
+    [STRINGID_CHALLENGERLOSTTOENEMYTRAINER]         = COMPOUND_STRING("The challenger has no more Pokémon that can fight!\pThe challenger lost to {B_TRAINER1_NAME_WITH_CLASS}!{PAUSE_UNTIL_PRESS}"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -2087,7 +2090,12 @@ void BufferStringBattle(u16 stringID, u32 battler)
     case STRINGID_INTROMSG: // first battle msg
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         {
-            if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+            if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
+            {
+                const u8 *customIntro = GetScriptedBattleIntroText();
+                stringPtr = (customIntro != NULL) ? customIntro : sText_ScriptedBattleIntro;
+            }
+            else if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
                 {
@@ -3468,7 +3476,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     else
         gTextFlags.useAlternateDownArrow = TRUE;
 
-    if ((gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)) || gTestRunnerEnabled)
+    if ((gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_SCRIPTED)) || gTestRunnerEnabled)
         gTextFlags.autoScroll = TRUE;
     else
         gTextFlags.autoScroll = FALSE;
@@ -3477,6 +3485,8 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             speed = 1;
+        else if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
+            speed = GetPlayerTextSpeedDelay();  // Scripted battles use player's setting
         else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
             speed = sRecordedBattleTextSpeeds[GetTextSpeedInRecordedBattle()];
         else

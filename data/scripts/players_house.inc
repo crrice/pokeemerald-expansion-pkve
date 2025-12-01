@@ -156,8 +156,6 @@ PlayersHouse_1F_EventScript_PetalburgGymReportMale::
 	applymovement OBJ_EVENT_ID_PLAYER, PlayersHouse_1F_Movement_PlayerApproachTVForGymMale
 	waitmovement 0
 	playbgm MUS_ENCOUNTER_INTERVIEWER, FALSE
-	msgbox PlayersHouse_1F_Text_MaybeDadWillBeOn, MSGBOX_DEFAULT
-	closemessage
 	applymovement VAR_0x8005, PlayersHouse_1F_Movement_MomMakeRoomToSeeTVMale
 	waitmovement 0
 	applymovement OBJ_EVENT_ID_PLAYER, PlayersHouse_1F_Movement_PlayerMoveToTVMale
@@ -165,7 +163,12 @@ PlayersHouse_1F_EventScript_PetalburgGymReportMale::
 	call PlayersHouse_1F_EventScript_WatchGymBroadcast
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
+	goto_if_eq VAR_TEMP_0, 1, PlayersHouse_1F_EventScript_WatchedBroadcastMale
 	msgbox PlayersHouse_1F_Text_ItsOverWeMissedHim, MSGBOX_DEFAULT
+	goto PlayersHouse_1F_EventScript_AfterBroadcastMale
+PlayersHouse_1F_EventScript_WatchedBroadcastMale::
+	msgbox PlayersHouse_1F_Text_WatchedBroadcast, MSGBOX_DEFAULT
+PlayersHouse_1F_EventScript_AfterBroadcastMale::
 	msgbox PlayersHouse_1F_Text_GoIntroduceYourselfNextDoor, MSGBOX_DEFAULT
 	closemessage
 	setvar VAR_TEMP_1, 1
@@ -181,8 +184,6 @@ PlayersHouse_1F_EventScript_PetalburgGymReportFemale::
 	applymovement OBJ_EVENT_ID_PLAYER, PlayersHouse_1F_Movement_PlayerApproachTVForGymFemale
 	waitmovement 0
 	playbgm MUS_ENCOUNTER_INTERVIEWER, FALSE
-	msgbox PlayersHouse_1F_Text_MaybeDadWillBeOn, MSGBOX_DEFAULT
-	closemessage
 	applymovement VAR_0x8005, PlayersHouse_1F_Movement_MomMakeRoomToSeeTVFemale
 	waitmovement 0
 	applymovement OBJ_EVENT_ID_PLAYER, PlayersHouse_1F_Movement_PlayerMoveToTVFemale
@@ -190,7 +191,12 @@ PlayersHouse_1F_EventScript_PetalburgGymReportFemale::
 	call PlayersHouse_1F_EventScript_WatchGymBroadcast
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
+	goto_if_eq VAR_TEMP_0, 1, PlayersHouse_1F_EventScript_WatchedBroadcastFemale
 	msgbox PlayersHouse_1F_Text_ItsOverWeMissedHim, MSGBOX_DEFAULT
+	goto PlayersHouse_1F_EventScript_AfterBroadcastFemale
+PlayersHouse_1F_EventScript_WatchedBroadcastFemale::
+	msgbox PlayersHouse_1F_Text_WatchedBroadcast, MSGBOX_DEFAULT
+PlayersHouse_1F_EventScript_AfterBroadcastFemale::
 	msgbox PlayersHouse_1F_Text_GoIntroduceYourselfNextDoor, MSGBOX_DEFAULT
 	closemessage
 	setvar VAR_TEMP_1, 1
@@ -213,6 +219,16 @@ PlayersHouse_1F_EventScript_WatchGymBroadcast::
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	msgbox PlayersHouse_1F_Text_ReportFromPetalburgGym, MSGBOX_DEFAULT
+	msgbox PlayersHouse_1F_Text_WatchTheBroadcast, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PlayersHouse_1F_EventScript_SkipBroadcast
+	setvar VAR_TEMP_0, 1
+	msgbox PlayersHouse_1F_Text_HighlightsIntro, MSGBOX_DEFAULT
+	callnative Script_StartNormanTVBattle
+	waitstate
+	goto PlayersHouse_1F_EventScript_AfterBroadcast
+PlayersHouse_1F_EventScript_SkipBroadcast::
+	setvar VAR_TEMP_0, 0
+PlayersHouse_1F_EventScript_AfterBroadcast::
 	fadedefaultbgm
 	special TurnOffTVScreen
 	setflag FLAG_SYS_TV_HOME
