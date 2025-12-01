@@ -2808,8 +2808,8 @@ static u8 DisplaySelectionWindow(u8 windowType)
     #if OW_FOLLOWERS_ENABLED == TRUE && B_FLAG_FOLLOWERS_DISABLED != 0
         else if (sPartyMenuInternal->actions[i] == MENU_TOGGLE_FOLLOWER)
         {
-            static const u8 sText_LetOut[] = _("LET OUT");
-            static const u8 sText_PutAway[] = _("PUT AWAY");
+            static const u8 sText_LetOut[] = _("Let Out");
+            static const u8 sText_PutAway[] = _("Put Away");
             text = FlagGet(B_FLAG_FOLLOWERS_DISABLED) ? sText_LetOut : sText_PutAway;
         }
     #endif
