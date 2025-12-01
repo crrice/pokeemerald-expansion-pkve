@@ -29,6 +29,14 @@ make clean        # Full clean including tools
 make tidy         # Clean ROM/ELF only, keep tools
 ```
 
+## Testing
+
+After building, copy the ROM to your Windows Roms folder for testing. In WSL, this is typically:
+```bash
+cp pokeemerald.gba /mnt/c/Users/<your-windows-username>/Documents/Roms/
+```
+Ask the user for their specific path if not known.
+
 ## Running Tests
 
 The project uses a custom test runner with mgba-rom-test. Tests are in `test/` and organized by feature:
