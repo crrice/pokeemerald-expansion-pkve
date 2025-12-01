@@ -56,9 +56,16 @@ static const struct ScriptedPokemon sMyBattle_Pokemon1 = {
 
 ### Step 2: Define Action Scripts
 ```c
+// Player (position 0) attacks opponent (position 1)
 static const struct ScriptedBattleAction sMyBattle_PlayerScript[] = {
-    {SCRIPTED_ACTION_USE_MOVE, 0, 1},  // Move slot 0, target battler 1
-    {SCRIPTED_ACTION_USE_MOVE, 1, 1},  // Move slot 1, target battler 1
+    {SCRIPTED_ACTION_USE_MOVE, 0, 1},  // Move slot 0, target opponent
+    {SCRIPTED_ACTION_USE_MOVE, 1, 1},  // Move slot 1, target opponent
+    {SCRIPTED_ACTION_END, 0, 0},
+};
+
+// Opponent (position 1) attacks player (position 0)
+static const struct ScriptedBattleAction sMyBattle_OpponentScript[] = {
+    {SCRIPTED_ACTION_USE_MOVE, 0, 0},  // Move slot 0, target player
     {SCRIPTED_ACTION_END, 0, 0},
 };
 ```
@@ -113,6 +120,13 @@ Three slide-in message points available:
 
 These use the trainer slide system with a custom announcer sprite (`announcerTrainerPic`).
 
-## Terminology Note
+## Terminology
 
-"Player" side = left side (back sprite), "Opponent" side = right side (front sprite). This matches battle engine conventions regardless of who "wins" narratively.
+**Always use "player" and "opponent" consistently:**
+
+- **Player** = position 0 = left/lower side of screen (back sprite)
+- **Opponent** = position 1 = right/upper side of screen (front sprite)
+
+This matches battle engine conventions. When targeting:
+- Player scripts target `1` (opponent)
+- Opponent scripts target `0` (player)

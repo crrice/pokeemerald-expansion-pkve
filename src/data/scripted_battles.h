@@ -123,31 +123,32 @@ static const struct ScriptedPokemon sNormanTVBattle_ChallengerHariyama = {
 };
 
 // Action scripts
-// Norman's script: After Cofagrigus faints, send in Slaking (party index 3)
-// Then use Return (move slot 0) twice
+// Player side (position 0): Challenger with Mightyena/Hariyama
+// Opponent side (position 1): Norman with Cofagrigus/Slaking
+
+// Player script: Mightyena uses Crunch, then Hariyama is forced in and doesn't get to act
 static const struct ScriptedBattleAction sNormanTVBattle_PlayerScript[] = {
-    // Turn 1: Cofagrigus will faint from Crunch, so we need to handle the switch-in of Slaking
-    // The battle system will ask for switch when Cofagrigus faints
-    // Note: ChooseAction will be called, then ChooseMove, but Cofagrigus faints before acting
-
-    // Turn 2: Slaking uses Return on Mightyena
-    {SCRIPTED_ACTION_USE_MOVE, 0, 1},  // Move slot 0 (Return), target battler 1 (opponent)
-
-    // Turn 3: Slaking uses Return on Graveler
-    {SCRIPTED_ACTION_USE_MOVE, 0, 1},  // Move slot 0 (Return), target battler 1 (opponent)
-
-    {SCRIPTED_ACTION_END, 0, 0},
-};
-
-// Challenger's script: Mightyena uses Crunch, then Hariyama is forced in and doesn't get to act
-static const struct ScriptedBattleAction sNormanTVBattle_OpponentScript[] = {
     // Turn 1: Mightyena uses Crunch on Cofagrigus
-    {SCRIPTED_ACTION_USE_MOVE, 0, 0},  // Move slot 0 (Crunch), target battler 0 (player/Norman)
+    {SCRIPTED_ACTION_USE_MOVE, 0, 1},  // Move slot 0 (Crunch), target opponent
 
     // Turn 2: Mightyena is KO'd, Hariyama switches in
     // (handled automatically by battle system)
 
-    // Turn 3: Hariyama doesn't get to act (KO'd by Return before it can use Close Combat)
+    // Turn 3: Hariyama doesn't get to act (KO'd by Return before it can move)
+
+    {SCRIPTED_ACTION_END, 0, 0},
+};
+
+// Opponent script: Cofagrigus faints, Slaking switches in and uses Return twice
+static const struct ScriptedBattleAction sNormanTVBattle_OpponentScript[] = {
+    // Turn 1: Cofagrigus faints from Crunch before acting
+    // The battle system will ask for switch when Cofagrigus faints
+
+    // Turn 2: Slaking uses Return on Mightyena
+    {SCRIPTED_ACTION_USE_MOVE, 0, 0},  // Move slot 0 (Return), target player
+
+    // Turn 3: Slaking uses Return on Hariyama
+    {SCRIPTED_ACTION_USE_MOVE, 0, 0},  // Move slot 0 (Return), target player
 
     {SCRIPTED_ACTION_END, 0, 0},
 };
@@ -158,8 +159,8 @@ static const u8 sNormanTV_Announcer_SlakingSwitchIn[] = _("With COFAGRIGUS down,
 static const u8 sNormanTV_Announcer_BattleEnd[] = _("But SLAKING showed incredible energy!\pA stunning comeback for Leader Norman!");
 
 // The full battle definition
-// Note: "player" side = left side of screen (challenger's perspective)
-//       "opponent" side = right side of screen (Norman)
+// Player (position 0): Challenger - left/lower side of screen
+// Opponent (position 1): Norman - right/upper side of screen
 const struct ScriptedBattle gScriptedBattle_NormanTV = {
     .playerParty = {
         &sNormanTVBattle_ChallengerPoochyena,  // Fainted
@@ -177,8 +178,8 @@ const struct ScriptedBattle gScriptedBattle_NormanTV = {
         NULL,
         NULL,
     },
-    .playerScript = sNormanTVBattle_OpponentScript,   // Challenger's moves
-    .opponentScript = sNormanTVBattle_PlayerScript,   // Norman's moves
+    .playerScript = sNormanTVBattle_PlayerScript,      // Challenger's moves (position 0)
+    .opponentScript = sNormanTVBattle_OpponentScript, // Norman's moves (position 1)
     .playerName = NULL,  // Will use default
     .opponentName = NULL,
     .playerBackPic = TRAINER_BACK_PIC_LEAF,
