@@ -4,6 +4,10 @@
 .set LOCALID_MOM_2F, 14
 
 PlayersHouse_2F_EventScript_BlockStairsUntilClockIsSet::
+	goto_if_unset FLAG_SET_WALL_CLOCK, PlayersHouse_2F_EventScript_StillBlocked
+	return
+
+PlayersHouse_2F_EventScript_StillBlocked::
 	setvar VAR_LITTLEROOT_INTRO_STATE, 5
 	return
 
@@ -694,3 +698,86 @@ PlayersHouse_1F_Movement_PlayerApproachTVForLatiFemale:
 EventScript_RunningShoesManual::
 	msgbox PlayersHouse_1F_Text_RunningShoesManual, MSGBOX_SIGN
 	end
+
+PlayersHouse_2F_EventScript_Notebook::
+	lockall
+	msgbox PlayersHouse_2F_Text_NotebookIntro, MSGBOX_DEFAULT
+	msgbox PlayersHouse_2F_Text_ExpShareQuestion, MSGBOX_DEFAULT
+	multichoice 14, 6, MULTI_EXP_SHARE_MODE, FALSE
+	switch VAR_RESULT
+	case 0, PlayersHouse_2F_EventScript_ExpShareSingle
+	case 1, PlayersHouse_2F_EventScript_ExpShareAll
+	case 127, PlayersHouse_2F_EventScript_ExpShareCancel
+	end
+
+PlayersHouse_2F_EventScript_ExpShareSingle::
+	setvar VAR_0x8004, ITEM_EXP_SHARE
+	callnative Script_RemoveItemFromEverywhere
+	setvar VAR_0x8004, ITEM_EXP_SHARE_ALL
+	callnative Script_RemoveItemFromEverywhere
+	clearflag I_EXP_SHARE_FLAG
+	giveitem ITEM_EXP_SHARE
+	msgbox PlayersHouse_2F_Text_ExpShareSingleReceived, MSGBOX_DEFAULT
+	releaseall
+	end
+
+PlayersHouse_2F_EventScript_ExpShareAll::
+	setvar VAR_0x8004, ITEM_EXP_SHARE
+	callnative Script_RemoveItemFromEverywhere
+	setvar VAR_0x8004, ITEM_EXP_SHARE_ALL
+	callnative Script_RemoveItemFromEverywhere
+	setflag I_EXP_SHARE_FLAG
+	giveitem ITEM_EXP_SHARE_ALL
+	msgbox PlayersHouse_2F_Text_ExpShareAllReceived, MSGBOX_DEFAULT
+	releaseall
+	end
+
+PlayersHouse_2F_EventScript_ExpShareCancel::
+	releaseall
+	end
+
+PlayersHouse_2F_EventScript_GameCube::
+	msgbox PlayersHouse_2F_Text_ItsAGameCube, MSGBOX_SIGN
+	end
+
+PlayersHouse_2F_Text_NotebookIntro:
+	.string "{PLAYER} flipped open the notebook.\p"
+	.string "ADVENTURE RULE NO. 1\n"
+	.string "Open the MENU with START.\p"
+	.string "ADVENTURE RULE NO. 2\n"
+	.string "Record your progress with SAVE.\p"
+	.string "The remaining pages are blank…$"
+
+PlayersHouse_2F_Text_ExpShareQuestion:
+	.string "A note is attached:\p"
+	.string "Choose how you want EXP. SHARE\n"
+	.string "to work on your adventure.$"
+
+PlayersHouse_2F_Text_ExpShareSingleReceived:
+	.string "{PLAYER} put the EXP. SHARE away.\p"
+	.string "Give it to a POKéMON to hold, and\n"
+	.string "it will gain EXP. from battles.$"
+
+PlayersHouse_2F_Text_ExpShareAllReceived:
+	.string "{PLAYER} put the EXP. SHARE away.\p"
+	.string "All party POKéMON will gain EXP.\n"
+	.string "from battles. Use it to toggle.$"
+
+PlayersHouse_2F_Text_ItsAGameCube:
+	.string "It's a Nintendo GameCube.\p"
+	.string "A Game Boy Advance is connected to\n"
+	.string "serve as the Controller.$"
+
+PlayersHouse_2F_Text_ClockIsStopped:
+	.string "The clock is stopped…\p"
+	.string "Better set it and start it!$"
+
+PlayersHouse_2F_Text_HowDoYouLikeYourRoom:
+	.string "MOM: {PLAYER}, how do you like your\n"
+	.string "new room?\p"
+	.string "Good! Everything's put away neatly!\p"
+	.string "They finished moving everything in\n"
+	.string "downstairs, too.\p"
+	.string "POKéMON movers are so convenient!\p"
+	.string "Oh, you should make sure that\n"
+	.string "everything's all there on your desk.$"

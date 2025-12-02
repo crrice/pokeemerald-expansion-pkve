@@ -581,6 +581,7 @@
 #define ITEM_WHITE_HERB 460
 #define ITEM_EXP_SHARE 461
 #define ITEM_EXP_ALL ITEM_EXP_SHARE // Gen I name
+#define ITEM_EXP_SHARE_ALL 829
 #define ITEM_QUICK_CLAW 462
 #define ITEM_SOOTHE_BELL 463
 #define ITEM_MENTAL_HERB 464
@@ -997,7 +998,7 @@
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEMS_COUNT 829
+#define ITEMS_COUNT 830
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

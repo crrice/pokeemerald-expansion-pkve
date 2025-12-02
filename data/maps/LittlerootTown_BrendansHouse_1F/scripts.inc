@@ -70,6 +70,16 @@ LittlerootTown_BrendansHouse_1F_EventScript_GoUpstairsToSetClock::
 	releaseall
 	end
 
+LittlerootTown_BrendansHouse_1F_EventScript_PushUpstairs::
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_BrendansHouse_1F_Movement_PushTowardStairs
+	applymovement LOCALID_MOM, LittlerootTown_BrendansHouse_1F_Movement_PushTowardStairs
+	waitmovement 0
+	warp MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F, 7, 1
+	waitstate
+	releaseall
+	end
+
 LittlerootTown_BrendansHouse_1F_Movement_PushTowardStairs:
 	walk_up
 	step_end

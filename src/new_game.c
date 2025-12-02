@@ -46,6 +46,7 @@
 #include "union_room_chat.h"
 #include "constants/map_groups.h"
 #include "constants/items.h"
+#include "config/item.h"
 #include "difficulty.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
@@ -189,6 +190,8 @@ void NewGameInitData(void)
     gSaveBlock1Ptr->registeredItem = ITEM_NONE;
     ClearBag();
     NewGameInitPCItems();
+    AddBagItem(ITEM_EXP_SHARE_ALL, 1);
+    FlagSet(I_EXP_SHARE_FLAG);
     ClearPokeblocks();
     ClearDecorationInventories();
     InitEasyChatPhrases();

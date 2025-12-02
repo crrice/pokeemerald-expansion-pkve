@@ -8218,17 +8218,35 @@ const struct Item gItemsInfo[] =
                 "This device gives\n"
                 "exp. to other\n"
                 "party members."),
+            .pocket = POCKET_KEY_ITEMS,
+            .type = ITEM_USE_FIELD,
+            .fieldUseFunc = ItemUseOutOfBattle_ExpShare,
         #else
             .price = 3000,
             .description = COMPOUND_STRING(
                 "A hold item that\n"
                 "gets Exp. points\n"
                 "from battles."),
+            .pocket = POCKET_ITEMS,
+            .type = ITEM_USE_BAG_MENU,
+            .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         #endif
-        .pocket = I_EXP_SHARE_ITEM >= GEN_6 ? POCKET_KEY_ITEMS : POCKET_ITEMS,
-        .type = ITEM_USE_FIELD,
-        .fieldUseFunc = ItemUseOutOfBattle_ExpShare,
         .flingPower = 30,
+        .iconPic = gItemIcon_ExpShare,
+        .iconPalette = gItemIconPalette_ExpShare,
+    },
+
+    [ITEM_EXP_SHARE_ALL] =
+    {
+        .name = _("Exp. Share"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "This device gives\n"
+            "exp. to other\n"
+            "party members."),
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_ExpShareAll,
         .iconPic = gItemIcon_ExpShare,
         .iconPalette = gItemIconPalette_ExpShare,
     },

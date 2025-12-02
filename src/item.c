@@ -15,6 +15,9 @@
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
 #include "graphics.h"
+#include "pokemon.h"
+#include "pokemon_storage_system.h"
+#include "daycare.h"
 #include "constants/battle.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -1012,4 +1015,74 @@ u32 GetItemStatus2Mask(u16 itemId)
         return STATUS2_CONFUSION;
     else
         return 0;
+}
+
+// Removes an item from all possible locations: bag, PC, party, boxes, and daycare.
+// Returns TRUE if the item was found and removed from at least one location.
+bool32 RemoveItemFromEverywhere(u16 itemId)
+{
+    u32 i, j;
+    bool32 found = FALSE;
+    u16 none = ITEM_NONE;
+
+    // 1. Remove from bag (checks all pockets)
+    while (RemoveBagItem(itemId, 1))
+        found = TRUE;
+
+    // 2. Remove from PC storage
+    for (i = 0; i < PC_ITEMS_COUNT; i++)
+    {
+        if (gSaveBlock1Ptr->pcItems[i].itemId == itemId)
+        {
+            gSaveBlock1Ptr->pcItems[i].itemId = ITEM_NONE;
+            gSaveBlock1Ptr->pcItems[i].quantity = 0;
+            found = TRUE;
+        }
+    }
+
+    // 3. Remove from party Pokemon held items
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE
+            && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == itemId)
+        {
+            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &none);
+            found = TRUE;
+        }
+    }
+
+    // 4. Remove from boxed Pokemon held items
+    for (i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        for (j = 0; j < IN_BOX_COUNT; j++)
+        {
+            if (GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_SPECIES) != SPECIES_NONE
+                && GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_HELD_ITEM) == itemId)
+            {
+                SetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_HELD_ITEM, &none);
+                found = TRUE;
+            }
+        }
+    }
+
+    // 5. Remove from daycare Pokemon held items
+    for (i = 0; i < DAYCARE_MON_COUNT; i++)
+    {
+        if (GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_SPECIES) != SPECIES_NONE
+            && GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_HELD_ITEM) == itemId)
+        {
+            SetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_HELD_ITEM, &none);
+            found = TRUE;
+        }
+    }
+
+    return found;
+}
+
+// Script wrapper for RemoveItemFromEverywhere
+// Usage: setvar VAR_0x8004, ITEM_ID
+//        callnative Script_RemoveItemFromEverywhere
+void Script_RemoveItemFromEverywhere(void)
+{
+    RemoveItemFromEverywhere(gSpecialVar_0x8004);
 }

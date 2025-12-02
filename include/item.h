@@ -84,6 +84,7 @@ u32 ItemId_GetSecondaryId(u32 itemId);
 u32 ItemId_GetFlingPower(u32 itemId);
 u32 GetItemStatus1Mask(u16 itemId);
 u32 GetItemStatus2Mask(u16 itemId);
+bool32 RemoveItemFromEverywhere(u16 itemId);
 
 /* Expands to:
  * enum
