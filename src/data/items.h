@@ -14111,4 +14111,22 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+// Custom items
+
+    [ITEM_WIMPY_BRACE] =
+    {
+        .name = _("Wimpy Brace"),
+        .price = 3000,
+        .holdEffect = HOLD_EFFECT_WIMPY_BRACE,
+        .description = COMPOUND_STRING(
+            "A hold item that\n"
+            "prevents growth."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .flingPower = 60,
+        .iconPic = gItemIcon_MachoBrace,
+        .iconPalette = gItemIconPalette_MachoBrace,
+    },
 };
