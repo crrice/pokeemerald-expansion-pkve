@@ -1709,9 +1709,10 @@ static const struct LevelUpMove sAlakazamLevelUpLearnset[] = {
 
 #if P_FAMILY_MACHOP
 static const struct LevelUpMove sMachopLevelUpLearnset[] = {
-    LEVEL_UP_MOVE( 1, MOVE_LOW_KICK),
+    LEVEL_UP_MOVE( 1, MOVE_POUND),
     LEVEL_UP_MOVE( 1, MOVE_LEER),
     LEVEL_UP_MOVE( 4, MOVE_FOCUS_ENERGY),
+    LEVEL_UP_MOVE( 6, MOVE_LOW_KICK),
     LEVEL_UP_MOVE( 8, MOVE_REVENGE),
     LEVEL_UP_MOVE(12, MOVE_LOW_SWEEP),
     LEVEL_UP_MOVE(16, MOVE_KNOCK_OFF),
