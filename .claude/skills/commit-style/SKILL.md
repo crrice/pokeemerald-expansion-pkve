@@ -13,7 +13,8 @@ description: Git commit message style guide. Reference when creating commits.
 - Describe the change at a high level
 
 **Body (optional):**
-- Use bullet points for multiple related changes
+- Use bullet points when changes need to be findable later (balance, features)
+- Skip body for temporary/testing commits or when title is sufficient
 - Include rationale when relevant (especially balance changes)
 - Keep it scannable for future git log searches
 
