@@ -54,7 +54,9 @@
 #include "window.h"
 #include "list_menu.h"
 #include "malloc.h"
+#include "quests.h"
 #include "constants/event_objects.h"
+#include "constants/rgb.h"
 
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(struct ScriptContext *ctx);
@@ -3139,4 +3141,109 @@ void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
     u8 condition = ScriptReadByte(ctx);
     if (ctx->breakOnTrainerBattle && sScriptConditionTable[condition][ctx->comparisonResult] == 1)
         StopScript(ctx);
+}
+
+// Quest Menu Script Commands
+bool8 ScrCmd_questmenu(struct ScriptContext *ctx)
+{
+    u8 caseId = ScriptReadByte(ctx);
+    u8 questId = VarGet(ScriptReadByte(ctx));
+
+    switch (caseId)
+    {
+    case QUEST_MENU_OPEN:
+    default:
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        QuestMenu_Init(0, CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        ScriptContext_Stop();
+        break;
+    case QUEST_MENU_UNLOCK_QUEST:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        break;
+    case QUEST_MENU_SET_ACTIVE:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_ACTIVE);
+        break;
+    case QUEST_MENU_SET_REWARD:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_REWARD);
+        QuestMenu_GetSetQuestState(questId, FLAG_REMOVE_ACTIVE);
+        break;
+    case QUEST_MENU_COMPLETE_QUEST:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_COMPLETED);
+        QuestMenu_GetSetQuestState(questId, FLAG_REMOVE_ACTIVE);
+        QuestMenu_GetSetQuestState(questId, FLAG_REMOVE_REWARD);
+        break;
+    case QUEST_MENU_CHECK_UNLOCKED:
+        gSpecialVar_Result = QuestMenu_GetSetQuestState(questId, FLAG_GET_UNLOCKED) ? TRUE : FALSE;
+        break;
+    case QUEST_MENU_CHECK_INACTIVE:
+        gSpecialVar_Result = QuestMenu_GetSetQuestState(questId, FLAG_GET_INACTIVE) ? TRUE : FALSE;
+        break;
+    case QUEST_MENU_CHECK_ACTIVE:
+        gSpecialVar_Result = QuestMenu_GetSetQuestState(questId, FLAG_GET_ACTIVE) ? TRUE : FALSE;
+        break;
+    case QUEST_MENU_CHECK_REWARD:
+        gSpecialVar_Result = QuestMenu_GetSetQuestState(questId, FLAG_GET_REWARD) ? TRUE : FALSE;
+        break;
+    case QUEST_MENU_CHECK_COMPLETE:
+        gSpecialVar_Result = QuestMenu_GetSetQuestState(questId, FLAG_GET_COMPLETED) ? TRUE : FALSE;
+        break;
+    case QUEST_MENU_BUFFER_QUEST_NAME:
+        QuestMenu_CopyQuestName(gStringVar1, questId);
+        break;
+    }
+
+    return FALSE;
+}
+
+bool8 ScrCmd_returnqueststate(struct ScriptContext *ctx)
+{
+    u8 questId = VarGet(ScriptReadByte(ctx));
+
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_INACTIVE))
+    {
+        gSpecialVar_Result = FLAG_GET_INACTIVE;
+        return FALSE;
+    }
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_ACTIVE))
+    {
+        gSpecialVar_Result = FLAG_GET_ACTIVE;
+        return FALSE;
+    }
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_REWARD))
+    {
+        gSpecialVar_Result = FLAG_GET_REWARD;
+        return FALSE;
+    }
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_COMPLETED))
+    {
+        gSpecialVar_Result = FLAG_GET_COMPLETED;
+        return FALSE;
+    }
+
+    return FALSE;
+}
+
+bool8 ScrCmd_subquestmenu(struct ScriptContext *ctx)
+{
+    u8 caseId = ScriptReadByte(ctx);
+    u8 parentId = VarGet(ScriptReadHalfword(ctx));
+    u8 childId = VarGet(ScriptReadHalfword(ctx));
+
+    switch (caseId)
+    {
+    case QUEST_MENU_COMPLETE_QUEST:
+        QuestMenu_GetSetSubquestState(parentId, FLAG_SET_COMPLETED, childId);
+        break;
+    case QUEST_MENU_CHECK_COMPLETE:
+        gSpecialVar_Result = QuestMenu_GetSetSubquestState(parentId, FLAG_GET_COMPLETED, childId) ? TRUE : FALSE;
+        break;
+    case QUEST_MENU_BUFFER_QUEST_NAME:
+        QuestMenu_CopySubquestName(gStringVar1, parentId, childId);
+        break;
+    }
+
+    return FALSE;
 }
