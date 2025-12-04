@@ -15916,6 +15916,10 @@ static void Cmd_handleballthrow(void)
         if (gBattleMons[gBattlerTarget].status1 & (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE))
             odds = (odds * 15) / 10;
 
+        // Childhood myth - holding B helps catch (TODO: reduce to 1% boost after testing)
+        if (gMain.heldKeys & B_BUTTON)
+            odds *= 10;
+
         if (gBattleResults.catchAttempts[ballId] < 255)
             gBattleResults.catchAttempts[ballId]++;
 
