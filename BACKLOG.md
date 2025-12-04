@@ -11,16 +11,6 @@ High-level tasks to implement.
   - Grant access via script (or deduce from `FLAG_RECEIVED_POKEDEX`)
   - Consider custom modifications: show all species as silhouettes, allow search when seen (with penalties)
 
-- [ ] Add Quest Menu (Unbound-style)
-  - Port from: https://github.com/pret/pokeemerald/compare/master...PokemonSanFran:pokeemerald:unbound-quest-menu
-  - ~3,500 lines, 21 files - main implementation in `src/quests.c`
-  - Evaluation steps:
-    1. Clone branch locally, review `global.h` changes for save data conflicts with pokeemerald-expansion
-    2. Check if `start_menu.c` and `scrcmd.c` hooks are compatible
-    3. Test graphics assets work as-is
-  - Features: quest states (locked/active/reward/complete), subquests, filtering, favorites
-  - Adds 3 new script commands for quest control
-
 - [ ] Quest: "The Berry Thief" (Phantump)
   - Location: Farmer in Oldale, Phantump on Route 101 near berry trees
   - Flow: Farmer complains about missing berries → investigate → find Phantump hoarding berries
@@ -114,11 +104,12 @@ High-level tasks to implement.
     - He's found REAL footprints somewhere, needs help investigating
     - Could lead to rare encounter or hidden area
     - "30 years and FINALLY" energy
-  - Oldale Ruins (anime tie-in): New area north of town
-    - Locked initially (Strength? Rock Smash? Story flag?)
-    - Ancient Pokemon puzzles, ties into Hoenn archaeology (Relicanth, Regis)
-    - Could be weather-related? Ancient weather shrine?
-    - Early tease, return later - "milestone 2" content
+  - Ruins Approach - New area east of Oldale (anime tie-in)
+    - Early game encounters: Oddish, Zigzagoon, Poochyena, Wurmple, Natu (10% rare)
+    - Location for Berry Thief quest (Phantump encounter)
+    - Sealed ruins entrance as future content hook
+    - Berry trees, ancient glyphs (weather/legendary lore), hidden item
+    - Minimal/zero NPCs - let environment speak
 
 ## Quick Notes
 
@@ -171,3 +162,6 @@ Currently B button catch boost only works when selecting the ball (calculation h
 
 ## Done
 
+- [x] Add Quest Menu (Unbound-style) - Ported from [ghoulslash/pokeemerald quest-menu](https://github.com/ghoulslash/pokeemerald/tree/pokemon_unbound/quest-menu)
+- [x] Wimpy Brace item + Oldale NPC gifts (Macho Brace / Wimpy Brace)
+- [x] Machop learnset adjustment (Pound at L1, Low Kick at L6)
