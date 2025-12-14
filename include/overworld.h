@@ -143,6 +143,8 @@ bool32 IsOverworldLinkActive(void);
 void CB1_Overworld(void);
 void CB2_OverworldBasic(void);
 void UpdateTimeOfDay(void);
+void OnTimeOfDayChange(u8 previousTime, u8 newTime);
+void InitBerryThiefTreeState(void);
 bool32 MapHasNaturalLight(enum MapType mapType);
 bool32 CurrentMapHasShadows(void);
 void UpdateAltBgPalettes(u16 palettes);

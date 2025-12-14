@@ -30,7 +30,16 @@ OldaleTown_EventScript_TownSign::
 	end
 
 OldaleTown_EventScript_Girl::
-	msgbox OldaleTown_Text_SavingMyProgress, MSGBOX_NPC
+	lock
+	faceplayer
+	goto_if_quest_complete QUEST_BERRY_THIEF, OldaleTown_EventScript_Girl_QuestDone
+	msgbox OldaleTown_Text_BerryFarmerHint, MSGBOX_DEFAULT
+	release
+	end
+
+OldaleTown_EventScript_Girl_QuestDone:
+	msgbox OldaleTown_Text_BerryFarmerHappy, MSGBOX_DEFAULT
+	release
 	end
 
 OldaleTown_EventScript_MartEmployee::
@@ -339,9 +348,15 @@ OldaleTown_Movement_ReturnToOriginalPosition:
 	walk_left
 	step_end
 
-OldaleTown_Text_SavingMyProgress:
-	.string "I want to take a rest, so I'm saving my\n"
-	.string "progress.$"
+OldaleTown_Text_BerryFarmerHint:
+	.string "The farmer by the old ruins used to\n"
+	.string "sell the best berries for POKéBLOCKS...\p"
+	.string "I wonder why he hasn't been at the\n"
+	.string "market lately?$"
+
+OldaleTown_Text_BerryFarmerHappy:
+	.string "The berry farmer is back at the market!\n"
+	.string "Now I can finally make some POKéBLOCKS!$"
 
 OldaleTown_Text_IWorkAtPokemonMart:
 	.string "Hi!\n"

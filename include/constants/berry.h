@@ -134,6 +134,9 @@
 #define BERRY_TREE_ROUTE_123_SITRUS   88
 #define BERRY_TREE_ROUTE_123_RAWST    89
 
+// Custom maps
+#define BERRY_TREE_OLDALE_RUINS_1     90
+
 // Remainder are unused
 
 #define BERRY_TREES_COUNT 128

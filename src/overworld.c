@@ -1569,6 +1569,7 @@ const struct BlendSettings gTimeOfDayBlend[] =
 void UpdateTimeOfDay(void)
 {
     s32 hours, minutes;
+    u8 previousTimeOfDay = gTimeOfDay;
     RtcCalcLocalTime();
     hours = sHoursOverride ? sHoursOverride : gLocalTime.hours;
     minutes = sHoursOverride ? 0 : gLocalTime.minutes;
@@ -1618,6 +1619,10 @@ void UpdateTimeOfDay(void)
         gTimeBlend.startBlend = gTimeBlend.endBlend = gTimeOfDayBlend[TIME_DAY];
         gTimeOfDay = TIME_DAY;
     }
+
+    // Fire callback if time of day changed
+    if (previousTimeOfDay != gTimeOfDay)
+        OnTimeOfDayChange(previousTimeOfDay, gTimeOfDay);
 }
 
 #undef MORNING_HOUR_MIDDLE
