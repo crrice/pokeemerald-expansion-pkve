@@ -4420,6 +4420,26 @@
       "secondary_tileset": "gTileset_PrettyPetalFlowerShop",
       "border_filepath": "data/layouts/SerenePond/border.bin",
       "blockdata_filepath": "data/layouts/SerenePond/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLDALE_RUINS",
+      "name": "OldaleRuins_Layout",
+      "width": 30,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_TrainerHill",
+      "border_filepath": "data/layouts/OldaleRuins/border.bin",
+      "blockdata_filepath": "data/layouts/OldaleRuins/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLDALE_RUINS_BERRY_FARMERS_HOUSE",
+      "name": "OldaleRuins_BerryFarmersHouse_Layout",
+      "width": 8,
+      "height": 8,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/OldaleRuins_BerryFarmersHouse/border.bin",
+      "blockdata_filepath": "data/layouts/OldaleRuins_BerryFarmersHouse/map.bin"
     }
   ]
 }
