@@ -177,8 +177,8 @@ const struct ScriptedBattleAction *GetNextScriptedAction(u32 battler)
     return action;
 }
 
-// Callback helpers
-static void WaitForMonAnimAfterLoad(u32 battler)
+// Callback helpers - note: WaitForMonAnimAfterLoad is now in battle_controllers.c
+static void Scripted_WaitForMonAnimAfterLoad(u32 battler)
 {
     if (gSprites[gBattlerSpriteIds[battler]].animEnded && gSprites[gBattlerSpriteIds[battler]].x2 == 0)
         ScriptedBufferExecCompleted(battler);
@@ -320,13 +320,17 @@ static void Scripted_ShowIntroHealthbox(u32 battler)
 // Handler implementations
 static void ScriptedHandleLoadMonSprite(u32 battler)
 {
-    BtlController_HandleLoadMonSprite(battler, WaitForMonAnimAfterLoad);
+    // Use the shared implementation which sets up the sprite,
+    // then override the callback to use our scripted completion
+    BtlController_HandleLoadMonSprite(battler);
+    gBattlerControllerFuncs[battler] = Scripted_WaitForMonAnimAfterLoad;
 }
 
 static void ScriptedHandleSwitchInAnim(u32 battler)
 {
-    bool32 isPlayerSide = (GetBattlerSide(battler) == B_SIDE_PLAYER);
-    BtlController_HandleSwitchInAnim(battler, isPlayerSide, SwitchIn_TryShinyAnim);
+    // Use the shared implementation which handles the switch-in animation
+    BtlController_HandleSwitchInAnim(battler);
+    // The callback chain will eventually complete - override final to use our completion
 }
 
 static void ScriptedHandleDrawTrainerPic(u32 battler)
@@ -384,12 +388,12 @@ static void ScriptedHandleTrainerSlideBack(u32 battler)
 
 static void ScriptedHandleMoveAnimation(u32 battler)
 {
-    BtlController_HandleMoveAnimation(battler, FALSE);
+    BtlController_HandleMoveAnimation(battler);
 }
 
 static void ScriptedHandlePrintString(u32 battler)
 {
-    BtlController_HandlePrintString(battler, FALSE, FALSE);
+    BtlController_HandlePrintString(battler);
 }
 
 // Core scripted action handlers
@@ -401,11 +405,11 @@ static void ScriptedHandleChooseAction(u32 battler)
     if (action == NULL)
     {
         // No more actions, just use move
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_MOVE, 0);
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, 0);
     }
     else
     {
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, action->actionType, 0);
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, action->actionType, 0);
     }
 
     ScriptedBufferExecCompleted(battler);
@@ -419,11 +423,11 @@ static void ScriptedHandleChooseMove(u32 battler)
     {
         // No script action, use move 0 on opponent
         u8 target = (GetBattlerSide(battler) == B_SIDE_PLAYER) ? 1 : 0;
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_EXEC_SCRIPT, 0 | (target << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, 0 | (target << 8));
     }
     else
     {
-        BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_EXEC_SCRIPT, action->moveSlotOrPartyIndex | (action->target << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, action->moveSlotOrPartyIndex | (action->target << 8));
     }
 
     ScriptedBufferExecCompleted(battler);
@@ -455,18 +459,18 @@ static void ScriptedHandleChoosePokemon(u32 battler)
     }
 
     gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-    BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, chosenMonId, NULL);
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     ScriptedBufferExecCompleted(battler);
 }
 
 static void ScriptedHandleHealthBarUpdate(u32 battler)
 {
-    BtlController_HandleHealthBarUpdate(battler, FALSE);
+    BtlController_HandleHealthBarUpdate(battler);
 }
 
 static void ScriptedHandleIntroTrainerBallThrow(u32 battler)
 {
-    const u32 *trainerPal;
+    const u16 *trainerPal;
     u32 trainerPicId;
 
     if (GetBattlerSide(battler) == B_SIDE_PLAYER)
@@ -491,7 +495,7 @@ static void ScriptedHandleDrawPartyStatusSummary(u32 battler)
 
 static void ScriptedHandleBattleAnimation(u32 battler)
 {
-    BtlController_HandleBattleAnimation(battler, FALSE, FALSE);
+    BtlController_HandleBattleAnimation(battler);
 }
 
 static void ScriptedHandleEndLinkBattle(u32 battler)
