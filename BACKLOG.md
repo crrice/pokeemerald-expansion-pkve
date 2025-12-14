@@ -11,14 +11,6 @@ High-level tasks to implement.
   - Grant access via script (or deduce from `FLAG_RECEIVED_POKEDEX`)
   - Consider custom modifications: show all species as silhouettes, allow search when seen (with penalties)
 
-- [ ] Quest: "The Berry Thief" (Phantump)
-  - Location: Farmer in Oldale, Phantump on Route 101 near berry trees
-  - Flow: Farmer complains about missing berries → investigate → find Phantump hoarding berries
-  - Resolution: Phantump joins party holding Oran Berry, optional farmer reward
-  - Tie-in: Harvest ability (thematic), Ghost/Grass typing helps Roggenrola players vs Machop rival
-  - Tone: Light, comedic - caught red-handed, not malicious
-  - Requires: Quest menu system (or can be standalone with just flags)
-
 - [ ] Early Route Pokemon Additions (balance investigation)
   - Goal: Give each starter player options to cover weaknesses
   - **Routes/rates need careful review** - placeholder values below
@@ -97,19 +89,16 @@ High-level tasks to implement.
     - Makes catch tutorial feel like it mattered
   - Don't expose stats to player - let it be a mystery why his Pokemon hits different
 
-- [ ] Oldale Town Enhancements
-  - Mart potion guy: "Berries have been scarce lately, these are in demand" → gives potion
-    - Subtle setup for Phantump berry thief quest, rewards attentive players
-  - Footprint guy: Keep the gag initially, bring back later
+- [ ] Oldale Town Enhancements (partially done)
+  - [x] Oldale Ruins area east of Oldale with Berry Farmer's House
+  - [x] Girl NPC hints at berry quest ("farmer hasn't been at market")
+  - [ ] Mart potion guy: "Berries have been scarce lately, these are in demand" → gives potion
+  - [ ] Footprint guy: Keep the gag initially, bring back later
     - He's found REAL footprints somewhere, needs help investigating
     - Could lead to rare encounter or hidden area
     - "30 years and FINALLY" energy
-  - Ruins Approach - New area east of Oldale (anime tie-in)
-    - Early game encounters: Oddish, Zigzagoon, Poochyena, Wurmple, Natu (10% rare)
-    - Location for Berry Thief quest (Phantump encounter)
-    - Sealed ruins entrance as future content hook
-    - Berry trees, ancient glyphs (weather/legendary lore), hidden item
-    - Minimal/zero NPCs - let environment speak
+  - [ ] Sealed ruins entrance as future content hook
+  - [ ] Ancient glyphs (weather/legendary lore), hidden items
 
 ## Quick Notes
 
@@ -165,3 +154,12 @@ Currently B button catch boost only works when selecting the ball (calculation h
 - [x] Add Quest Menu (Unbound-style) - Ported from [ghoulslash/pokeemerald quest-menu](https://github.com/ghoulslash/pokeemerald/tree/pokemon_unbound/quest-menu)
 - [x] Wimpy Brace item + Oldale NPC gifts (Macho Brace / Wimpy Brace)
 - [x] Machop learnset adjustment (Pound at L1, Low Kick at L6)
+- [x] Enable time-based encounters (day/night exclusive Pokemon)
+  - Routes 101, 103, Serene Pond, Oldale Ruins have day/night variants
+  - Fake RTC at 60x speed for testing
+- [x] Quest: "Berry Thief" (Phantump)
+  - Old farmer in Oldale Ruins complains about missing Watmel Berries
+  - Phantump appears at berry tree at night with full cutscene
+  - Guaranteed Harvest ability (hidden ability) - thematic for berry thief
+  - Reward: 3 Oran Berries, access to rare Watmel Berry tree
+  - Oldale Town girl hints at quest, changes dialogue when complete
