@@ -3,6 +3,7 @@
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
+#include "gba/syscall.h"
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "item.h"
@@ -202,8 +203,8 @@ static void Task_QuestMenuTurnOff2(u8 taskId);
 // Tiles, palettes and tilemaps for the Quest Menu
 static const u32 sQuestMenuTiles[] =
         INCBIN_U32("graphics/quest_menu/menu.4bpp.lz");
-static const u32 sQuestMenuBgPals[] =
-        INCBIN_U32("graphics/quest_menu/menu.gbapal.lz");
+static const u16 sQuestMenuBgPals[] =
+        INCBIN_U16("graphics/quest_menu/menu.gbapal");
 static const u32 sQuestMenuTilemap[] =
         INCBIN_U32("graphics/quest_menu/menu.bin.lz");
 
@@ -1159,12 +1160,12 @@ static bool8 LoadGraphics(void)
 		case 1:
 			if (FreeTempTileDataBuffersIfPossible() != TRUE)
 			{
-				LZDecompressWram(sQuestMenuTilemap, sBg1TilemapBuffer);
+				LZ77UnCompWram(sQuestMenuTilemap, sBg1TilemapBuffer);
 				sStateDataPtr->data[0]++;
 			}
 			break;
 		case 2:
-			LoadCompressedPalette(sQuestMenuBgPals, 0x00, 0x60);
+			LoadPalette(sQuestMenuBgPals, BG_PLTT_ID(0), 0x60);
 			sStateDataPtr->data[0]++;
 			break;
 		case 3:
