@@ -4417,7 +4417,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_PrettyPetalFlowerShop",
+      "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/SerenePond/border.bin",
       "blockdata_filepath": "data/layouts/SerenePond/map.bin"
     },
@@ -4427,7 +4427,7 @@
       "width": 30,
       "height": 20,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_TrainerHill",
+      "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/OldaleRuins/border.bin",
       "blockdata_filepath": "data/layouts/OldaleRuins/map.bin"
     },
