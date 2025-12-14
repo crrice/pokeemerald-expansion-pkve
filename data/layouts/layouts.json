@@ -4415,7 +4415,7 @@
       "id": "LAYOUT_SERENE_POND",
       "name": "SerenePond_Layout",
       "width": 20,
-      "height": 20,
+      "height": 22,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/SerenePond/border.bin",
