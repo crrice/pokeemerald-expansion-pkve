@@ -83,8 +83,7 @@ OldaleRuins_BerryFarmersHouse_Text_OldMan_Reminder1:
 	.string "Any luck catching that thief?$"
 
 OldaleRuins_BerryFarmersHouse_Text_OldMan_Reminder2:
-	.string "Remember, it only seems to\n"
-	.string "appear at night...$"
+	.string "It only seems to appear at night...$"
 
 @ Text strings - Quest reward
 OldaleRuins_BerryFarmersHouse_Text_OldMan_Reward1:
