@@ -97,8 +97,16 @@ High-level tasks to implement.
     - He's found REAL footprints somewhere, needs help investigating
     - Could lead to rare encounter or hidden area
     - "30 years and FINALLY" energy
-  - [ ] Sealed ruins entrance as future content hook
-  - [ ] Ancient glyphs (weather/legendary lore), hidden items
+
+- [ ] Oldale Ruins Expansion (anime-inspired from EP276 "A Ruin with a View")
+  - [ ] Azurill encounter - add to Serene Pond or ruins water area
+  - [ ] "Living fossils" theme - Pokemon unchanged since ancient times (Relicanth, etc.)
+  - [ ] Four keys mechanic - sealed inner door, keys found throughout Hoenn
+    - Could tie to weather conditions, story beats, or Team Magma/Aqua encounters
+  - [ ] Main chamber with murals - ancient weather war, Groudon/Kyogre, Rayquaza foreshadowing
+  - [ ] Time-locked secret - sunrise/morning triggers hidden staircase (uses time-of-day system)
+  - [ ] Underground lake - Relicanth static encounter as puzzle reward
+  - [ ] Team Magma/Aqua connection - possibly involved in key collection or ruins storyline
 
 ## Quick Notes
 
