@@ -17458,6 +17458,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .tmIlliterate = TRUE,
         .levelUpLearnset = sMagikarpLevelUpLearnset,
         .teachableLearnset = sMagikarpTeachableLearnset,
+        .formSpeciesIdTable = sMagikarpFormSpeciesIdTable,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_GYARADOS}),
     },
 
@@ -17613,6 +17614,138 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sGyaradosFormChangeTable,
     },
 #endif //P_MEGA_EVOLUTIONS
+
+    // Aevian Forms (Pokemon Rejuvenation)
+    [SPECIES_MAGIKARP_AEVIAN] =
+    {
+        .baseHP        = 20,
+        .baseAttack    = 10,
+        .baseDefense   = 55,
+        .baseSpeed     = 80,
+        .baseSpAttack  = 15,
+        .baseSpDefense = 20,
+        .types = MON_TYPES(TYPE_FIRE),
+        .catchRate = 255,
+        .expYield = 40,
+        .evYield_Speed = 1,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 5,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_2, EGG_GROUP_DRAGON),
+        .abilities = { ABILITY_RATTLED, ABILITY_NONE, ABILITY_MAGMA_ARMOR },
+        .bodyColor = BODY_COLOR_RED,
+        .speciesName = _("Magikarp"),
+        .cryId = CRY_MAGIKARP,
+        .natDexNum = NATIONAL_DEX_MAGIKARP,
+        .categoryName = _("Fish"),
+        .height = 9,
+        .weight = 100,
+        .description = COMPOUND_STRING(
+            "This regional variant lives in volcanic\n"
+            "hot springs. Its scales have adapted to\n"
+            "the extreme heat, giving it a fiery\n"
+            "orange coloration."),
+        .pokemonScale = 310,
+        .pokemonOffset = 4,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_MagikarpAevian,
+        .frontPicSize = MON_COORDS_SIZE(48, 56),
+        .frontPicYOffset = 4,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .backPic = gMonBackPic_MagikarpAevian,
+        .backPicSize = MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 6,
+        .backAnimId = BACK_ANIM_CONCAVE_ARC_LARGE,
+        .palette = gMonPalette_MagikarpAevian,
+        .shinyPalette = gMonShinyPalette_MagikarpAevian,
+        .iconSprite = gMonIcon_MagikarpAevian,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(1, 7, SHADOW_SIZE_M)
+        FOOTPRINT(Magikarp)
+        OVERWORLD(
+            sPicTable_Magikarp,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_SPOT,
+            sAnimTable_Following,
+            gOverworldPalette_Magikarp,
+            gShinyOverworldPalette_Magikarp
+        )
+        .isAevianForm = TRUE,
+        .tmIlliterate = TRUE,
+        .levelUpLearnset = sMagikarpAevianLevelUpLearnset,
+        .teachableLearnset = sMagikarpTeachableLearnset,
+        .formSpeciesIdTable = sMagikarpFormSpeciesIdTable,
+        .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_GYARADOS_AEVIAN}),
+    },
+
+    [SPECIES_GYARADOS_AEVIAN] =
+    {
+        // Stats swapped: Atk <-> SpAtk compared to base
+        .baseHP        = 95,
+        .baseAttack    = 60,
+        .baseDefense   = 79,
+        .baseSpeed     = 81,
+        .baseSpAttack  = 125,
+        .baseSpDefense = 100,
+        .types = MON_TYPES(TYPE_FIRE, TYPE_DRAGON),
+        .catchRate = 45,
+        .expYield = 189,
+        .evYield_SpAttack = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 5,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_2, EGG_GROUP_DRAGON),
+        .abilities = { ABILITY_INTIMIDATE, ABILITY_NONE, ABILITY_MULTISCALE },
+        .bodyColor = BODY_COLOR_RED,
+        .speciesName = _("Gyarados"),
+        .cryId = CRY_GYARADOS,
+        .natDexNum = NATIONAL_DEX_GYARADOS,
+        .categoryName = _("Atrocious"),
+        .height = 65,
+        .weight = 2350,
+        .description = COMPOUND_STRING(
+            "This volcanic variant breathes searing\n"
+            "flames instead of water. Ancient murals\n"
+            "depict it emerging from erupting\n"
+            "volcanoes to rain fire upon the land."),
+        .pokemonScale = 256,
+        .pokemonOffset = 6,
+        .trainerScale = 481,
+        .trainerOffset = 13,
+        .frontPic = gMonFrontPic_GyaradosAevian,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 2,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .backPic = gMonBackPic_GyaradosAevian,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 5,
+        .backAnimId = BACK_ANIM_V_SHAKE,
+        .palette = gMonPalette_GyaradosAevian,
+        .shinyPalette = gMonShinyPalette_GyaradosAevian,
+        .iconSprite = gMonIcon_Gyarados,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(5, 9, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Gyarados)
+        OVERWORLD(
+            sPicTable_Gyarados,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_SLITHER,
+            sAnimTable_Following,
+            gOverworldPalette_Gyarados,
+            gShinyOverworldPalette_Gyarados
+        )
+        .isAevianForm = TRUE,
+        .levelUpLearnset = sGyaradosAevianLevelUpLearnset,
+        .teachableLearnset = sGyaradosTeachableLearnset,
+        .formSpeciesIdTable = sGyaradosFormSpeciesIdTable,
+    },
 #endif //P_FAMILY_MAGIKARP
 
 #if P_FAMILY_LAPRAS

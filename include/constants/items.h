@@ -1021,11 +1021,12 @@
 #define ITEM_DRAMPANITE 853
 #define ITEM_FALINKSITE 854
 
-// Custom items
-#define ITEM_WIMPY_BRACE 855
-#define ITEM_EXP_SHARE_ALL 856
+// Custom items (at end of 1000 item range, counting backwards to avoid upstream conflicts)
+#define ITEM_WIMPY_BRACE 997
+#define ITEM_EXP_SHARE_ALL 998
+#define ITEM_INFINITE_CANDY 999
 
-#define ITEMS_COUNT 857
+#define ITEMS_COUNT 1000
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
