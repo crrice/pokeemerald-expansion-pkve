@@ -120,7 +120,7 @@ High-level tasks to implement.
 
 ## Small Features
 
-- [ ] Auto-run toggle - Hold B to walk instead of run (invert check in `src/field_player_avatar.c:685`)
+- [x] Auto-run toggle - Hold B to walk instead of run (`src/field_player_avatar.c:844`)
 - [ ] Quest menu: Hide locked quests entirely instead of showing "??????" (modify list-building in `src/quests.c`)
 
 ## Feature: Hold B During Ball Shakes (Childhood Myth)

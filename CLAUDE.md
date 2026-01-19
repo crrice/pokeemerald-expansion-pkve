@@ -6,6 +6,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Pokemon Verdant Emerald is a ROM hack based on pokeemerald-expansion (from RH-Hideout), which itself is a decompilation of Pokemon Emerald. The project targets GBA hardware and produces a `pokeemerald.gba` ROM file.
 
+## Design Documentation
+
+Project-specific docs (not from upstream pokeemerald-expansion):
+
+| File | Purpose |
+|------|---------|
+| `DIVERGENCE_THEORY.md` | Core design document. Defines the dual-path system: Hero route (traditional) vs Anti-hero route (skip Roxanne via Rusturf Tunnel). Covers gym order, story divergence, Devon Goods consequences, Roxanne as secret final boss, NG+ system. **Read this first for project vision.** |
+| `ROADMAP.md` | Gameplay design by act. Currently covers Act 1 (Gyms 1-2): starter balance, weather introduction, rival fair-play doctrine. Will expand as development progresses. |
+| `BALANCE.md` | Encounter tables, per-Pokemon balance notes, and gameplay pillars (weather, berries, doubles, etc.). Reference when working on specific routes or Pokemon. |
+| `BACKLOG.md` | Task tracking. "Done" section shows completed work, "To Do" shows pending features. Check here for current implementation status. |
+| `JOURNAL.md` | Dev journal / scratch pad. Stream-of-consciousness design thoughts. Not structured, but captures rationale for early decisions (starter selection, evolution changes, etc.). |
+
 ## Build Commands
 
 ```bash

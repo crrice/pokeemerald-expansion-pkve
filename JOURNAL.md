@@ -50,7 +50,7 @@ IM ON TO SOMETHING
 but it will be a lot of work...
 ---
 
-This gives a final trio of (TalonFlame (Flying)) > (Machamp (Fighting)) > (Roggenrola (Rock))
+This gives a final trio of (Toucannon (Flying)) > (Machamp (Fighting)) > (Roggenrola (Rock))
 Is good because I like the pure types. Other notes:
 
 So with this combo, the other tasks are:
@@ -92,6 +92,7 @@ Machop (Guts, No Guard) default abilities (look good).
        (Steadfast) hidden (looks not so good, but what do I know).
 Roggenrola (Sturdy, No Guard > Sand Stream) default abilities (look good).
            (Sand Force) hidden (looks iffy, maybe weak, but what do I know).
+           WAS I HIGH WHEN I WROTE THIS? MY TEST GAME HAS WEAK ARMOR?
 Pikipek (Keen Eye, Skill Link) default abilities (Keen Eye maybe needs replaced, Skill Link OP for sure).
         (Pickup) hidden (fuck no).
 
