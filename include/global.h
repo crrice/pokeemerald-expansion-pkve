@@ -241,6 +241,15 @@ struct NPCFollower
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
+// Stores Wally's Ralts data from the tutorial for use in later battles
+struct WallyRaltsData
+{
+    u32 personality;      // Determines gender, shiny, ability slot
+    u8 ivs[NUM_STATS];    // Individual values
+    u8 hiddenNature;      // For mint system - initially same as personality nature
+    u8 padding;
+};
+
 struct SaveBlock3
 {
 #if OW_USE_FAKE_RTC
@@ -259,6 +268,7 @@ struct SaveBlock3
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
+    struct WallyRaltsData wallyRalts;
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;

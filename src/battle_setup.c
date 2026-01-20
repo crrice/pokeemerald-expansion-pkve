@@ -428,9 +428,26 @@ static void DoBattlePyramidTrainerHillBattle(void)
 }
 
 // Initiates battle where Wally catches Ralts
+// Creates a Ralts with random gender (for Gardevoir/Gallade split) and saves
+// its data to SaveBlock3 for use in all future Wally battles.
 void StartWallyTutorialBattle(void)
 {
-    CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5);
+    u32 personality = Random32();
+    struct Pokemon *mon = &gEnemyParty[0];
+
+    // Create Ralts with random personality (allows either gender) and player's OT ID
+    CreateMon(mon, SPECIES_RALTS, 5, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
+
+    // Save Ralts data for future Wally battles
+    gSaveBlock3Ptr->wallyRalts.personality = personality;
+    gSaveBlock3Ptr->wallyRalts.ivs[STAT_HP] = GetMonData(mon, MON_DATA_HP_IV, NULL);
+    gSaveBlock3Ptr->wallyRalts.ivs[STAT_ATK] = GetMonData(mon, MON_DATA_ATK_IV, NULL);
+    gSaveBlock3Ptr->wallyRalts.ivs[STAT_DEF] = GetMonData(mon, MON_DATA_DEF_IV, NULL);
+    gSaveBlock3Ptr->wallyRalts.ivs[STAT_SPEED] = GetMonData(mon, MON_DATA_SPEED_IV, NULL);
+    gSaveBlock3Ptr->wallyRalts.ivs[STAT_SPATK] = GetMonData(mon, MON_DATA_SPATK_IV, NULL);
+    gSaveBlock3Ptr->wallyRalts.ivs[STAT_SPDEF] = GetMonData(mon, MON_DATA_SPDEF_IV, NULL);
+    gSaveBlock3Ptr->wallyRalts.hiddenNature = personality % NUM_NATURES;
+
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     gBattleTypeFlags = BATTLE_TYPE_WALLY_TUTORIAL;

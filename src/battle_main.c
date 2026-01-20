@@ -460,6 +460,71 @@ void CB2_InitBattle(void)
     }
 }
 
+// Checks if a species is part of the Ralts evolutionary line
+static bool32 IsRaltsLine(u16 species)
+{
+    return species == SPECIES_RALTS
+        || species == SPECIES_KIRLIA
+        || species == SPECIES_GARDEVOIR
+        || species == SPECIES_GALLADE
+        || species == SPECIES_GARDEVOIR_MEGA
+        || species == SPECIES_GALLADE_MEGA;
+}
+
+// Checks if the trainer is Wally
+static bool32 IsWallyTrainer(u16 trainerId)
+{
+    return trainerId == TRAINER_WALLY_MAUVILLE
+        || trainerId == TRAINER_WALLY_VR_1
+        || trainerId == TRAINER_WALLY_VR_2
+        || trainerId == TRAINER_WALLY_VR_3
+        || trainerId == TRAINER_WALLY_VR_4
+        || trainerId == TRAINER_WALLY_VR_5;
+}
+
+// Applies saved Ralts data from the tutorial to Wally's party
+// This makes his Ralts/Kirlia/Gardevoir/Gallade persistent across battles
+static void TryUpscaleWallyRalts(u16 trainerId)
+{
+    s32 i;
+    struct Pokemon *mon;
+    u16 species;
+    u32 personality;
+
+    if (!IsWallyTrainer(trainerId))
+        return;
+
+    // Find the Ralts-line Pokemon in Wally's party
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        mon = &gEnemyParty[i];
+        species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+
+        if (IsRaltsLine(species))
+        {
+            // Apply saved personality (determines nature via hidden nature, gender, ability slot, shiny)
+            personality = gSaveBlock3Ptr->wallyRalts.personality;
+            SetMonData(mon, MON_DATA_PERSONALITY, &personality);
+
+            // Apply saved IVs
+            SetMonData(mon, MON_DATA_HP_IV, &gSaveBlock3Ptr->wallyRalts.ivs[STAT_HP]);
+            SetMonData(mon, MON_DATA_ATK_IV, &gSaveBlock3Ptr->wallyRalts.ivs[STAT_ATK]);
+            SetMonData(mon, MON_DATA_DEF_IV, &gSaveBlock3Ptr->wallyRalts.ivs[STAT_DEF]);
+            SetMonData(mon, MON_DATA_SPEED_IV, &gSaveBlock3Ptr->wallyRalts.ivs[STAT_SPEED]);
+            SetMonData(mon, MON_DATA_SPATK_IV, &gSaveBlock3Ptr->wallyRalts.ivs[STAT_SPATK]);
+            SetMonData(mon, MON_DATA_SPDEF_IV, &gSaveBlock3Ptr->wallyRalts.ivs[STAT_SPDEF]);
+
+            // Apply hidden nature (for mint system)
+            SetMonData(mon, MON_DATA_HIDDEN_NATURE, &gSaveBlock3Ptr->wallyRalts.hiddenNature);
+
+            // Recalculate stats with new IVs and nature
+            CalculateMonStats(mon);
+
+            return; // Only one Ralts-line mon per party
+        }
+    }
+}
+
 static void CB2_InitBattleInternal(void)
 {
     s32 i;
@@ -566,6 +631,7 @@ static void CB2_InitBattleInternal(void)
             CreateNPCTrainerParty(&gEnemyParty[0], TRAINER_BATTLE_PARAM.opponentA, TRUE);
             if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
                 CreateNPCTrainerParty(&gEnemyParty[PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB, FALSE);
+            TryUpscaleWallyRalts(TRAINER_BATTLE_PARAM.opponentA);
             SetWildMonHeldItem();
             CalculateEnemyPartyCount();
         }
