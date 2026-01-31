@@ -571,7 +571,7 @@
         },
         {
           "map": "MAP_ROUTE102",
-          "base_label": "gRoute102",
+          "base_label": "gRoute102_Morning",
           "land_mons": {
             "encounter_rate": 20,
             "mons": [
@@ -591,11 +591,6 @@
                 "species": "SPECIES_POOCHYENA"
               },
               {
-                "min_level": 4,
-                "max_level": 4,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
                 "min_level": 3,
                 "max_level": 3,
                 "species": "SPECIES_LOTAD"
@@ -611,14 +606,19 @@
                 "species": "SPECIES_ZIGZAGOON"
               },
               {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_AZURILL"
               },
               {
                 "min_level": 4,
                 "max_level": 4,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_AZURILL"
               },
               {
                 "min_level": 4,
@@ -626,8 +626,8 @@
                 "species": "SPECIES_RALTS"
               },
               {
-                "min_level": 4,
-                "max_level": 4,
+                "min_level": 3,
+                "max_level": 3,
                 "species": "SPECIES_ZIGZAGOON"
               },
               {
@@ -719,6 +719,83 @@
                 "min_level": 40,
                 "max_level": 45,
                 "species": "SPECIES_CORPHISH"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "base_label": "gRoute102_Day"
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "base_label": "gRoute102_Evening"
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "base_label": "gRoute102_Night",
+          "land_mons": {
+            "encounter_rate": 20,
+            "mons": [
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_POOCHYENA"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_WURMPLE"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ODDISH"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_ODDISH"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_HOOTHOOT"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_HOOTHOOT"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RALTS"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_SEEDOT"
               }
             ]
           }

@@ -222,6 +222,32 @@ Water/Fishing encounters exist but require Surf/Rods not available at this point
 
 **Wooper**: Night-exclusive. Water/Ground is excellent defensive typing. Only Ground-type available pre-Petalburg - critical for Pikipek players vs Roxanne. Unaware HA ignores stat boosts, strong vs setup sweepers. Quagsire is a solid wall.
 
+### Serene Pond
+
+Levels 2-3. Hidden area accessible from Route 101. Requires Cut - player enters from southeast, traverses anti-clockwise through cut trees and grass to reach the pond at the southwest. One-way ledge in the south provides a quick exit. Backtracking reward after Roxanne.
+
+#### Encounters
+
+| Pokemon | Type | Day % | Night % | Abilities |
+|---------|------|-------|---------|-----------|
+| Wurmple | Bug | 40% | 40% | Shield Dust / Run Away |
+| Zigzagoon | Normal | 30% | 10% | Pickup / Gluttony |
+| Skwovet | Normal | 20% | - | Cheek Pouch / Gluttony (HA) |
+| Poochyena | Dark | 10% | 30% | Run Away / Quick Feet / Rattled (HA) |
+| Spinarak | Bug/Poison | - | 20% | Swarm / Insomnia / Sniper (HA) |
+
+#### Fishing (Old Rod+)
+
+| Pokemon | Type | Rate | Abilities |
+|---------|------|------|-----------|
+| Magikarp (Aevian) | Fairy/Dragon | 100% | Swift Swim / Rattled (HA) |
+
+#### Balance Notes
+
+Land encounters are identical to Route 101. The unique draw is **Aevian Magikarp** - the only location to catch it. This regional variant evolves into Aevian Gyarados (Fairy/Dragon), a significant divergence from standard Gyarados.
+
+Since Cut is required, this is a backtracking reward after Roxanne. Players who remember this pond can return for an exclusive catch.
+
 ### Oldale Ruins
 
 Levels 3-4. Optional area east of Oldale Town. Home to Berry Thief quest.
@@ -252,6 +278,46 @@ Phantump available at Lv 5 with **guaranteed Harvest ability** via the Berry Thi
 **Poochyena**: Night only here. See Route 101 notes.
 
 **Phantump**: Night-exclusive, rare (10%). Ghost/Grass is unique typing - immune to Normal/Fighting, resists Water/Grass/Electric/Ground. Wild ones have Natural Cure or Frisk. Quest version with Harvest is far superior. Trevenant evolution is a solid physical attacker.
+
+### Route 102
+
+Levels 3-4. First "full" route after getting Pokeballs. Connects Oldale to Petalburg. Has a small pond (Surf/fishing for backtracking).
+
+#### Day Encounters
+
+| Pokemon | Type | Day % | Abilities |
+|---------|------|-------|-----------|
+| Poochyena | Dark | 30% | Run Away / Quick Feet / Rattled (HA) |
+| Wurmple | Bug | 20% | Shield Dust / Run Away |
+| Lotad | Water/Grass | 20% | Swift Swim / Rain Dish / Own Tempo (HA) |
+| Zigzagoon | Normal | 16% | Pickup / Gluttony |
+| Azurill | Normal/Fairy | 9% | Thick Fat / Huge Power / Sap Sipper (HA) |
+| Ralts | Psychic/Fairy | 4% | Synchronize / Trace / Telepathy (HA) |
+| Seedot | Grass | 1% | Chlorophyll / Early Bird / Pickpocket (HA) |
+
+#### Night Encounters
+
+| Pokemon | Type | Night % | Abilities |
+|---------|------|---------|-----------|
+| Poochyena | Dark | 20% | Run Away / Quick Feet / Rattled (HA) |
+| Wurmple | Bug | 20% | Shield Dust / Run Away |
+| Oddish | Grass/Poison | 20% | Chlorophyll / Run Away (HA) |
+| Hoothoot | Normal/Flying | 20% | Insomnia / Keen Eye / Tinted Lens (HA) |
+| Zigzagoon | Normal | 15% | Pickup / Gluttony |
+| Ralts | Psychic/Fairy | 4% | Synchronize / Trace / Telepathy (HA) |
+| Seedot | Grass | 1% | Chlorophyll / Early Bird / Pickpocket (HA) |
+
+#### Balance Notes
+
+**Azurill**: Day-exclusive. Huge Power doubles Attack - Azumarill with this ability is a legitimate threat. Long-term investment for players who recognize the potential. Happiness evolution means early effort pays off.
+
+**Oddish**: Night-exclusive. Grass/Poison provides unique defensive typing this early. Vileplume/Bellossom evolution split offers choice. Chlorophyll ties to weather pillar (sun doubles Speed).
+
+**Hoothoot**: Night-exclusive. Insomnia prevents sleep - useful utility. Tinted Lens HA makes resisted moves hit neutrally, surprisingly powerful on Noctowl. Gives Route 102 a distinct nocturnal identity.
+
+**Lotad**: Day-only now. Swift Swim + Rain Dish ties to weather pillar. Ludicolo is a fun rain sweeper. Counterpart to Oddish at night.
+
+**Ralts**: Kept at 4% - the rare encounter that makes the route memorable. Wally's Ralts connection adds narrative weight.
 
 ## Gameplay Arcs
 

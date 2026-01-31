@@ -11,18 +11,14 @@ High-level tasks to implement.
   - Grant access via script (or deduce from `FLAG_RECEIVED_POKEDEX`)
   - Consider custom modifications: show all species as silhouettes, allow search when seen (with penalties)
 
-- [ ] Early Route Pokemon Additions (balance investigation)
+- [ ] Early Route Pokemon Additions (in progress)
   - Goal: Give each starter player options to cover weaknesses
-  - **Routes/rates need careful review** - placeholder values below
-  - Candidates:
-    - Skwovet (Normal, Cheek Pouch) - Route 101? forest squirrel vibe
-    - Cottonee (Grass/Fairy, Prankster) - Route 101 or 102? universal support via status moves
-    - Wooper (Water/Ground, Unaware/Water Absorb) - Route 102 pond or 103 coastal? Ground STAB for Pikipek vs Rock
-  - Balance considerations:
-    - Pikipek player needs Ground coverage (Roxanne, Rock rival)
-    - Machop player needs... ?
-    - Roggenrola player needs... ?
-  - TODO: Review current encounter tables, map out type coverage gaps per starter
+  - **Done:**
+    - Skwovet - Route 101 day (20%)
+    - Wooper - Route 103 night (20%) - Ground for Pikipek vs Roxanne
+    - Azurill - Route 102 day (9%) - Huge Power payoff
+    - Oddish/Hoothoot - Route 102 night (20% each)
+  - **Remaining:** Route 104, Petalburg Woods, etc.
 
 - [ ] Buff existing early route Pokemon
   - Goal: Make vanilla Gen 3 mons competitive with new additions - avoid "old mon bad, new mon good"
@@ -76,18 +72,10 @@ High-level tasks to implement.
   - Thematic payoff: Groudon/Kyogre war is something player LIVED, not watched
   - Ties into: Weather balance pass, early route mons, buff existing mons
 
-- [ ] Make Wally's Ralts "real"
-  - Generate real mon data during catch tutorial (IVs, nature, gender, PID, shiny)
-  - Persist in save (~10 bytes: PID + IVs + shiny flag)
-  - Carry forward to all Wally battles - his Gardevoir/Gallade uses these stats
-  - Gender determines evo: Male → Gallade, Female → Gardevoir
-  - Shiny sparkle shows during catch scene (immediate feedback)
-  - Fun implications:
-    - Community shiny hunting for Wally becomes a thing
-    - "I gave Wally a shiny" wholesome flex
-    - Every playthrough his ace is slightly different
-    - Makes catch tutorial feel like it mattered
-  - Don't expose stats to player - let it be a mystery why his Pokemon hits different
+- [ ] Wally's Ralts - gender-based trainer splits
+  - Core system implemented (personality/IVs persist, upscaler applies to all Wally battles)
+  - TODO: Create 12 trainer definitions (6 battles × 2 genders) for Gardevoir/Gallade split
+  - TODO: Add gender check in map scripts to select correct trainer ID
 
 - [ ] Oldale Town Enhancements (partially done)
   - [x] Oldale Ruins area east of Oldale with Berry Farmer's House
@@ -107,6 +95,27 @@ High-level tasks to implement.
   - [ ] Time-locked secret - sunrise/morning triggers hidden staircase (uses time-of-day system)
   - [ ] Underground lake - Relicanth static encounter as puzzle reward
   - [ ] Team Magma/Aqua connection - possibly involved in key collection or ruins storyline
+
+- [ ] Sunflora rework (Grass/Fire sun sweeper)
+  - **Type:** Grass → Grass/Fire
+  - **Abilities:** Chlorophyll / Solar Power / Drought (HA)
+  - **Stats:**
+    | Stat | Old | New |
+    |------|-----|-----|
+    | HP | 75 | 95 |
+    | Atk | 75 | 55 |
+    | Def | 55 | 85 |
+    | SpA | 105 | 125 |
+    | SpD | 85 | 100 |
+    | Spe | 30 | 60 |
+    | BST | 425 | 520 |
+  - **Level-up (Sunflora):**
+    - 0: Sunny Day, Ember, Flower Shield
+    - 16: Razor Leaf, 19: Flame Burst, 22: Synthesis, 25: Giga Drain
+    - 28: Morning Sun, 31: Fire Spin, 34: Solar Beam, 37: Flamethrower
+    - 40: Petal Dance, 43: Heat Wave, 46: Solar Blade, 50: Fire Blast, 55: Overheat
+  - **Coverage to add:** Earth Power (TM/tutor), Weather Ball, Sludge Bomb, Dazzling Gleam
+  - **Note:** With permanent weather, Chlorophyll = permanent 120 Spe, Solar Power = sustained pressure + HP drain
 
 ## Quick Notes
 
@@ -159,11 +168,18 @@ Currently B button catch boost only works when selecting the ball (calculation h
 
 ## Done
 
+- [x] Wally's Ralts persistence system
+  - Tutorial Ralts data (personality, IVs, hidden nature) saved to SaveBlock3
+  - TryUpscaleWallyRalts() applies saved data to all future Wally battles
+  - Supports shiny, gender variance, future mint system
+- [x] Route 102 time-of-day encounters
+  - Day: Azurill added (9%), Lotad day-only
+  - Night: Oddish (20%), Hoothoot (20%) replace Lotad/Azurill
 - [x] Add Quest Menu (Unbound-style) - Ported from [ghoulslash/pokeemerald quest-menu](https://github.com/ghoulslash/pokeemerald/tree/pokemon_unbound/quest-menu)
 - [x] Wimpy Brace item + Oldale NPC gifts (Macho Brace / Wimpy Brace)
 - [x] Machop learnset adjustment (Pound at L1, Low Kick at L6)
 - [x] Enable time-based encounters (day/night exclusive Pokemon)
-  - Routes 101, 103, Serene Pond, Oldale Ruins have day/night variants
+  - Routes 101, 102, 103, Serene Pond, Oldale Ruins have day/night variants
   - Fake RTC at 60x speed for testing
 - [x] Quest: "Berry Thief" (Phantump)
   - Old farmer in Oldale Ruins complains about missing Watmel Berries
