@@ -4539,13 +4539,12 @@ BattleScript_PayDayMoneyAndPickUpItems::
 BattleScript_ScriptedBattleWon::
 	tryscriptedbattlewonslide BattleScript_ScriptedBattleWonEnd
 	@ If we get here, there's an announcer message to show
-	handletrainerslidemsg BS_SCRIPTING, 0
 	trainerslidein BS_OPPONENT1
-	handletrainerslidemsg BS_SCRIPTING, 1
+	handletrainerslidemsg BS_SCRIPTING, 0
 	waitstate
 	trainerslideout BS_OPPONENT1
 	waitstate
-	handletrainerslidemsg BS_SCRIPTING, 2
+	handletrainerslidemsg BS_SCRIPTING, 1
 BattleScript_ScriptedBattleWonEnd::
 	end2
 
@@ -4555,6 +4554,7 @@ BattleScript_LocalBattleLost::
 	jumpifbattletype BATTLE_TYPE_TRAINER_HILL, BattleScript_LocalBattleLostPrintTrainersWinText
 	jumpifbattletype BATTLE_TYPE_EREADER_TRAINER, BattleScript_LocalBattleLostEnd
 	jumpifhalfword CMP_EQUAL, gTrainerBattleParameter + 2, TRAINER_SECRET_BASE, BattleScript_LocalBattleLostEnd
+	jumpifbattletype BATTLE_TYPE_SCRIPTED, BattleScript_ScriptedBattleLostEnd
 	jumpifnowhiteout BattleScript_LocalBattleLostEnd_
 	jumpifbattletype BATTLE_TYPE_INGAME_PARTNER, BattleScript_LocalBattleLostPrintWhiteOut
 BattleScript_LocalBattleLostPrintWhiteOut::
@@ -4578,13 +4578,12 @@ BattleScript_LocalBattleLostEnd::
 BattleScript_ScriptedBattleLostEnd::
 	tryscriptedbattlewonslide BattleScript_ScriptedBattleLostEndNoSlide
 	@ If we get here, there's an announcer message to show
-	handletrainerslidemsg BS_SCRIPTING, 0
 	trainerslidein BS_OPPONENT1
-	handletrainerslidemsg BS_SCRIPTING, 1
+	handletrainerslidemsg BS_SCRIPTING, 0
 	waitstate
 	trainerslideout BS_OPPONENT1
 	waitstate
-	handletrainerslidemsg BS_SCRIPTING, 2
+	handletrainerslidemsg BS_SCRIPTING, 1
 BattleScript_ScriptedBattleLostEndNoSlide::
 	printstring STRINGID_CHALLENGERLOSTTOENEMYTRAINER
 	waitmessage B_WAIT_TIME_LONG

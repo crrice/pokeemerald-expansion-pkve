@@ -70,8 +70,9 @@ struct ScriptedBattle
     const u8 *announcer_BattleEnd;          // When battle ends (custom, not standard slide)
 };
 
-// Controller setup function
-void SetControllerToScripted(u32 battler);
+// Controller setup functions (split like RecordedPlayer/RecordedOpponent)
+void SetControllerToScriptedPlayer(u32 battler);
+void SetControllerToScriptedOpponent(u32 battler);
 
 // Get custom intro text for scripted battles (returns NULL if not set or not scripted)
 const u8 *GetScriptedBattleIntroText(void);

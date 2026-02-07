@@ -192,9 +192,10 @@ static void InitBtlControllersInternal(void)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
         {
-            // Both sides controlled by script for scripted battles (TV replays, etc.)
-            gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToScripted;
-            gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToScripted;
+            // Scripted battles (TV replays, etc.) use separate controllers for each side
+            // This mirrors the RecordedPlayer/RecordedOpponent pattern
+            gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToScriptedPlayer;
+            gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToScriptedOpponent;
         }
         else
         {
@@ -370,6 +371,16 @@ static inline bool32 IsControllerWally(u32 battler)
 static inline bool32 IsControllerRecordedOpponent(u32 battler)
 {
     return (gBattlerControllerEndFuncs[battler] == RecordedOpponentBufferExecCompleted);
+}
+
+static inline bool32 IsControllerScriptedPlayer(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == ScriptedPlayerBufferExecCompleted);
+}
+
+static inline bool32 IsControllerScriptedOpponent(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == ScriptedOpponentBufferExecCompleted);
 }
 
 static inline bool32 IsControllerLinkOpponent(u32 battler)
@@ -2272,7 +2283,7 @@ void BtlController_HandleLoadMonSprite(u32 battler)
 
     SetBattlerShadowSpriteCallback(battler, species);
 
-    if (IsControllerOpponent(battler) || IsControllerLinkOpponent(battler) || IsControllerRecordedOpponent(battler))
+    if (IsControllerOpponent(battler) || IsControllerLinkOpponent(battler) || IsControllerRecordedOpponent(battler) || IsControllerScriptedOpponent(battler))
         gBattlerControllerFuncs[battler] = TryShinyAnimAfterMonAnim;
     else
         gBattlerControllerFuncs[battler] = WaitForMonAnimAfterLoad;
@@ -2284,7 +2295,8 @@ void BtlController_HandleSwitchInAnim(u32 battler)
                         || IsControllerPlayerPartner(battler)
                         || IsControllerRecordedPlayer(battler)
                         || IsControllerRecordedPartner(battler)
-                        || IsControllerLinkPartner(battler));
+                        || IsControllerLinkPartner(battler)
+                        || IsControllerScriptedPlayer(battler));
 
     if (IsControllerPlayer(battler))
     {
@@ -2579,7 +2591,8 @@ void BtlController_HandleHealthBarUpdate(u32 battler)
         if (IsControllerPlayer(battler)
          || IsControllerRecordedPlayer(battler)
          || IsControllerRecordedPartner(battler)
-         || IsControllerWally(battler))
+         || IsControllerWally(battler)
+         || IsControllerScriptedPlayer(battler))
             UpdateHpTextInHealthbox(gHealthboxSpriteIds[battler], HP_CURRENT, 0, maxHP);
         TestRunner_Battle_RecordHP(battler, curHP, 0);
     }

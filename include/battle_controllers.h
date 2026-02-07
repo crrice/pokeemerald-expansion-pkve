@@ -421,6 +421,14 @@ void WallyBufferExecCompleted(u32 battler);
 void SetControllerToRecordedOpponent(u32 battler);
 void RecordedOpponentBufferExecCompleted(u32 battler);
 
+// scripted player controller (for TV battles, etc.)
+void SetControllerToScriptedPlayer(u32 battler);
+void ScriptedPlayerBufferExecCompleted(u32 battler);
+
+// scripted opponent controller (for TV battles, etc.)
+void SetControllerToScriptedOpponent(u32 battler);
+void ScriptedOpponentBufferExecCompleted(u32 battler);
+
 // link opponent
 void SetControllerToLinkOpponent(u32 battler);
 void LinkOpponentBufferExecCompleted(u32 battler);
