@@ -35,7 +35,9 @@ Each `ScriptedBattleAction` entry = one turn per battler:
 This matches how the battle engine calls controllers: action type first, then details.
 
 ### Party Save/Restore
-Player's real party is saved (dynamically allocated), replaced with scripted parties during battle, then restored after. Memory is freed on restore.
+Player's real party is saved to static EWRAM buffers, replaced with scripted parties during battle, then restored after via `CB2_AfterScriptedBattle`.
+
+**Critical:** Do not use heap allocation (`Alloc`) for data that must survive across `CB2_InitBattle`, because `MoveSaveBlocks_ResetHeap()` wipes the entire heap during battle init. This applies to any pre-battle setup, not just scripted battles.
 
 ## Adding a New Scripted Battle
 

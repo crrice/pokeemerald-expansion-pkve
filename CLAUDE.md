@@ -41,6 +41,8 @@ make clean        # Full clean including tools
 make tidy         # Clean ROM/ELF only, keep tools
 ```
 
+**Build gotcha:** Incremental builds do not reliably pick up changes to `.s` (assembly) files. Always run `make tidy` before `make` after editing any `.s` file. If a code change has zero observable effect in-game, suspect a stale build before investigating further.
+
 ## Testing
 
 After building, copy the ROM to your Windows Roms folder for testing. In WSL, this is typically:
