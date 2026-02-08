@@ -801,7 +801,7 @@ static u8 ScriptedBattle_BuildParty(struct Pokemon *party, const struct Scripted
 
         const struct ScriptedPokemon *src = scriptedParty[i];
 
-        CreateMon(&party[i], src->species, src->level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+        CreateMon(&party[i], src->species, src->level, USE_RANDOM_IVS, FALSE, 0, OT_ID_RANDOM_NO_SHINY, 0);
         partyCount = i + 1;
 
         // Set HP

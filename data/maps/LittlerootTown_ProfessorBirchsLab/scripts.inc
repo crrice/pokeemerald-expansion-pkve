@@ -269,6 +269,13 @@ LittlerootTown_ProfessorBirchsLab_Movement_PlayerEnterLabForJohtoStarter:
 LittlerootTown_ProfessorBirchsLab_EventScript_Aide::
 	lock
 	faceplayer
+	@ Check quest states first (after Pokedex received)
+	goto_if_quest_complete QUEST_FIELD_RESEARCH, LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestComplete
+	goto_if_quest_reward QUEST_FIELD_RESEARCH, LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestReward
+	goto_if_quest_active QUEST_FIELD_RESEARCH, LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestActive
+	@ Not started - check if player has Pokedex
+	goto_if_ge VAR_BIRCH_LAB_STATE, 5, LittlerootTown_ProfessorBirchsLab_EventScript_AideOfferQuest
+	@ Pre-Pokedex dialogue
 	goto_if_ge VAR_BIRCH_LAB_STATE, 3, LittlerootTown_ProfessorBirchsLab_EventScript_AideReceivedStarter
 	goto_if_set FLAG_BIRCH_AIDE_MET, LittlerootTown_ProfessorBirchsLab_EventScript_AideAlreadyMet
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_BirchAwayOnFieldwork, MSGBOX_DEFAULT
@@ -283,6 +290,52 @@ LittlerootTown_ProfessorBirchsLab_EventScript_AideAlreadyMet::
 
 LittlerootTown_ProfessorBirchsLab_EventScript_AideReceivedStarter::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_BirchEnjoysRivalsHelpToo, MSGBOX_DEFAULT
+	release
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_AideOfferQuest::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AideOfferQuest, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, LittlerootTown_ProfessorBirchsLab_EventScript_AideDeclineQuest
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AideQuestAccepted, MSGBOX_DEFAULT
+	startquest QUEST_FIELD_RESEARCH
+	release
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_AideDeclineQuest::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AideDeclineQuest, MSGBOX_DEFAULT
+	release
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestActive::
+	@ Get National Dex caught count
+	setvar VAR_0x8004, 1
+	specialvar VAR_RESULT, ScriptGetPokedexInfo
+	@ VAR_0x8006 now has caught count
+	goto_if_ge VAR_0x8006, 20, LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestGoalMet
+	@ Not yet at goal - show progress
+	buffernumberstring STR_VAR_1, VAR_0x8006
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AideQuestProgress, MSGBOX_DEFAULT
+	release
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestGoalMet::
+	@ Player has caught 20+, set reward state
+	questmenu QUEST_MENU_SET_REWARD, QUEST_FIELD_RESEARCH
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AideQuestGoalMet, MSGBOX_DEFAULT
+	@ Fall through to reward
+LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestReward::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AideGiveReward, MSGBOX_DEFAULT
+	setflag FLAG_UNUSED_0x023  @ DN_FLAG_DEXNAV_GET
+	playfanfare MUS_OBTAIN_ITEM
+	message LittlerootTown_ProfessorBirchsLab_Text_AideReceivedDexNav
+	waitfanfare
+	completequest QUEST_FIELD_RESEARCH
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AideDexNavExplain, MSGBOX_DEFAULT
+	release
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_AideQuestComplete::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AidePostQuest, MSGBOX_DEFAULT
 	release
 	end
 
@@ -545,6 +598,8 @@ LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex::
 	waitfanfare
 	setflag FLAG_SYS_POKEDEX_GET
 	setflag FLAG_SYS_QUEST_MENU_GET
+	setflag FLAG_SYS_NATIONAL_DEX
+	special EnableNationalPokedex
 	special SetUnlockedPokedexFlags
 	setflag FLAG_RECEIVED_POKEDEX_FROM_BIRCH
 	setvar VAR_CABLE_CLUB_TUTORIAL_STATE, 1
@@ -681,6 +736,62 @@ LittlerootTown_ProfessorBirchsLab_Text_BirchEnjoysRivalsHelpToo:
 	.string "and distribution of POKéMON.\p"
 	.string "The PROF enjoys {RIVAL}'s help, too.\n"
 	.string "There's a lot of love there.$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideOfferQuest:
+	.string "Oh, you got a POKéDEX!\n"
+	.string "That's wonderful!\p"
+	.string "Say, could you help me with some\n"
+	.string "field research?\p"
+	.string "I'm studying POKéMON distribution\n"
+	.string "in the region.\p"
+	.string "If you could catch 20 different\n"
+	.string "species, it would really help!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideQuestAccepted:
+	.string "Wonderful! I knew I could count\n"
+	.string "on you!\p"
+	.string "Just catch 20 different POKéMON\n"
+	.string "species and report back to me.$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideDeclineQuest:
+	.string "Oh, that's okay.\n"
+	.string "Come back if you change your mind!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideQuestProgress:
+	.string "Let's see… You've caught\n"
+	.string "{STR_VAR_1} species so far.\p"
+	.string "Keep exploring! There are so many\n"
+	.string "POKéMON out there to discover.$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideQuestGoalMet:
+	.string "Wow! You've caught 20 species!\n"
+	.string "This data is incredible!\p"
+	.string "The PROF will be thrilled when\n"
+	.string "he sees this!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideGiveReward:
+	.string "As thanks for your hard work,\n"
+	.string "I have something special for you.\p"
+	.string "It's a new feature for your\n"
+	.string "POKéDEX called the DEXNAV!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideReceivedDexNav:
+	.string "{PLAYER} received the DEXNAV!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AideDexNavExplain:
+	.string "The DEXNAV lets you search for\n"
+	.string "specific POKéMON in an area.\p"
+	.string "You can even find POKéMON with\n"
+	.string "rare abilities and moves!\p"
+	.string "Just check your START menu\n"
+	.string "to use it.$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AidePostQuest:
+	.string "The DEXNAV is really useful,\n"
+	.string "isn't it?\p"
+	.string "I hear you can find POKéMON with\n"
+	.string "their hidden abilities if you\l"
+	.string "search long enough!$"
 
 LittlerootTown_ProfessorBirchsLab_Text_LikeYouToHavePokemon:
 	.string "PROF. BIRCH: So, {PLAYER}{KUN}.\p"
