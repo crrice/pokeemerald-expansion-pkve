@@ -244,7 +244,7 @@ Levels 2-3. Hidden area accessible from Route 101. Requires Cut - player enters 
 
 #### Balance Notes
 
-Land encounters are identical to Route 101. The unique draw is **Aevian Magikarp** - the only location to catch it. This regional variant evolves into Aevian Gyarados (Fairy/Dragon), a significant divergence from standard Gyarados.
+Land encounters are identical to Route 101. The unique draw is **Aevian Magikarp** - the only location to catch it. This regional variant evolves into Aevian Gyarados (Fire/Dragon), a significant divergence from standard Gyarados.
 
 Since Cut is required, this is a backtracking reward after Roxanne. Players who remember this pond can return for an exclusive catch.
 
