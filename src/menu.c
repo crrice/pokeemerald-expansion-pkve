@@ -621,7 +621,7 @@ void DisplayYesNoMenuWithDefault(u8 initialCursorPos)
 u8 AddStartMenuWindow(u8 numActions)
 {
     if (sStartMenuWindowId == WINDOW_NONE)
-        sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, (numActions * 2) + 2, 15, 0x139);
+        sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, (numActions * 7 + 12) / 4, 15, 0x139);
     return sStartMenuWindowId;
 }
 
@@ -2119,7 +2119,7 @@ void PrintPlayerNameOnWindow(u8 windowId, const u8 *src, u16 x, u16 y)
 
     StringExpandPlaceholders(gStringVar4, src);
 
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, x, y, TEXT_SKIP_DRAW, 0);
+    AddTextPrinterParameterized(windowId, FONT_NARROW, gStringVar4, x, y, TEXT_SKIP_DRAW, 0);
 }
 
 static void UNUSED UnusedBlitBitmapRect(const struct Bitmap *src, struct Bitmap *dst, u16 srcX, u16 srcY, u16 dstX, u16 dstY, u16 width, u16 height)

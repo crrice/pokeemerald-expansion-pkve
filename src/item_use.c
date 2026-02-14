@@ -1481,6 +1481,12 @@ void ItemUseOutOfBattle_Fusion(u8 taskId)
     SetUpItemUseCallback(taskId);
 }
 
+void ItemUseOutOfBattle_EVTrainer(u8 taskId)
+{
+    gItemUseCB = ItemUseCB_EVTrainer;
+    SetUpItemUseCallback(taskId);
+}
+
 void Task_UseHoneyOnField(u8 taskId)
 {
     StartSweetScentFieldEffect();

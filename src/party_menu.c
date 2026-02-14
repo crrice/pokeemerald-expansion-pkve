@@ -80,6 +80,7 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "ui_stat_editor.h"
 
 enum {
     MENU_SUMMARY,
@@ -3089,6 +3090,18 @@ static void CursorCb_Summary(u8 taskId)
 {
     PlaySE(SE_SELECT);
     sPartyMenuInternal->exitCallback = CB2_ShowPokemonSummaryScreen;
+    Task_ClosePartyMenu(taskId);
+}
+
+static void CB2_OpenStatEditor(void)
+{
+    StatEditor_Init(CB2_ReturnToPartyMenuFromSummaryScreen);
+}
+
+void ItemUseCB_EVTrainer(u8 taskId, TaskFunc task)
+{
+    gSpecialVar_0x8004 = gPartyMenu.slotId;
+    sPartyMenuInternal->exitCallback = CB2_OpenStatEditor;
     Task_ClosePartyMenu(taskId);
 }
 

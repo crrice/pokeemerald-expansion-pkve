@@ -15063,6 +15063,22 @@ const struct Item gItemsInfo[] =
 
 // Custom items
 
+    [ITEM_EV_TRAINER] =
+    {
+        .name = ITEM_NAME("EV Trainer"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A device for\n"
+            "adjusting a Pokémon's\n"
+            "base points."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_EVTrainer,
+        .iconPic = gItemIcon_MachoBrace,
+        .iconPalette = gItemIconPalette_MachoBrace,
+    },
+
     [ITEM_WIMPY_BRACE] =
     {
         .name = ITEM_NAME("Wimpy Brace"),
