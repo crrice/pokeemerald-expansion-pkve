@@ -216,6 +216,8 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+    memset(gSaveBlock2Ptr->questData, 0, sizeof(gSaveBlock2Ptr->questData));
+    memset(gSaveBlock2Ptr->subQuests, 0, sizeof(gSaveBlock2Ptr->subQuests));
 }
 
 static void ResetMiniGamesRecords(void)
