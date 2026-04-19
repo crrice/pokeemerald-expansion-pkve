@@ -74,7 +74,7 @@ OldaleRuins_EventScript_BerryThiefTree_QuestActive:
 	msgbox OldaleRuins_Text_StartledAttack, MSGBOX_DEFAULT
 	closemessage
 	@ Start battle with Harvest ability Phantump
-	createmon 1, 0, SPECIES_PHANTUMP, 5, abilityNum=2
+	createmon 1, 0, SPECIES_PHANTUMP, 5, item=ITEM_SITRUS_BERRY, abilityNum=2
 	dowildbattle
 	@ Remove Phantump sprite after battle
 	removeobject LOCALID_PHANTUMP

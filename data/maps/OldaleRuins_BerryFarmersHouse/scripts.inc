@@ -44,11 +44,30 @@ OldaleRuins_BerryFarmersHouse_EventScript_OldMan_Reward:
 	end
 
 OldaleRuins_BerryFarmersHouse_EventScript_OldMan_Complete:
-	@ Quest already done - friendly chat
+	@ Quest already done - offer berry shop
 	msgbox OldaleRuins_BerryFarmersHouse_Text_OldMan_Complete1, MSGBOX_DEFAULT
 	msgbox OldaleRuins_BerryFarmersHouse_Text_OldMan_Complete2, MSGBOX_DEFAULT
+	msgbox OldaleRuins_BerryFarmersHouse_Text_OldMan_Shop, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, OldaleRuins_BerryFarmersHouse_EventScript_OldMan_DeclineShop
+	pokemart OldaleRuins_BerryFarmersHouse_BerryShop
 	release
 	end
+
+OldaleRuins_BerryFarmersHouse_EventScript_OldMan_DeclineShop:
+	msgbox OldaleRuins_BerryFarmersHouse_Text_OldMan_DeclineShop, MSGBOX_DEFAULT
+	release
+	end
+
+	.align 2
+OldaleRuins_BerryFarmersHouse_BerryShop:
+	.2byte ITEM_ORAN_BERRY
+	.2byte ITEM_PECHA_BERRY
+	.2byte ITEM_RAWST_BERRY
+	.2byte ITEM_CHERI_BERRY
+	.2byte ITEM_CHESTO_BERRY
+	.2byte ITEM_ASPEAR_BERRY
+	.2byte ITEM_PERSIM_BERRY
+	pokemartlistend
 
 @ Text strings - Quest intro
 OldaleRuins_BerryFarmersHouse_Text_OldMan_Intro1:
@@ -100,7 +119,7 @@ OldaleRuins_BerryFarmersHouse_Text_OldMan_Reward3:
 	.string "And here, take some ORAN BERRIES too -\n"
 	.string "they're not as rare, but just as useful!$"
 
-@ Text strings - Quest complete
+@ Text strings - Quest complete / shop
 OldaleRuins_BerryFarmersHouse_Text_OldMan_Complete1:
 	.string "Thanks again for helping me\n"
 	.string "with that PHANTUMP!$"
@@ -108,3 +127,10 @@ OldaleRuins_BerryFarmersHouse_Text_OldMan_Complete1:
 OldaleRuins_BerryFarmersHouse_Text_OldMan_Complete2:
 	.string "My WATMEL BERRIES have been growing\n"
 	.string "wonderfully ever since!$"
+
+OldaleRuins_BerryFarmersHouse_Text_OldMan_Shop:
+	.string "I've got a nice harvest going now.\n"
+	.string "Want to buy some berries?$"
+
+OldaleRuins_BerryFarmersHouse_Text_OldMan_DeclineShop:
+	.string "No worries! Come back anytime.$"
