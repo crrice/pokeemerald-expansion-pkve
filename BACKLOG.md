@@ -4,6 +4,21 @@ High-level tasks to implement.
 
 ## To Do
 
+- [ ] Starter Redesign Follow-ups (Axew + Deino pair — core swap done, rest outstanding)
+  - [ ] **VAR_STARTER_MON case cleanup** — Routes 104, 110, 119, Rustboro, Lilycove, Mauville Game Corner, Petalburg Pokecenter still have 3-case switches. Remove case 2.
+  - [ ] **Later rival battles** — Route 104, 110, 119, Rustboro, Lilycove rival teams still reference old starter lines (Grovyle/Combusken/Marshtomp etc). Full rival team redesign.
+  - [ ] **Rival identity pass** — Brendan aggro (sun→rain weathers), May stall (sand→hail weathers). Team comp should reflect.
+  - [ ] **Learnset adjustments**
+    - Axew: Assurance ~L3-5, Metal Claw ~L12-15 (Gym 1 Steel STAB), Dual Chop ~L18-20 (Gym 2 Dragon STAB)
+    - Deino: Bite ~L5-6 (pulled from L9), Dragon Breath ~L20-22 (pulled from L32), keep Crunch L20
+  - [ ] **Birch's lab narrative** — 2 pokeballs on the table instead of 3, dialogue pass
+  - [ ] **Old trio re-placement** — Pikipek/Machop/Roggenrola as wild/gift mons
+    - Machop → Granite Cave (already planned per ROADMAP Segment 4)
+    - Roggenrola → Granite Cave or Rusturf Tunnel
+    - Pikipek → early route slot (Route 116 area?)
+  - [ ] **Starter BST / ability review** — deferred, open question whether Dragon/Steel Haxorus needs any compensatory tuning
+  - [ ] **Starter encounter flags / overworld sprites** — confirm 2-starter flow doesn't break anywhere (TV Dad battle script, Birch rescue, etc.)
+
 - [ ] Enable DexNav
   - Set `DEXNAV_ENABLED` to `TRUE` in `include/config/dexnav.h`
   - Assign flags/vars (`DN_FLAG_*`, `DN_VAR_*`)
@@ -12,13 +27,73 @@ High-level tasks to implement.
   - Consider custom modifications: show all species as silhouettes, allow search when seen (with penalties)
 
 - [ ] Early Route Pokemon Additions (in progress)
-  - Goal: Give each starter player options to cover weaknesses
+  - Goal: Give players team options that cover starter weaknesses and carry the "late grower" early game
   - **Done:**
     - Skwovet - Route 101 day (20%)
-    - Wooper - Route 103 night (20%) - Ground for Pikipek vs Roxanne
+    - Wooper - Route 103 night (20%) - Water/Ground, neutral into Gym 1 for Deino players; general utility tank for both
     - Azurill - Route 102 day (9%) - Huge Power payoff
     - Oddish/Hoothoot - Route 102 night (20% each)
-  - **Remaining:** Route 104, Petalburg Woods, etc.
+    - Route 104 day/night tables - Krabby, Dwebble, Marill, Pincurchin, Finneon fishing
+  - **Remaining:** Petalburg Woods, Route 116, Granite Cave, etc.
+  - Note: "starter carries you to Gym 4" is no longer the plan — both starters are late growers and team Pokemon matter more than before.
+
+- [ ] Rusturf Tunnel Divergence Scene (core story rework)
+  - Goal: Front-load the Hero/Anti-hero choice to BEFORE the first gym. Players face the Rubicon while seasoned Emerald veterans go "wait, something's wrong."
+  - See `memory/tunnel_divergence.md` for the full design spec.
+  - **Petalburg Woods rewrite:**
+    - Two Aqua grunts ambush the Devon researcher
+    - Player fights one ("I'll hold them off!"), the other flees west with goods
+    - Researcher: "They took it! West, toward Rustboro!"
+  - **Rustboro gym closure:**
+    - Sign on gym door / attendant NPC: "Leader Roxanne is assisting the Devon Corporation."
+    - Rustboro NPCs and Devon Corp staff redirect player toward Route 116
+    - Gym opens post-tunnel-scene + goods-returned (hero path)
+  - **Rusturf Tunnel redesign:**
+    - Remove east-side Rock Smash gate entirely (no Wally event needed here)
+    - Add visible broken-rocks breach at former gate location
+    - Add hidden side passage (triggers on retreat after the tunnel scene)
+    - East-side gauntlet: L15-18 wilds (soft gate, not hard)
+  - **Tunnel scene (Roxanne + grunt):**
+    - Overworld Roxanne sprite walks to tunnel ahead of player
+    - Cutscene at broken rocks: grunt visible fleeing east, Roxanne delivers her line, departs back to Rustboro
+    - Grunt in side passage (revealed on retreat): fight, recover goods
+    - Post-grunt-fight: return to Rustboro, Devon thanks, receives **Cut HM** + Exp Share if not already given
+  - **Wattson Rubicon hook:**
+    - Post-Wattson-badge flag fires world-state update
+    - Grunt sprite removed from tunnel side passage permanently
+    - Roxanne's gym dialogue permanently shifts to "secret final boss" waiting state
+    - Devon Corp dialogue shifts to "we never recovered the goods" permanent state
+  - **Wattson dialogue:**
+    - Pre-fight line keyed on badge count == 0 (anti-hero Rubicon pre-battle text)
+    - Post-victory line: "You... you actually did it. WAHAHA!" (the Rubicon acknowledgment)
+  - **Cut HM audit (Hoenn-wide):**
+    - Survey all Cut-gated content from Petalburg Woods through Route 121
+    - Ensure no story-critical content is locked behind Cut for anti-hero players pre-Gym-8
+    - Flavor/exploration content can remain gated
+    - Document gated content for anti-hero post-climax "cut unlocks Hoenn" exploration phase
+  - **Flags needed (tentative):**
+    - `FLAG_TUNNEL_SCENE_COMPLETE`
+    - `FLAG_GOODS_RECOVERED`
+    - `FLAG_ANTI_HERO_COMMITTED` (set on Wattson badge if `FLAG_GOODS_RECOVERED` not set)
+    - `FLAG_CUT_DIVERGENCE_ANTI_AVAILABLE` (set on Roxanne-as-final-gym defeat for anti-hero)
+
+- [ ] Area Weather Cycles System
+  - Goal: Weather introduced as ambient worldbuilding, not just battle mechanic. Each signature area sets a default permanent weather at battle start, cycling by time of day.
+  - **Core rule:** Encounter tables are NOT affected by weather cycles. Weather and encounters are independent axes.
+  - **Narrative arc:** Natural cycles (Act 1) → Aqua/Magma disruption (Act 2) → planetary tyranny (Act 3) → Rayquaza restores. Rayquaza = restoration, not erasure.
+  - **Signature cycle map (first pass):**
+    - Route 104: Sun day / Rain night (prototype — implement first)
+    - Route 116, Route 111 desert: Sandstorm (always)
+    - Mt. Chimney / Fiery Path: Sun (always)
+    - Shoal Cave / north ice: Hail (always)
+    - Sootopolis basin: Rain (always)
+    - Weather Institute: broken cycle (puzzle zone)
+    - Sky Pillar: none (Rayquaza's Air Lock domain)
+    - All other routes: clear (cycles should feel special, not noise)
+  - **Implementation MVP:** Just Route 104. Battle-start weather hook. NPC tutorial dialogue.
+  - **Later polish:** Overworld particles/tints, DexNav weather icon, NPC dialogue variation.
+  - **Override:** Story scripts can force weather/clear for cutscenes.
+  - See `memory/weather_cycles.md`.
 
 - [ ] Buff existing early route Pokemon
   - Goal: Make vanilla Gen 3 mons competitive with new additions - avoid "old mon bad, new mon good"

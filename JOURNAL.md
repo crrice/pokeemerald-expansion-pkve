@@ -7,6 +7,74 @@
 
 ---
 
+## Starter Rethink (2026-04) — Axew + Deino Pair
+
+OK new plan. Scrap the trio. Dragon pair.
+
+Axew + Deino.
+
+Why:
+- Two starters mirror the Hero/Anti-hero split. Not gating — either starter works on either route — but the *vibes* line up. Axew = honorable, knightly, coat-of-arms dragon. Deino = three-headed, blind, learns by biting shit. Anti-hero energy.
+- Cool factor. Dragon starters are rare. Pseudos as starters are rarer.
+- Symmetry through asymmetry. Physical vs Special. Dragon/Steel vs Dark/Dragon. One climbs steady, one evolves late.
+- Avoids Unbound's trio (Larvitar/Beldum/Gible).
+
+Axew line → **Dragon/STEEL**, not pure Dragon. Haxorus looks like it's wearing armor — axe-face, steel tusks. Also neutralizes the canonical Fairy/Ice 4x weaknesses, which on an expanded curve where starters need to carry into the L80s actually matters. Becomes a defensive bruiser: resists 9 types, only fears Fighting/Ground/Fire. Heavy but intentional.
+
+Evolution levels (late growers):
+- Axew → Fraxure @ 46, Fraxure → Haxorus @ 68
+- Deino → Zweilous @ 48, Zweilous → Hydreigon @ 72
+
+Starter hits mid-evo around Gym 4-5, final form Gym 6-7. This **forces team-building from wild catches**, which is exactly the point — Routes 101-103 already have interesting mons (Wooper, Azurill, Ralts, Wingull, Phantump, Oddish). They deserve real team slots, not "shelf until box dump."
+
+No type triangle means no starter-matchup tension in rival fights. Good — rival identity shifts to **weather**. Brendan aggro (sun/rain), May stall (sand/hail). More interesting anyway.
+
+### The Deino problem
+
+Hustle + Bite + Dragon Rage through L48 is a long haul on an expanded curve. Leaning toward minimal buffs — the payoff story reads better when the climb is real. Floor is: pull Bite earlier (L5), pull Dragon Breath earlier (~L20ish) so Dragon STAB is online for Gym 2.
+
+### Gym 1/2 flip
+
+- Gym 1 Roxanne (Rock): Axew (Steel STAB, resists Rock) **crushes**. Deino (neutral) **struggles** — reason for Deino players to consider Anti-hero tunnel route.
+- Gym 2 Brawly (Fighting): **Both** starters 2x weak. Universal skill check. Deino has Crunch at L20 vs Meditite (Psychic 2x SE) as a legit answer. Axew leans on Dual Chop neutral chip + team support (Abra, Wingull).
+
+### Move plan (starters)
+
+Axew:
+- L1 Scratch/Leer
+- L3-5 Assurance (non-STAB Dark coverage)
+- L12-15 **Metal Claw** (Steel STAB — Gym 1 unlock, +10% Atk chain)
+- L18-20 **Dual Chop** (Dragon STAB — Gym 2 neutral damage, anti-Sub/Sturdy)
+- Dragon Rage kept at L10
+
+Deino:
+- L1 Tackle/Dragon Rage
+- L5-6 **Bite** (Dark STAB pulled earlier from L9)
+- L12-15 Headbutt or Assurance
+- L18-20 **Crunch** (natural L20, keep — Gym 2 answer)
+- L20-22 **Dragon Breath** (pulled from L32 — Dragon STAB online by Gym 2, para chance)
+
+### Old trio
+
+Don't cut. Re-place:
+- Machop → Granite Cave (already planned per roadmap)
+- Roggenrola → Granite Cave / Rusturf
+- Pikipek → early route slot, probably Route 116 area
+
+### Still open / future
+
+- Rival team redesign everywhere past Route 103 (Combusken/Grovyle/Marshtomp lines gone)
+- VAR_STARTER_MON case 2 cleanup across Routes 104/110/119/Rustboro/Lilycove/Mauville/Petalburg
+- Birch narrative: 2 pokeballs on the table, not 3
+- Starter BST review deferred
+- Stat rebalancing for new Dragon/Steel typing on Axew line — does it need a nerf anywhere to compensate?
+
+Keeping the old trio entry below for historical record. Worth seeing what I rejected and why.
+
+---
+
+# Original Entry (Flying/Fighting/Rock trio era — SUPERSEDED)
+
 I have settled on using the flying/fighting/rock trio as the starter types.
 Therefore a lot is needed to really enable that.
 

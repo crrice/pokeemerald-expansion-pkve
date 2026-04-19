@@ -6,9 +6,43 @@ Two paths. One world. Choose your legend.
 
 ## The Split
 
-At Rustboro City, the world forks. Most trainers walk through the gym doors and begin their hero's journey. Some walk past them, into the darkness of Rusturf Tunnel, and emerge as something else entirely.
+The world forks inside Rusturf Tunnel, before the first gym.
+
+Petalburg Woods — two Aqua grunts ambush a Devon researcher. One fights the player as a delay. The other flees west with the stolen goods. The researcher: *"They took it! West, toward Rustboro!"*
+
+Rustboro — the gym is closed. *"Leader Roxanne is assisting the Devon Corporation."* NPCs point east, toward Rusturf Tunnel. Devon Corporation is in agitation. The player follows.
+
+Inside the tunnel — Roxanne stands at a freshly-smashed eastern wall. A grunt is visible beyond it, fleeing through the breach. *"Damn — they broke through?! If the goods are already on the other side, we may have lost them..."* Roxanne turns back toward Rustboro to coordinate. The player is alone at the junction.
+
+Two paths:
+
+**Pursue** — step through the broken rocks, follow the visible trail east. Brutal wilds. Emerge in Verdanturf. Nobody expected you. Beat Wattson with no badges, and the world locks behind you.
+
+**Double back** — turn around. Retrace toward the tunnel entrance. A side passage you didn't notice on the way in catches your eye. The grunt is hiding there — the broken rocks were a diversion, he doubled back. Fight, recover the goods, return to Devon.
+
+The grunt tricked Roxanne. He tricks most players. The ones who see through it earn the hero's journey.
 
 This document outlines the two routes through Pokemon Verdant Emerald.
+
+---
+
+## The Starters
+
+Two starters. A pair, not a trio.
+
+| | **AXEW** (Dragon/Steel) | **DEINO** (Dark/Dragon) |
+|--|--|--|
+| Final form | Haxorus — physical bruiser, 9 resistances | Hydreigon — special attacker, three-headed ruin |
+| Evolution | Fraxure @ 46, Haxorus @ 68 — steady climb | Zweilous @ 48, Hydreigon @ 72 — late apotheosis |
+| Vibe | Honorable, knightly. A dragon on a coat of arms. | Chaotic, destructive. Learns by biting everything. |
+| Gym 1 (Roxanne) | Resists Rock, Steel STAB 2x SE — dominates | Neutral — struggles without team support |
+| Gym 2 (Brawly) | 2x Fighting weak — team skill check | 2x Fighting weak — Crunch answers Meditite |
+
+**Neither starter gates a route.** A Hero-route Deino is perfectly valid, and an Anti-hero Axew is a beautiful contradiction. But the *aesthetic* alignment is real: Axew maps cleanly onto the Hero archetype, Deino onto the Anti-hero. Players who resonate with one vibe tend to choose the starter that matches.
+
+The pair also reinforces the split thematically: two starters, two paths, one world.
+
+**Late growers.** Both starters hit mid-evo around Gym 4-5 and final form around Gym 6-7. This is deliberate — it forces players to build their team from Hoenn's wild encounters rather than ride a snowballing starter. Routes 101-103 have been re-stocked with mons worth keeping.
 
 ---
 
@@ -102,9 +136,25 @@ The forbidden path. You skip the tutorial, survive the gauntlet, and crash into 
 
 ### The Tunnel
 
-Rusturf Tunnel is your crucible. No Rock Smash gates. Just darkness, brutal wilds (Lv 15-18), and a gauntlet that says "turn back now."
+Rusturf Tunnel is your crucible. No Rock Smash gates — the grunt already broke through. Just darkness, brutal wilds (Lv 15-18), and a gauntlet that says "turn back now."
 
 You don't turn back.
+
+You saw the grunt run. You saw Roxanne give up. You don't stop to look around. Relentless pursuit — that's who you are.
+
+You emerge in Verdanturf with no badges, no Cut, no Briney, no plan. Wattson is the first thing Hoenn puts in your way.
+
+### The Rubicon
+
+Stepping into Verdanturf isn't the point of no return. You can still walk back through the tunnel — the side passage is still there, the grunt is still there, you can still choose hero.
+
+**Beating Wattson is the Rubicon.**
+
+The moment the Dynamo Badge hits your bag, the world updates. Off-screen, the grunt slips out of the tunnel — goods gone forever. Roxanne returns to her gym, closes the door, and starts preparing for someone nobody will see for a long time. Devon Corporation's theft is permanent. Archie has what he needs.
+
+You chose this by *winning*. Walking east was reversible. Beating a gym with a team that shouldn't be able to beat it — that's a commitment nobody can undo.
+
+**Wattson's team is identical to his hero-route Gym 3 team.** No scaling, no pity version. If you can take him at Gym 1 with Route 104 and Route 116 Pokémon, you earned every bit of what comes next.
 
 ### Story Beats
 
@@ -150,8 +200,13 @@ The rival becomes YOUR measuring stick. They're trying to catch YOU.
 
 ### Gym Leader Reactions
 
-**Wattson (No badges):**
+**Wattson (No badges, pre-battle):**
 > "A challenger without a single badge? You came through the tunnel, didn't you? WAHAHA! Most trainers start in Rustboro... but you're not most trainers. Let's see if you've got the SPARK!"
+
+**Wattson (No badges, post-victory — the Rubicon line):**
+> "You... you actually did it. WAHAHA! A trainer with four badges wouldn't have had half the trouble you just put me through. But you did it with nothing. ZERO badges, Route 104 Pokémon, and a starter that won't see its final form for months. I haven't seen anything like this in my entire career. Go on then — keep going. Hoenn needs to know what you are."
+
+*[Dynamo Badge obtained. The world updates. The grunt slips from the tunnel. The goods are gone.]*
 
 **Flannery (1 badge, Wattson's):**
 > "Wait, you beat Wattson before Roxanne? Before BRAWLY? ...The path you're taking... it's reckless. I like it."
@@ -178,6 +233,22 @@ On Anti-hero route, you skipped Roxanne. No Briney.
 **Solution:** Brutal Surf from Route 109/Slateport to Dewford. Open ocean. High-level Tentacruel. Endless trainer gauntlet (swimmers, sailors). You want Brawly's badge? Earn the swim.
 
 Or... go back, humble yourself, beat Roxanne, unlock Briney. Your choice.
+
+### Cut HM
+
+Cut is a divergence axis.
+
+**Hero:** Cut granted by Devon Corporation when you return the stolen goods — *before* Roxanne. Cut-gated content (Serene Pond's Aevian Magikarp, Cloud Nine Psyduck, and other hidden areas across Hoenn) is accessible throughout Act 1 onward.
+
+**Anti-hero:** Devon never gets their goods. You don't get Cut from them. You don't get it at all... until you finish your path.
+
+Cut is granted when Anti-hero defeats Roxanne — *as their 8th gym*, the secret final boss. The moment her Sand team falls, the old gym leader hands you the HM herself:
+
+> "The goods I was going to give to a hero, years ago. I've been keeping them. I thought maybe someday... Well. You're not what I imagined. But you're who showed up. Take it."
+
+All of Hoenn's Cut-gated content becomes accessible as **post-climax exploration.** Every tree you walked past, every passage you couldn't reach — now yours. The anti-hero's reward for the long way around.
+
+**Design note:** Cut-gated content must be audited Hoenn-wide to ensure nothing *story-critical* is locked behind Cut for anti-hero players pre-Gym-8. Flavor, exploration, and optional content can remain gated.
 
 ### Roxanne: The Secret Final Boss
 
@@ -342,6 +413,11 @@ And you remember everything.
 - [x] Rayquaza role → Hero: savior/ally. Anti-hero: challenger after you do its job
 - [x] Legendary catchability → Defined per route (see Legendary Availability section)
 - [x] NG+ system → Back-in-time isekai, party devolved at Lv5, held items + money + dex carry
+- [x] Divergence mechanism → Rusturf Tunnel scene with Roxanne, broken rocks, grunt misdirection. Player chooses by geography (pursue east / double back).
+- [x] Rubicon → Beating Wattson with zero badges. World state locks on Dynamo Badge.
+- [x] Cut HM divergence → Hero gets it pre-Roxanne (post-goods-return). Anti-hero gets it at Gym 8 from Roxanne after defeating her as final boss.
+- [x] Wattson team scaling → None. Same team both routes. Anti-hero trains up or fails.
+- [x] Pre-Roxanne rival battle → Dropped. Tunnel scene carries the stakes.
 
 ### Still Open
 - [ ] Mt. Chimney on Anti-hero: Fight Aqua? Magma? BOTH? Stakes are higher since Aqua has Devon tech.

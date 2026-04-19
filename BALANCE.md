@@ -154,7 +154,58 @@ I hate grinding. But I like RP. Overall focus on letting the player customize th
 
 ### Littleroot
 
-Notes on starter balance. Integrate from TODO.md / discussion.
+Starters: **Axew** (Dragon/Steel) and **Deino** (Dark/Dragon). A pair, not a trio.
+
+#### Design Philosophy
+
+**Late Growers.** Both lines are pseudo-legendaries. Mid-evo lands around Gym 4-5, final form around Gym 6-7. The starter is a long-term project — the early/mid game is carried by the *team*, not the starter. This is the opposite of the classic "starter snowballs into the ace" pattern; here, wild encounters on Routes 101-104 earn permanent team slots.
+
+**No type triangle.** Both are Dragon-typed. Rival tension shifts from starter matchup to *weather identity* (Brendan aggro sun/rain, May stall sand/hail). Rival takes the other starter (mirror-match rivalry throughout the game).
+
+#### Axew Line (Dragon/Steel)
+
+*Typing rationale*: Haxorus visually reads as armored/steel — axe-face, tusks, plating. Dragon/Steel neutralizes the canonical Ice/Fairy 4x weaknesses and creates a defensive bruiser profile (resists Normal, Flying, Rock, Bug, Steel, Grass, Electric, Psychic, Dragon; immune to Poison). Only weaknesses: Fighting, Ground, Fire. Heavy defensive profile is intentional — Haxorus is meant to carry into L80s content.
+
+*Evolution*: Axew → Fraxure @ L46 → Haxorus @ L68. Steady climb.
+
+*Identity*: Physical attacker. Steady, honorable, reliable. "The hero starter" in vibe, not in route gating.
+
+*Target learnset adjustments*:
+- L3-5: **Assurance** — early non-STAB Dark coverage, double power if opponent moved. Thematic vs Deino mirror match.
+- L12-15: **Metal Claw** — 50 BP Steel STAB, 10% Atk-up. The Gym 1 (Roxanne) unlock — 2x SE on Rock, addictive chain.
+- L18-20: **Dual Chop** — 40 BP × 2, Dragon STAB, Sub/Sturdy breaker. Online for Gym 2.
+- Keep Dragon Rage at L10 (40 flat damage scales out well).
+
+*Gym matchup notes*:
+- Gym 1 (Roxanne, Rock): **Dominates.** Steel STAB + Rock resistance.
+- Gym 2 (Brawly, Fighting): **2x weak.** Must rely on Dual Chop neutral damage + team support (Wingull, Abra, Ralts).
+
+#### Deino Line (Dark/Dragon)
+
+*Typing*: Canonical Dark/Dragon throughout evolution.
+
+*Evolution*: Deino → Zweilous @ L48 → Hydreigon @ L72. Late apotheosis — long middle stage.
+
+*Identity*: Special attacker (Hydreigon). "The anti-hero starter" in vibe. Long climb, massive payoff.
+
+*Early-game problem*: Hustle + limited moveset through L48 is rough. Leaning on minimal learnset buffs rather than ability/stat intervention — the payoff story reads better when the climb is real.
+
+*Target learnset adjustments*:
+- L5-6: **Bite** (pulled from L9) — earlier Dark STAB, thematic ("learns by biting").
+- L12-15: Headbutt or Assurance for non-STAB coverage.
+- L18-20: **Crunch** — natural learn level, keep. *The Gym 2 answer* — 2x SE on Meditite (Psychic).
+- L20-22: **Dragon Breath** (pulled from L32) — Dragon STAB online by Gym 2, paralysis chance.
+
+*Gym matchup notes*:
+- Gym 1 (Roxanne, Rock): **Neutral-negative.** No SE STAB on Rock. Must lean on team (Wooper, Lotad, Ralts).
+- Gym 2 (Brawly, Fighting): **2x weak** but **Crunch is a legit answer vs Meditite** (Psychic 2x SE). Pure Fighting still walls — team support needed.
+
+#### Open Questions
+
+- Does Dragon/Steel Haxorus need a BST nerf to compensate for the defensive profile upgrade? Deferred.
+- Does Hydreigon need any special-attacker kit tweaks? Deferred.
+- Should starter Deino get an advantage (egg move, hidden ability unlock) to smooth its long early game? Pending playtesting.
+- Old starters Pikipek/Machop/Roggenrola need wild/gift placement (see BACKLOG).
 
 ### Route 101
 
@@ -220,7 +271,7 @@ Water/Fishing encounters exist but require Surf/Rods not available at this point
 
 **Zigzagoon**: See Route 101 notes. More common at night here.
 
-**Wooper**: Night-exclusive. Water/Ground is excellent defensive typing. Only Ground-type available pre-Petalburg - critical for Pikipek players vs Roxanne. Unaware HA ignores stat boosts, strong vs setup sweepers. Quagsire is a solid wall.
+**Wooper**: Night-exclusive. Water/Ground is excellent defensive typing. Only Ground-type available pre-Petalburg. **Particularly valuable for Deino players vs Roxanne** — Deino is neutral into Rock and needs team-based answers; Wooper is one of the best available. Unaware HA ignores stat boosts, strong vs setup sweepers. Quagsire is a solid long-term wall.
 
 ### Serene Pond
 
@@ -319,17 +370,83 @@ Levels 3-4. First "full" route after getting Pokeballs. Connects Oldale to Petal
 
 **Ralts**: Kept at 4% - the rare encounter that makes the route memorable. Wally's Ralts connection adds narrative weight.
 
+### Route 104
+
+Levels 6-9. Coastal route north of Petalburg, transitioning into Petalburg Woods. Dual biome (grass north / beach south) treated as a single encounter pool. **First area with a permanent weather cycle** — the tutorial biome for the weather system.
+
+#### Weather Cycle
+
+- **Day: Sun** (permanent, set at battle start, overridable by ability/move weather)
+- **Night: Rain** (permanent, same rules)
+- Framing: coastal convection — hot dry days, wet nights. Natural Hoenn geography, not Aqua/Magma interference.
+- Tutorial: NPC dialogue in Petalburg ("Pack a poncho — always rains after sundown on 104") + player observation in first battle.
+- Encounter tables are **not** affected by the cycle — encounters are time-of-day only. Weather and encounters are independent axes.
+
+#### Day Encounters
+
+| Pokemon | Type | Day % | Abilities |
+|---------|------|-------|-----------|
+| Krabby | Water | 25% | Hyper Cutter / Shell Armor / Sheer Force (HA) |
+| Wingull | Water/Flying | 20% | Keen Eye / Hydration / Rain Dish (HA) |
+| Dwebble | Bug/Rock | 15% | Sturdy / Shell Armor / Weak Armor (HA) |
+| Marill | Water/Fairy | 10% | Thick Fat / Huge Power / Sap Sipper (HA) |
+| Taillow | Flying | 10% | Guts / Scrappy (HA) |
+| Wurmple | Bug | 10% | Shield Dust / Run Away |
+| Poochyena | Dark | 4% | Run Away / Quick Feet / Rattled (HA) |
+| Zigzagoon | Normal | 4% | Pickup / Gluttony |
+| Pincurchin | Electric | 2% | Lightning Rod / Electric Surge (HA) |
+
+#### Night Encounters
+
+| Pokemon | Type | Night % | Abilities |
+|---------|------|---------|-----------|
+| Krabby | Water | 30% | Hyper Cutter / Shell Armor / Sheer Force (HA) |
+| Dwebble | Bug/Rock | 24% | Sturdy / Shell Armor / Weak Armor (HA) |
+| Wingull | Water/Flying | 10% | Keen Eye / Hydration / Rain Dish (HA) |
+| Marill | Water/Fairy | 10% | Thick Fat / Huge Power / Sap Sipper (HA) |
+| Spinarak | Bug/Poison | 10% | Swarm / Insomnia / Sniper (HA) |
+| Poochyena | Dark | 10% | Run Away / Quick Feet / Rattled (HA) |
+| Zigzagoon | Normal | 4% | Pickup / Gluttony |
+| Pincurchin | Electric | 2% | Lightning Rod / Electric Surge (HA) |
+
+#### Water/Fishing
+
+- **Surf:** Wingull / Pelipper (unchanged from vanilla).
+- **Fishing (all rods):** Finneon 100%. Lumineon is the coastal swimmer here; Aevian Magikarp remains Serene Pond exclusive.
+- **Corphish/Crawdaunt intentionally absent** from Route 104 (will be placed elsewhere or held for later).
+
+#### Balance Notes
+
+**Density note**: 8-9 mons per day/night pool is above the 5-6 target for single-biome routes. Justified by the dual grass/beach biome character of Route 104. Filler slots (Poochyena/Zigzagoon at 4%) could be pruned if the pool feels crowded in playtesting.
+
+**Krabby**: Flagship beach mon. Kingler has strong Atk and Sheer Force HA boosts Crabhammer/X-Scissor. Early Water access — a key Gym 1 (Roxanne) tool for **Deino players**, who are neutral into Rock and need team-based answers.
+
+**Dwebble**: Bug/Rock — defensively mediocre (weak to Rock/Water/Steel) but **Crustle + Shell Smash** is a legit sweeper. Shell Armor HA blocks crits. Good long-term project.
+
+**Marill**: Huge Power HA doubles Attack. Azumarill + Aqua Jet is a classic priority bruiser. Plays into the Azurill pipeline from Route 102. Water/Fairy gives team coverage against Dark/Dragon threats long-term (including mirror-match starter fights).
+
+**Wingull**: Carries from Route 103. Pelipper Drizzle is core to the weather pillar but evolves mid-game (~L25).
+
+**Taillow**: Vanilla pure Flying. Guts + Flame/Toxic Orb is a classic combo for Swellow. Fast glass cannon.
+
+**Pincurchin**: Rare (2%) pure Electric. **Electric Surge HA** sets Electric Terrain — unique early terrain mechanic access. Pre-Wattson Electric coverage. Commitment catch via DexNav or patience.
+
+**Spinarak / Wurmple / Poochyena / Zigzagoon**: Filler overlap with earlier routes. Keeps Route 104 feeling connected to the rest of early Hoenn.
+
+**No Corphish**: Intentional. Crawdaunt is strong but placing it here alongside Krabby would be two beach-crustacean lines — thematic overlap. Reserved for later placement or intentional cut.
+
 ## Gameplay Arcs
 
 ### Rival Battle 1 - Route 103.
 
-Only starters available.
+Only starters available. Rival takes the other starter (mirror match).
 
-Player -- Rival
+| Player | Rival | Notes |
+|--------|-------|-------|
+| Axew | Deino | Pure Dragon-on-Dragon. Axew's physical bulk + Steel typing advantage vs most early non-STAB moves; Deino's Dragon Rage floors 40 damage. Test: does Axew 2-shot, or does Deino's Dragon Rage + Bite bring it close? |
+| Deino | Axew | Same battle inverted. Deino's special bulk is worse but Dragon Rage doesn't scale off Atk. Test: is the flat damage enough to threaten Axew? |
 
-Roggen vs Machop: No problems.
-Machop vs Pikipek: TODO, test.
-Pikipek vs Roggen: TODO, test.
+No type advantage either way — both are Dragon. The fight is about stats, abilities (Rivalry vs Hustle), and move access at L5-7.
 
 ### Next??
 
