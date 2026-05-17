@@ -26,6 +26,10 @@ PetalburgWoods_EventScript_DevonResearcherLeft::
 	applymovement LOCALID_PETALBURG_WOODS_GRUNT, PetalburgWoods_Movement_AquaApproachPlayer
 	waitmovement 0
 	msgbox PetalburgWoods_Text_NoOneCrossesTeamAqua, MSGBOX_DEFAULT
+	closemessage
+	addobject LOCALID_PETALBURG_WOODS_AQUA_GRUNT_2
+	applymovement LOCALID_PETALBURG_WOODS_AQUA_GRUNT_2, PetalburgWoods_Movement_Aqua2ApproachResearcherLeft
+	waitmovement 0
 	trainerbattle_no_intro TRAINER_GRUNT_PETALBURG_WOODS, PetalburgWoods_Text_YoureKiddingMe
 	applymovement LOCALID_PETALBURG_WOODS_GRUNT, PetalburgWoods_Movement_AquaBackOff
 	waitmovement 0
@@ -62,6 +66,10 @@ PetalburgWoods_EventScript_DevonResearcherRight::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	msgbox PetalburgWoods_Text_NoOneCrossesTeamAqua, MSGBOX_DEFAULT
+	closemessage
+	addobject LOCALID_PETALBURG_WOODS_AQUA_GRUNT_2
+	applymovement LOCALID_PETALBURG_WOODS_AQUA_GRUNT_2, PetalburgWoods_Movement_Aqua2ApproachResearcherRight
+	waitmovement 0
 	trainerbattle_no_intro TRAINER_GRUNT_PETALBURG_WOODS, PetalburgWoods_Text_YoureKiddingMe
 	applymovement LOCALID_PETALBURG_WOODS_GRUNT, PetalburgWoods_Movement_AquaBackOff
 	waitmovement 0
@@ -83,8 +91,10 @@ PetalburgWoods_EventScript_DevonResearcherPostBattle::
 	msgbox PetalburgWoods_Text_YouveGotSomeNerve, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_PETALBURG_WOODS_GRUNT, PetalburgWoods_Movement_AquaRunAway
+	applymovement LOCALID_PETALBURG_WOODS_AQUA_GRUNT_2, PetalburgWoods_Movement_Aqua2RunAway
 	waitmovement 0
 	removeobject LOCALID_PETALBURG_WOODS_GRUNT
+	removeobject LOCALID_PETALBURG_WOODS_AQUA_GRUNT_2
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	msgbox PetalburgWoods_Text_ThatWasAwfullyClose, MSGBOX_DEFAULT
@@ -235,6 +245,32 @@ PetalburgWoods_Movement_AquaEntrance:
 
 PetalburgWoods_Movement_AquaApproachPlayer:
 	walk_down
+	step_end
+
+PetalburgWoods_Movement_Aqua2ApproachResearcherLeft:
+	walk_fast_up
+	walk_fast_up
+	step_end
+
+PetalburgWoods_Movement_Aqua2ApproachResearcherRight:
+	walk_fast_up
+	walk_fast_right
+	walk_fast_up
+	step_end
+
+PetalburgWoods_Movement_Aqua2RunAway:
+	walk_fast_right
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_left
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	delay_16
+	delay_16
 	step_end
 
 PetalburgWoods_EventScript_Boy1::
