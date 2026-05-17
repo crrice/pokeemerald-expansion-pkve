@@ -98,8 +98,8 @@ static const struct WindowTemplate sWindowTemplate_StarterLabel =
 
 static const u8 sPokeballCoords[STARTER_MON_COUNT][2] =
 {
-    {90, 72},
-    {150, 72},
+    {88, 72},
+    {152, 72},
 };
 
 static const u8 sStarterLabelCoords[STARTER_MON_COUNT][2] =
@@ -200,8 +200,8 @@ static const struct OamData sOam_StarterCircle =
 
 static const u8 sCursorCoords[][2] =
 {
-    {90, 40},
-    {150, 40},
+    {88, 40},
+    {152, 40},
 };
 
 static const union AnimCmd sAnim_Hand[] =
@@ -603,6 +603,8 @@ static void ClearStarterLabel(void)
     sStarterLabelWindowId = WINDOW_NONE;
     SetGpuReg(REG_OFFSET_WIN0H, 0);
     SetGpuReg(REG_OFFSET_WIN0V, 0);
+    DrawStdFrameWithCustomTileAndPalette(0, FALSE, 0x2A8, 0xD);
+    PutWindowTilemap(0);
     ScheduleBgCopyTilemapToVram(0);
 }
 
