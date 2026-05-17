@@ -40,10 +40,14 @@ High-level tasks to implement.
 - [ ] Rusturf Tunnel Divergence Scene (core story rework)
   - Goal: Front-load the Hero/Anti-hero choice to BEFORE the first gym. Players face the Rubicon while seasoned Emerald veterans go "wait, something's wrong."
   - See `memory/tunnel_divergence.md` for the full design spec.
-  - **Petalburg Woods rewrite:**
-    - Two Aqua grunts ambush the Devon researcher
-    - Player fights one ("I'll hold them off!"), the other flees west with goods
-    - Researcher: "They took it! West, toward Rustboro!"
+  - **Petalburg Woods rewrite (DECIDE v1 vs v2 NEXT SESSION):**
+    - v1 (currently implemented, scaffolding only, dialogue still vanilla): pincer staging — researcher confronted as in vanilla, male Aqua grunt issues "no one crosses" challenge, female grunt sneaks in from south during the standoff and dashes to the researcher, then trainer battle vs male grunt, both flee. Preserves combat. Subtle divergence — most vanilla players won't notice on first pass.
+    - v2 (proposed alternative): researcher finds his Shroomish in the woods (dialogue tweak, no grunt encounter), exits north alone. Player exits woods to find him on the ground just outside: "They ambushed me and stole my papers." No combat in this segment. The vanilla "I would have ambushed you" beat is preserved — Aqua just got him at a different moment.
+    - Why v2 might be better: immediate "this isn't vanilla" signal on one of the earliest scenes. Veterans get both a "what the hell" moment and a prediction-payoff if they correctly anticipate "uh oh, he's going to get jumped." Fits hero archetype's "always one step behind, catching up" framing.
+    - Why v1 might be better: preserves the woods battle (XP, agency, encounter pacing). Pincer foreshadows the Rusturf Tunnel misdirection geometrically.
+    - Open detail for v2: should the player WITNESS the grunts fleeing in the distance as they exit the woods (visible-but-uncatchable, more memorable), or arrive purely to the aftermath (cleaner read)?
+    - Switch cost if v2 wins: rewrite woods script (remove grunts from scene), add new Route 104 scene with prone researcher, repurpose or remove `FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT_2` and the pincer movements in scripts.inc. Most existing scaffolding is reusable for the Route 104 aftermath scene.
+    - Either way, researcher line: "They took it! [West, toward Rustboro!] / [Somewhere on the road north…]"
   - **Rustboro gym closure:**
     - Sign on gym door / attendant NPC: "Leader Roxanne is assisting the Devon Corporation."
     - Rustboro NPCs and Devon Corp staff redirect player toward Route 116
