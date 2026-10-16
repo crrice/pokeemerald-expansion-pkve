@@ -31,6 +31,7 @@ Spec: `DIVERGENCE_THEORY.md` (The Tunnel, The Rubicon, The Devon Goods) and `ROA
 
 One area at a time: design the table in `BALANCE.md` first, then implement.
 
+- [ ] [ready] Route 104: implement the day/night tables and Finneon fishing already designed in `BALANCE.md`. The live table is still vanilla.
 - [ ] [refine] Petalburg Woods
 - [ ] [refine] Route 116
 - [ ] [refine] Rusturf Tunnel interior
@@ -129,7 +130,7 @@ What exists today, one line per feature. Details live in git history and the des
 
 - Starter swap: Axew/Deino pair (Axew line Dragon/Steel, evolution levels, early learnsets in `gen_9.h`)
 - Petalburg Woods rewrite + Route 104 Devon Goods theft (v2), sets `VAR_PETALBURG_WOODS_STATE` = 2
-- Time-of-day encounters: Routes 101-104, Serene Pond, Oldale Ruins (tables in `BALANCE.md`), fake RTC at 60x for testing
+- Time-of-day encounters: Routes 101-103, Serene Pond, Oldale Ruins (tables in `BALANCE.md`), fake RTC at 60x for testing
 - Oldale Ruins area and Berry Farmer's House; Oldale girl hints at the berry quest
 - Quest menu (ported from [ghoulslash/pokeemerald quest-menu](https://github.com/ghoulslash/pokeemerald/tree/pokemon_unbound/quest-menu)) and quests: Berry Thief (Phantump cutscene, farmer's berry shop), Field Research
 - DexNav enabled (flags/vars assigned, granted in Birch's lab, shown in the start menu)
