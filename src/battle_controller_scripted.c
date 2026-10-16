@@ -986,7 +986,7 @@ const u8 *GetScriptedBattleAnnouncerMsg(u32 slideId)
     {
     case TRAINER_SLIDE_BEFORE_FIRST_TURN:
         return sCurrentScriptedBattle->announcer_BeforeFirstTurn;
-    case TRAINER_SLIDE_LAST_SWITCHIN:
+    case TRAINER_SLIDE_SELF_LAST_SWITCHIN:
         return sCurrentScriptedBattle->announcer_LastSwitchIn;
     case TRAINER_SLIDE_BATTLE_WON:
         return sCurrentScriptedBattle->announcer_BattleEnd;

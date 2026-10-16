@@ -377,8 +377,8 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
             case TRAINER_SLIDE_BEFORE_FIRST_TURN:
                 shouldRun = TRUE;
                 break;
-            case TRAINER_SLIDE_LAST_SWITCHIN:
-                shouldRun = ShouldRunTrainerSlideLastSwitchIn(battler);
+            case TRAINER_SLIDE_SELF_LAST_SWITCHIN:
+                shouldRun = ShouldRunTrainerSlideLastSwitchIn(battler, slideId);
                 break;
             default:
                 return TRAINER_SLIDE_TARGET_NONE;
