@@ -126,6 +126,13 @@ My favorite gimmick and the easiest to balance (maybe) and most fun IMO. No othe
 - Should be using mega evos from gym 4 onward.
 - Should have a lot of stones by gym 6-7.
 
+#### Revival Blessing → Mega Restore (under consideration)
+
+- **The change:** If a mega-evolved Pokemon is KO'd and later revived via Revival Blessing, it returns in its mega form rather than its base form.
+- **Source:** Pokemon Champions, Regulation M-C update (2026-09-09). Observed on op.gg's Champions move page; not yet corroborated by Serebii or the update's official patch note summaries, so treat as one-source until confirmed.
+- **Our lean:** Scope to Revival Blessing only — not bag Revives / Max Revives. Rationale: the moveslot + 1 PP cost is a real deckbuilding trade, whereas letting a $2000 bag item restore mega form effectively deletes the once-per-battle scarcity that makes mega a real commitment. Champions can afford the broader rule because it has no in-battle bag; a single-player Emerald pace doesn't have that safety valve.
+- **Status:** Idea only. Revisit once Revival Blessing distribution in this hack is decided (Gen 9 mons like Pawmot/Sneasler need to actually be reachable for this to matter).
+
 ### QOL
 
 I hate grinding. But I like RP. Overall focus on letting the player customize their own experience.
