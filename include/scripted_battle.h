@@ -51,9 +51,9 @@ struct ScriptedBattle
     // Display info
     const u8 *playerName;
     const u8 *opponentName;
-    enum TrainerPicID playerBackPic;       // TRAINER_PIC_BACK_* constant
-    enum TrainerPicID opponentTrainerPic;  // TRAINER_PIC_FRONT_* constant
-    enum TrainerPicID announcerTrainerPic; // TRAINER_PIC_FRONT_* constant for slide-in announcer (0 = use opponent pic)
+    enum TrainerPicID playerBackPic;       // TRAINER_PIC_* constant with a back pic
+    enum TrainerPicID opponentTrainerPic;  // TRAINER_PIC_* constant
+    enum TrainerPicID announcerTrainerPic; // TRAINER_PIC_* constant for slide-in announcer (0 = use opponent pic)
     u16 opponentTrainerId;  // TRAINER_* constant for name display (e.g., TRAINER_NORMAN_1)
 
     // Battle configuration
