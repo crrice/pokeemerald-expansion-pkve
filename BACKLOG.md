@@ -5,26 +5,24 @@ High-level tasks to implement.
 ## To Do
 
 - [ ] Starter Redesign Follow-ups (Axew + Deino pair — core swap done, rest outstanding)
-  - [ ] **VAR_STARTER_MON case cleanup** — Routes 104, 110, 119, Rustboro, Lilycove, Mauville Game Corner, Petalburg Pokecenter still have 3-case switches. Remove case 2.
+  - [ ] **VAR_STARTER_MON case cleanup** — Route 103 done. Routes 104, 110, 119, Rustboro, Lilycove, Mauville Game Corner, Petalburg Pokecenter still have 3-case switches. Remove case 2.
   - [ ] **Later rival battles** — Route 104, 110, 119, Rustboro, Lilycove rival teams still reference old starter lines (Grovyle/Combusken/Marshtomp etc). Full rival team redesign.
   - [ ] **Rival identity pass** — Brendan aggro (sun→rain weathers), May stall (sand→hail weathers). Team comp should reflect.
-  - [ ] **Learnset adjustments**
-    - Axew: Assurance ~L3-5, Metal Claw ~L12-15 (Gym 1 Steel STAB), Dual Chop ~L18-20 (Gym 2 Dragon STAB)
-    - Deino: Bite ~L5-6 (pulled from L9), Dragon Breath ~L20-22 (pulled from L32), keep Crunch L20
+  - [x] **Learnset adjustments** — live in `gen_9.h` (the gen_5.h edits never took effect)
+    - Axew: Bite L3, Metal Claw L6 (Gym 1 Steel STAB), Dragon Claw L18 (Gym 2 Dragon STAB). Fraxure/Haxorus get Metal Claw at L1.
+    - Deino: Bite L6, Dragon Breath L16, Crunch L32 (kept as the upgrade to Bite)
   - [ ] **Birch's lab narrative** — 2 pokeballs on the table instead of 3, dialogue pass
   - [ ] **Old trio re-placement** — Pikipek/Machop/Roggenrola as wild/gift mons
     - Machop → Granite Cave (already planned per ROADMAP Segment 4)
     - Roggenrola → Granite Cave or Rusturf Tunnel
     - Pikipek → early route slot (Route 116 area?)
   - [ ] **Starter BST / ability review** — deferred, open question whether Dragon/Steel Haxorus needs any compensatory tuning
-  - [ ] **Starter encounter flags / overworld sprites** — confirm 2-starter flow doesn't break anywhere (TV Dad battle script, Birch rescue, etc.)
+  - [ ] **Starter encounter flags / overworld sprites** — confirm 2-starter flow doesn't break anywhere (TV Dad battle script, Birch rescue, etc.). Starter selection freeze already fixed; rest needs a playtest.
 
-- [ ] Enable DexNav
-  - Set `DEXNAV_ENABLED` to `TRUE` in `include/config/dexnav.h`
-  - Assign flags/vars (`DN_FLAG_*`, `DN_VAR_*`)
-  - Optionally enable `USE_DEXNAV_SEARCH_LEVELS` for per-species tracking
-  - Grant access via script (or deduce from `FLAG_RECEIVED_POKEDEX`)
-  - Consider custom modifications: show all species as silhouettes, allow search when seen (with penalties)
+- [ ] DexNav customizations (core is done, see Done)
+  - Optionally enable `USE_DEXNAV_SEARCH_LEVELS` for per-species tracking (costs 1 save byte per species)
+  - Show all species as silhouettes
+  - Allow search when only seen (with penalties)
 
 - [ ] Early Route Pokemon Additions (in progress)
   - Goal: Give players team options that cover starter weaknesses and carry the "late grower" early game
@@ -40,14 +38,10 @@ High-level tasks to implement.
 - [ ] Rusturf Tunnel Divergence Scene (core story rework)
   - Goal: Front-load the Hero/Anti-hero choice to BEFORE the first gym. Players face the Rubicon while seasoned Emerald veterans go "wait, something's wrong."
   - See `memory/tunnel_divergence.md` for the full design spec.
-  - **Petalburg Woods rewrite (DECIDE v1 vs v2 NEXT SESSION):**
-    - v1 (currently implemented, scaffolding only, dialogue still vanilla): pincer staging — researcher confronted as in vanilla, male Aqua grunt issues "no one crosses" challenge, female grunt sneaks in from south during the standoff and dashes to the researcher, then trainer battle vs male grunt, both flee. Preserves combat. Subtle divergence — most vanilla players won't notice on first pass.
-    - v2 (proposed alternative): researcher finds his Shroomish in the woods (dialogue tweak, no grunt encounter), exits north alone. Player exits woods to find him on the ground just outside: "They ambushed me and stole my papers." No combat in this segment. The vanilla "I would have ambushed you" beat is preserved — Aqua just got him at a different moment.
-    - Why v2 might be better: immediate "this isn't vanilla" signal on one of the earliest scenes. Veterans get both a "what the hell" moment and a prediction-payoff if they correctly anticipate "uh oh, he's going to get jumped." Fits hero archetype's "always one step behind, catching up" framing.
-    - Why v1 might be better: preserves the woods battle (XP, agency, encounter pacing). Pincer foreshadows the Rusturf Tunnel misdirection geometrically.
-    - Open detail for v2: should the player WITNESS the grunts fleeing in the distance as they exit the woods (visible-but-uncatchable, more memorable), or arrive purely to the aftermath (cleaner read)?
-    - Switch cost if v2 wins: rewrite woods script (remove grunts from scene), add new Route 104 scene with prone researcher, repurpose or remove `FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT_2` and the pincer movements in scripts.inc. Most existing scaffolding is reusable for the Route 104 aftermath scene.
-    - Either way, researcher line: "They took it! [West, toward Rustboro!] / [Somewhere on the road north…]"
+  - **Petalburg Woods rewrite (done, v2):**
+    - Woods: no grunts. Researcher finds his Shroomish, says he's heading back to Rustboro, exits north. No battle, no Great Ball.
+    - Route 104, just north of the woods: a grunt runs in, takes the papers on-screen and escapes east before the player can reach him. Researcher: "He's gone… and so are my papers! I have to get to RUSTBORO at once!"
+    - `VAR_PETALBURG_WOODS_STATE` = 2 (theft witnessed) is set but not read yet — the Rustboro gym closure should key off it.
   - **Rustboro gym closure:**
     - Sign on gym door / attendant NPC: "Leader Roxanne is assisting the Devon Corporation."
     - Rustboro NPCs and Devon Corp staff redirect player toward Route 116
@@ -166,7 +160,7 @@ High-level tasks to implement.
     - "30 years and FINALLY" energy
 
 - [ ] Oldale Ruins Expansion (anime-inspired from EP276 "A Ruin with a View")
-  - [ ] Azurill encounter - add to Serene Pond or ruins water area
+  - [ ] Azurill encounter - add to Serene Pond or ruins water area (already on Route 102 day; this is in addition)
   - [ ] "Living fossils" theme - Pokemon unchanged since ancient times (Relicanth, etc.)
   - [ ] Four keys mechanic - sealed inner door, keys found throughout Hoenn
     - Could tie to weather conditions, story beats, or Team Magma/Aqua encounters
@@ -247,6 +241,24 @@ Currently B button catch boost only works when selecting the ball (calculation h
 
 ## Done
 
+- [x] Starter swap: Axew/Deino pair replaces the Pikipek/Machop/Roggenrola trio
+  - Axew line is Dragon/Steel; evolution levels adjusted for both lines
+  - Early learnsets tuned (Metal Claw / Bite at L6, Deino Dragon Breath at L16)
+  - Fixed the starter selection freeze and textbox redraw after the trio-to-duo refactor
+- [x] Petalburg Woods / Route 104 Devon Goods theft (v2, see Rusturf Tunnel item)
+- [x] Enable DexNav (enabled, flags/vars assigned, granted in Birch's lab, shown in start menu)
+- [x] Aevian Magikarp and Gyarados regional variants
+- [x] Quest: "Field Research"
+- [x] Berry Thief follow-up: farmer's berry shop after the quest, Phantump holds a Sitrus Berry
+- [x] EV Trainer key item, IV editing behind a flag
+- [x] Compact start menu
+- [x] Gen 8 Pokemon enabled
+- [x] Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) + lookup skill
+- [x] Bug fixes:
+  - Scripted battle crash on return to overworld after upstream merge
+  - Quest state not cleared on new game
+  - Wally tutorial trainer sprite stuck as black silhouette
+  - Follower respawning after Put Away (follower flag clashed with DexNav's search flag)
 - [x] Wally's Ralts persistence system
   - Tutorial Ralts data (personality, IVs, hidden nature) saved to SaveBlock3
   - TryUpscaleWallyRalts() applies saved data to all future Wally battles
