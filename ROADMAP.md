@@ -2,7 +2,7 @@
 
 This document outlines the intended player progression, availability of key resources, and design rationale for the first act of the game, culminating in the defeat of the second Gym Leader, Brawly.
 
-**Target level range:** Starter L5 → Gym 1 (Roxanne) L12-15 → Gym 2 (Brawly) L18-24. The expanded level curve (see `memory/level_curve.md`) pulls Act 1 longer than vanilla — more time on Routes 101-104 and in Petalburg Woods is expected.
+**Target level range:** Starter L5 → Gym 1 (Roxanne) L12-15 → Gym 2 (Brawly) L18-24. The expanded level curve (per-area levels in `BALANCE.md`) pulls Act 1 longer than vanilla — more time on Routes 101-104 and in Petalburg Woods is expected.
 
 ## Core Design Principles
 

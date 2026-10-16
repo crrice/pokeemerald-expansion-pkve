@@ -37,7 +37,7 @@ High-level tasks to implement.
 
 - [ ] Rusturf Tunnel Divergence Scene (core story rework)
   - Goal: Front-load the Hero/Anti-hero choice to BEFORE the first gym. Players face the Rubicon while seasoned Emerald veterans go "wait, something's wrong."
-  - See `memory/tunnel_divergence.md` for the full design spec.
+  - See `DIVERGENCE_THEORY.md` (The Tunnel, The Rubicon, The Devon Goods) and `ROADMAP.md` Segment 3 for the full design spec.
   - **Petalburg Woods rewrite (done, v2):**
     - Woods: no grunts. Researcher finds his Shroomish, says he's heading back to Rustboro, exits north. No battle, no Great Ball.
     - Route 104, just north of the woods: a grunt runs in, takes the papers on-screen and escapes east before the player can reach him. Researcher: "He's gone… and so are my papers! I have to get to RUSTBORO at once!"
@@ -91,7 +91,7 @@ High-level tasks to implement.
   - **Implementation MVP:** Just Route 104. Battle-start weather hook. NPC tutorial dialogue.
   - **Later polish:** Overworld particles/tints, DexNav weather icon, NPC dialogue variation.
   - **Override:** Story scripts can force weather/clear for cutscenes.
-  - See `memory/weather_cycles.md`.
+  - See `BALANCE.md` (Weather, and the Route 104 Weather Cycle section).
 
 - [ ] Buff existing early route Pokemon
   - Goal: Make vanilla Gen 3 mons competitive with new additions - avoid "old mon bad, new mon good"
