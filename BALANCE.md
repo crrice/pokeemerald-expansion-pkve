@@ -23,10 +23,11 @@ Weather is our main gimmick. Introduced this gen and is the story theme so leani
 
 #### Duration
 
-All weather is permanent until replaced. Weather wars are committal - you override theirs or live with it.
+Two layers:
 
-- Ability-based weather: permanent. Not implemented (one config line: `B_ABILITY_WEATHER` to `GEN_5`).
-- Move-based weather: permanent. Not implemented. [OPEN: an older backlog note had move weather staying 5/8 turns; decide which.]
+- **Battle weather** (moves and abilities): current-gen rules, 5 turns, or 8 with the matching rock item. This is expansion's default (`B_ABILITY_WEATHER` stays `GEN_LATEST`).
+- **Environmental weather** (the area's own weather, "it's raining here today"): lasts until replaced or dispelled, and comes back when a temporary battle weather wears off. Not implemented, and upstream has nothing like it: its Gen 9 option (`B_OVERWORLD_WEATHER_OVERRIDE`) instead blocks weather moves and abilities entirely while overworld weather is present, which we don't want.
+- Open: what dispels environmental weather for good, as opposed to temporarily replacing it.
 
 #### Design Goals
 

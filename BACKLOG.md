@@ -54,7 +54,7 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 
 ### Optional
 
-- [ ] [refine] Route 104 weather cycle prototype (sun by day, rain by night; see `BALANCE.md` Area Weather Cycles). Waits on the expansion 1.17 upgrade (`setstartingstatus`). Open: NPC tutorial dialogue.
+- [ ] [refine] Route 104 weather cycle prototype (sun by day, rain by night; see `BALANCE.md` Area Weather Cycles). Waits on the expansion 1.17 upgrade (`setstartingstatus`). Can start without the environmental-weather restore behavior (Demo 1). Open: NPC tutorial dialogue.
 
 ## Demo 1
 
@@ -69,8 +69,8 @@ Ends at the **Weather Institute on both routes**, the minimum for a real evaluat
 
 ### Weather
 
-- [ ] [ready] Permanent ability weather: set `B_ABILITY_WEATHER` to `GEN_5` (`BALANCE.md`: ability weather is permanent). After the upgrade.
-- [ ] (you: design call) Move-based weather duration: `BALANCE.md` says permanent, an older backlog note said 5/8 turns.
+- [ ] [ready] Keep overworld weather overridable: set `B_OVERWORLD_WEATHER_OVERRIDE` below `GEN_9` after the 1.17 upgrade (Gen 9 makes weather moves and abilities fail while overworld weather is present).
+- [ ] [refine] Environmental weather layer (`BALANCE.md` Weather → Duration): the area weather set at battle start lasts until replaced or dispelled, and comes back when a temporary move/ability weather wears off. Custom battle code on top of `setstartingstatus`. Open: what dispels it for good.
 - [ ] [refine] Area weather cycles for the areas reached by the Weather Institute, after the Route 104 prototype (`BALANCE.md` Area Weather Cycles).
 - [ ] [refine] Weather counterplay timeline: when players get weather setters (Pelipper ~L25, others?), when enemies start using weather, when counters (Utility Umbrella, Cloud Nine/Air Lock users like Psyduck, Safety Goggles) become available. Feeds item placement.
 
