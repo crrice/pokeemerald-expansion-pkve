@@ -29,7 +29,9 @@
 
 enum RpnKind { R_NUM, R_READ, R_BINOP, R_NOT, R_BIT, R_CAP };
 enum Mode { MODE_NONE, MODE_TAP, MODE_HOLD };
-enum OpKind { OP_RUN, OP_UNTIL, OP_EXPECT, OP_CAPTURE, OP_WATCH, OP_SEEN, OP_EXPORTSAVE, OP_SCREENSHOT, OP_STATE };
+enum OpKind { OP_RUN, OP_UNTIL, OP_EXPECT, OP_CAPTURE, OP_WATCH, OP_SEEN, OP_EXPORTSAVE, OP_SCREENSHOT, OP_STATE,
+              OP_TRACK, OP_RECORD, OP_LOGGED, OP_TRANSCRIPT };
+enum TrackWhen { WHEN_CHANGE, WHEN_RISE, WHEN_FALL };
 
 struct RpnTok { enum RpnKind kind; int64_t num; int size; int sign; char op[3]; };
 struct Rpn { int n; struct RpnTok t[MAX_RPN]; };
@@ -40,6 +42,11 @@ struct Op {
     enum Mode mode;
     uint32_t buttons;
     int period, frames, timeout, slot, watch, stable, hasGuard, soft;
+    int negate, update, start, initial, section, skipzero;
+    enum TrackWhen when;
+    char vkind[16], ckind[16], c2kind[16];
+    struct Rpn extra[4];  // TRACK: turn, ctx, ctx2, key
+    int numExtra;
     char text[256];
     char path[512];
     struct Rpn rpn;
@@ -59,6 +66,24 @@ static struct Sym sSyms[MAX_SYMS];
 static int sNumSyms;
 static int64_t sSlots[MAX_SLOTS];
 static char sRom[512], sSav[512], sArtifacts[512];
+// ---- battle transcript recording ----
+#define MAX_TRACKS   64
+#define MAX_LINES    4096
+struct Track { const struct Op *op; int64_t last, lastKey; int primed; };
+static struct Track sTracks[MAX_TRACKS];
+static int sNumTracks, sRecording;
+static char *sLines[2][MAX_LINES];  // section 0 = battle events, 1 = on-screen text
+static int sNumLines[2];
+static char sTranscriptPath[512];
+static uint32_t sTextAddr;
+static int sTextLen;
+static char *sCharmap[256];
+static int sCtrlLen[256];          // EXT_CTRL_CODE_BEGIN code -> length including the code byte
+static uint8_t sSkipPrefix[64];    // ignore captured text starting with these bytes
+static int sSkipPrefixLen;
+static uint32_t sSkipPrefixAddr;
+static uint8_t sLastText[1024];
+
 static struct mCore *sCore;
 static color_t *sVideo;
 static unsigned sWidth, sHeight;
@@ -219,6 +244,49 @@ static void loadPlan(const char *path)
             getKey(head, "path", sArtifacts, sizeof(sArtifacts));
             continue;
         }
+        if (!strcmp(word, "TEXTSRC"))
+        {
+            sTextAddr = (uint32_t)strtoul(getKey(head, "addr", buf, sizeof(buf)) ? buf : "0", NULL, 0);
+            sTextLen = getInt(head, "len", 0);
+            if (sTextLen > (int)sizeof(sLastText))
+                sTextLen = sizeof(sLastText);
+            continue;
+        }
+        if (!strcmp(word, "TEXTSKIP"))
+        {
+            sSkipPrefixAddr = (uint32_t)strtoul(getKey(head, "addr", buf, sizeof(buf)) ? buf : "0", NULL, 0);
+            continue;
+        }
+        if (!strcmp(word, "CHARMAP"))
+        {
+            // lines: "<hex byte>\t<text>"
+            if (!getKey(head, "path", buf, sizeof(buf)))
+                continue;
+            FILE *cf = fopen(buf, "r");
+            if (!cf)
+                die("cannot open charmap %s", buf);
+            char cl[256];
+            while (fgets(cl, sizeof(cl), cf))
+            {
+                char *tab = strchr(cl, '\t');
+                if (!tab)
+                    continue;
+                *tab = 0;
+                tab[1 + strcspn(tab + 1, "\n")] = 0;
+                if (!strncmp(cl, "ctrl ", 5))
+                {
+                    unsigned code = (unsigned)strtoul(cl + 5, NULL, 16);
+                    if (code < 256)
+                        sCtrlLen[code] = atoi(tab + 1);
+                    continue;
+                }
+                unsigned b = (unsigned)strtoul(cl, NULL, 16);
+                if (b < 256 && !sCharmap[b])
+                    sCharmap[b] = strdup(tab + 1);
+            }
+            fclose(cf);
+            continue;
+        }
         if (!strcmp(word, "DIAG"))
         {
             if (sNumDiags >= MAX_DIAGS)
@@ -252,15 +320,52 @@ static void loadPlan(const char *path)
             // text runs to the end of the head (it is always the last key)
             snprintf(op->text, sizeof(op->text), "%s", txt + 6);
             op->text[strcspn(op->text, "\n")] = 0;
+            for (size_t l = strlen(op->text); l && op->text[l - 1] == ' '; l--)
+                op->text[l - 1] = 0;
         }
-        char *guardText = strstr(rpnText, ";;");
-        if (guardText)
+        op->negate = getInt(head, "negate", 0);
+        op->update = getInt(head, "update", 0);
+        op->start = getInt(head, "start", 0);
+        op->initial = getInt(head, "initial", 0);
+        op->section = getInt(head, "section", 0);
+        op->skipzero = getInt(head, "skipzero", 0);  // TRACK: don't log changes to 0 (teardown)
+        if (getKey(head, "when", buf, sizeof(buf)))
+            op->when = !strcmp(buf, "rise") ? WHEN_RISE : !strcmp(buf, "fall") ? WHEN_FALL : WHEN_CHANGE;
+        getKey(head, "vkind", op->vkind, sizeof(op->vkind));
+        getKey(head, "ckind", op->ckind, sizeof(op->ckind));
+        getKey(head, "c2kind", op->c2kind, sizeof(op->c2kind));
+        if (!strcmp(word, "LOGGED"))
         {
-            *guardText = 0;
-            parseRpn(&op->guard, guardText + 2);
+            // the part after '|' is the literal text to search for
+            char *n = rpnText;
+            while (*n == ' ')
+                n++;
+            snprintf(op->path, sizeof(op->path), "%s", n);
+            op->path[strcspn(op->path, "\n")] = 0;
+            op->kind = OP_LOGGED;
+            continue;
+        }
+        // RPN segments separated by ";;". UNTIL: cond ;; guard. TRACK: value ;; turn ;; ctx ;; ctx2 ;; key.
+        char *segs[6] = { rpnText };
+        int numSegs = 1;
+        for (char *p = strstr(rpnText, ";;"); p && numSegs < 6; p = strstr(p, ";;"))
+        {
+            *p = 0;
+            p += 2;
+            segs[numSegs++] = p;
+        }
+        if (!strcmp(word, "TRACK"))
+        {
+            for (int k = 1; k < numSegs; k++)
+                parseRpn(&op->extra[k - 1], segs[k]);
+            op->numExtra = numSegs - 1;
+        }
+        else if (numSegs > 1)
+        {
+            parseRpn(&op->guard, segs[1]);
             op->hasGuard = 1;
         }
-        parseRpn(&op->rpn, rpnText);
+        parseRpn(&op->rpn, segs[0]);
 
         if (!strcmp(word, "RUN"))            op->kind = OP_RUN;
         else if (!strcmp(word, "UNTIL"))     op->kind = OP_UNTIL;
@@ -271,6 +376,10 @@ static void loadPlan(const char *path)
         else if (!strcmp(word, "EXPORTSAVE")) op->kind = OP_EXPORTSAVE;
         else if (!strcmp(word, "SCREENSHOT")) op->kind = OP_SCREENSHOT;
         else if (!strcmp(word, "STATE"))     op->kind = OP_STATE;
+        else if (!strcmp(word, "TRACK"))     op->kind = OP_TRACK;
+        else if (!strcmp(word, "RECORD"))    op->kind = OP_RECORD;
+        else if (!strcmp(word, "LOGGED"))    op->kind = OP_LOGGED;
+        else if (!strcmp(word, "TRANSCRIPT")) op->kind = OP_TRANSCRIPT;
         else
             die("unknown plan op '%s'", word);
     }
@@ -417,6 +526,202 @@ static void printDiagnostics(void)
     }
 }
 
+// ---- transcript ----
+
+static void addLine(int section, const char *line)
+{
+    if (sNumLines[section] < MAX_LINES)
+        sLines[section][sNumLines[section]++] = strdup(line);
+}
+
+static void formatName(char *out, size_t size, const char *kind, int64_t v)
+{
+    const char *n = kind[0] ? lookupName(kind, (uint32_t)v) : NULL;
+    if (n)
+        snprintf(out, size, "%s", n);
+    else
+        snprintf(out, size, "%lld", (long long)v);
+}
+
+// Expand a track template: {turn} {old} {new} {ctx} {ctx2}
+static void emitTrack(const struct Op *op, int64_t oldV, int64_t newV)
+{
+    char out[512] = "", tmp[128];
+    const char *t = op->text;
+    while (*t && strlen(out) < sizeof(out) - 64)
+    {
+        if (*t == '{')
+        {
+            const char *end = strchr(t, '}');
+            if (!end)
+                break;
+            size_t n = end - t - 1;
+            #define IS(name) (n == strlen(name) && !strncmp(t + 1, name, n))
+            tmp[0] = 0;
+            if (IS("turn") && op->numExtra >= 1)
+                snprintf(tmp, sizeof(tmp), "%lld", (long long)eval(&op->extra[0]));
+            else if (IS("old"))
+                formatName(tmp, sizeof(tmp), op->vkind, oldV);
+            else if (IS("new"))
+                formatName(tmp, sizeof(tmp), op->vkind, newV);
+            else if (IS("ctx2") && op->numExtra >= 3)
+                formatName(tmp, sizeof(tmp), op->c2kind, eval(&op->extra[2]));
+            else if (IS("ctx") && op->numExtra >= 2)
+                formatName(tmp, sizeof(tmp), op->ckind, eval(&op->extra[1]));
+            #undef IS
+            strcat(out, tmp);
+            t = end + 1;
+        }
+        else
+        {
+            size_t l = strlen(out);
+            out[l] = *t++;
+            out[l + 1] = 0;
+        }
+    }
+    addLine(0, out);
+}
+
+static void sampleTracks(int force)
+{
+    for (int i = 0; i < sNumTracks; i++)
+    {
+        struct Track *tr = &sTracks[i];
+        int64_t v = eval(&tr->op->rpn);
+        int64_t key = tr->op->numExtra >= 4 && tr->op->extra[3].n ? eval(&tr->op->extra[3]) : 0;
+        if (tr->primed && key != tr->lastKey)
+        {
+            // the thing being tracked was replaced (e.g. a switch-in): resync silently
+            tr->lastKey = key;
+            tr->last = v;
+            continue;
+        }
+        if (!tr->primed)
+        {
+            tr->primed = 1;
+            tr->last = v;
+            tr->lastKey = key;
+            if (force && tr->op->initial)
+                emitTrack(tr->op, v, v);
+            continue;
+        }
+        if (v == tr->last)
+            continue;
+        int fire = tr->op->when == WHEN_CHANGE || (tr->op->when == WHEN_RISE && v > tr->last)
+                || (tr->op->when == WHEN_FALL && v < tr->last);
+        if (fire && !(tr->op->skipzero && v == 0))
+            emitTrack(tr->op, tr->last, v);
+        tr->last = v;
+    }
+}
+
+// On-screen battle text: decode the message buffer when it changes.
+static void sampleText(void)
+{
+    if (!sTextAddr || sTextLen <= 0)
+        return;
+    uint8_t cur[1024];
+    for (int i = 0; i < sTextLen; i++)
+        cur[i] = sCore->rawRead8(sCore, sTextAddr + i, -1);
+    if (!memcmp(cur, sLastText, sTextLen))
+        return;
+    memcpy(sLastText, cur, sTextLen);
+    if (sSkipPrefixAddr && !sSkipPrefixLen)
+    {
+        // read the prefix string from ROM once (up to EOS)
+        for (int i = 0; i < (int)sizeof(sSkipPrefix); i++)
+        {
+            uint8_t b = sCore->rawRead8(sCore, sSkipPrefixAddr + i, -1);
+            if (b == 0xFF)
+                break;
+            sSkipPrefix[sSkipPrefixLen++] = b;
+        }
+    }
+    if (sSkipPrefixLen && !memcmp(cur, sSkipPrefix, sSkipPrefixLen))
+        return;
+    char out[1024] = "";
+    for (int i = 0; i < sTextLen && cur[i] != 0xFF && strlen(out) < sizeof(out) - 16; i++)
+    {
+        uint8_t b = cur[i];
+        if (b == 0xFC && i + 1 < sTextLen)  // control code: skip it and its arguments
+            i += sCtrlLen[cur[i + 1]] ? sCtrlLen[cur[i + 1]] : 1;
+        else if (b == 0xFA || b == 0xFB || b == 0xFE)
+            strcat(out, " ");   // scroll / paragraph / newline
+        else if (sCharmap[b])
+            strcat(out, sCharmap[b]);
+    }
+    // collapse repeated spaces, trim
+    char clean[1024];
+    int j = 0;
+    for (int i = 0; out[i]; i++)
+        if (!(out[i] == ' ' && (j == 0 || clean[j - 1] == ' ')))
+            clean[j++] = out[i];
+    while (j && clean[j - 1] == ' ')
+        j--;
+    clean[j] = 0;
+    if (j && (!sNumLines[1] || strcmp(sLines[1][sNumLines[1] - 1], clean)))
+        addLine(1, clean);
+}
+
+static void writeTranscript(const char *path)
+{
+    FILE *f = fopen(path, "w");
+    if (!f)
+        return;
+    fprintf(f, "# battle\n");
+    for (int i = 0; i < sNumLines[0]; i++)
+        fprintf(f, "%s\n", sLines[0][i]);
+    fprintf(f, "# text\n");
+    for (int i = 0; i < sNumLines[1]; i++)
+        fprintf(f, "%s\n", sLines[1][i]);
+    fclose(f);
+}
+
+// Compare the recording to a golden file section by section.
+// Returns 0 if both match, else prints the first difference of each section that differs.
+static int compareTranscript(const char *golden, int line)
+{
+    FILE *f = fopen(golden, "r");
+    if (!f)
+    {
+        printf("FAIL line %d: no golden transcript at %s (run with --update-golden to create it)\n", line, golden);
+        return 1;
+    }
+    char *glines[2][MAX_LINES];
+    int gn[2] = { 0, 0 }, section = 0;
+    char buf[1024];
+    while (fgets(buf, sizeof(buf), f))
+    {
+        buf[strcspn(buf, "\n")] = 0;
+        if (!strcmp(buf, "# battle")) { section = 0; continue; }
+        if (!strcmp(buf, "# text"))   { section = 1; continue; }
+        if (gn[section] < MAX_LINES)
+            glines[section][gn[section]++] = strdup(buf);
+    }
+    fclose(f);
+    static const char *names[2] = { "battle events", "on-screen text" };
+    int bad[2] = { 0, 0 };
+    for (int s = 0; s < 2; s++)
+    {
+        int n = gn[s] > sNumLines[s] ? gn[s] : sNumLines[s];
+        for (int i = 0; i < n; i++)
+        {
+            const char *g = i < gn[s] ? glines[s][i] : "(nothing)";
+            const char *r = i < sNumLines[s] ? sLines[s][i] : "(nothing)";
+            if (strcmp(g, r))
+            {
+                printf("FAIL line %d: transcript %s differ from %s at entry %d\n", line, names[s], golden, i + 1);
+                printf("    expected: %s\n    got:      %s\n", g, r);
+                bad[s] = 1;
+                break;
+            }
+        }
+    }
+    if (bad[1] && !bad[0])
+        printf("    (only the wording changed: the battle itself played out as expected)\n");
+    return bad[0] || bad[1];
+}
+
 // ---- execution ----
 
 static void runFrame(uint32_t keys)
@@ -424,6 +729,11 @@ static void runFrame(uint32_t keys)
     sCore->setKeys(sCore, keys);
     sCore->runFrame(sCore);
     sFrame++;
+    if (sRecording)
+    {
+        sampleTracks(0);
+        sampleText();
+    }
     for (int i = 0; i < MAX_WATCHES; i++)
         if (sWatches[i].active && !sWatches[i].seen && eval(&sWatches[i].rpn))
             sWatches[i].seen = 1;
@@ -546,8 +856,51 @@ int main(int argc, char **argv)
             printf("info line %-4d %s\n", op->line, op->text);
             printState();
             break;
+        case OP_TRACK:
+            if (sNumTracks < MAX_TRACKS)
+                sTracks[sNumTracks++].op = op;
+            break;
+        case OP_RECORD:
+            if (op->start)
+            {
+                snprintf(sTranscriptPath, sizeof(sTranscriptPath), "%s", op->path);
+                for (int i = 0; i < sNumTracks; i++)
+                    sTracks[i].primed = 0;
+                memset(sLastText, 0, sizeof(sLastText));
+                sRecording = 1;
+                sampleTracks(1);
+                sampleText();
+            }
+            else
+            {
+                sRecording = 0;
+                writeTranscript(sTranscriptPath);
+            }
+            break;
+        case OP_LOGGED:
+        {
+            int found = 0;
+            for (int i = 0; i < sNumLines[op->section] && !found; i++)
+                found = strstr(sLines[op->section][i], op->path) != NULL;
+            if (found == op->negate)
+            {
+                printf("FAIL line %d: %s: %s\n", op->line, op->negate ? "unexpectedly recorded" : "never recorded", op->text);
+                failed = 1;
+            }
+            break;
         }
-        if (!failed && op->text[0] && op->kind != OP_CAPTURE && op->kind != OP_WATCH && op->kind != OP_STATE)
+        case OP_TRANSCRIPT:
+            if (op->update)
+            {
+                writeTranscript(op->path);
+                printf("info line %-4d golden transcript updated: %s\n", op->line, op->path);
+            }
+            else if (compareTranscript(op->path, op->line))
+                failed = 1;
+            break;
+        }
+        if (!failed && op->text[0] && op->kind != OP_CAPTURE && op->kind != OP_WATCH && op->kind != OP_STATE
+            && op->kind != OP_TRACK && op->kind != OP_RECORD)
             printf("ok   line %-4d %6ld frames  %s\n", op->line, sFrame - start, op->text);
     }
 

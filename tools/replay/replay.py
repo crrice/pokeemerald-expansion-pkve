@@ -41,7 +41,7 @@ BASE_HEADERS = [
     'global.h', 'main.h', 'task.h', 'palette.h', 'script.h', 'event_data.h', 'field_message_box.h',
     'field_player_avatar.h', 'event_object_movement.h', 'fieldmap.h', 'battle.h',
     'constants/battle.h', 'constants/flags.h', 'constants/vars.h', 'constants/maps.h',
-    'constants/species.h', 'constants/items.h', 'constants/moves.h',
+    'constants/species.h', 'constants/items.h', 'constants/moves.h', 'constants/characters.h',
 ]
 
 ARM_CFLAGS = ['-mthumb', '-mthumb-interwork', '-O0', '-mabi=apcs-gnu', '-mtune=arm7tdmi',
@@ -83,11 +83,39 @@ class Resolver:
 
     def name_tables(self):
         lines = [f"map {value:x} {name}" for name, value in self.map_constants().items()]
+        lines += self.kind_tables()
         for name, addrs in self.syms.items():
             # Only real memory addresses (EWRAM/IWRAM/ROM); skips absolute constants like ABILITY_NONE = 0.
             if len(addrs) == 1 and addrs[0] >= 0x02000000 and not name.startswith('$'):
                 lines.append(f"sym {addrs[0]:x} {name}")
         return '\n'.join(lines) + '\n'
+
+    NAME_KINDS = {
+        'species': ('include/constants/species.h', 'SPECIES_'),
+        'ability': ('include/constants/abilities.h', 'ABILITY_'),
+        'move': ('include/constants/moves.h', 'MOVE_'),
+        'outcome': ('include/constants/battle.h', 'B_OUTCOME_'),
+    }
+
+    def kind_names(self, kind):
+        """Names declared for a kind (e.g. every SPECIES_x), in header order."""
+        path, prefix = self.NAME_KINDS[kind]
+        pat = re.compile(rf'^\s*(?:#define\s+)?({prefix}[A-Z0-9_]+)\b(?!\()\s*(?:=|,|\s+\S)')
+        names = []
+        for line in open(os.path.join(ROOT, path)):
+            m = pat.match(line)
+            if m and m.group(1) not in names and not m.group(1).endswith(('_COUNT', '_START', '_END')):
+                names.append(m.group(1))
+        return names
+
+    def kind_tables(self):
+        """name-table lines for every kind: '<kind> <hex> <SHORT_NAME>' (prefix stripped)."""
+        lines = []
+        for kind, (_, prefix) in self.NAME_KINDS.items():
+            for name in self.kind_names(kind):
+                if name in self.constants:
+                    lines.append(f"{kind} {self.constants[name] & 0xFFFFFFFF:x} {name[len(prefix):]}")
+        return lines
 
     def map_constants(self):
         if not hasattr(self, '_maps'):
@@ -225,6 +253,58 @@ class Compiler:
         coord = self.off('ObjectEvent', f'currentCoords.{axis}')
         return f"{self.player_object()} {coord} + rs16 {self.r.const('MAP_OFFSET')} -"
 
+    def read(self, addr, size, signed=False):
+        """RPN reading SIZE bytes at a fixed address. The GBA bus can't do misaligned reads,
+        so misaligned fields (struct BattlePokemon is packed) are assembled from bytes."""
+        if addr % size == 0:
+            return f"{addr} r{'s' if signed else ''}{size * 8}"
+        parts = [f"{addr + i} r8" + (f" {8 * i} <<" if i else '') for i in range(size)]
+        return ' '.join(parts) + ' |' * (size - 1)
+
+    BATTLE_SIDES = {'player': 0, 'opponent': 1}  # singles: battler id = position
+    BATTLER_FIELDS = {'species': 'species', 'hp': 'hp', 'maxhp': 'maxHP', 'ability': 'ability',
+                      'level': 'level', 'status': 'status1'}
+
+    def battler_field(self, side, field):
+        if side not in self.BATTLE_SIDES:
+            raise ReplayError(f"battler side must be player or opponent, not '{side}'")
+        m = re.fullmatch(r'(pp|move)([0-3])', field)
+        if m:
+            member, slot = ('pp', int(m.group(2))) if m.group(1) == 'pp' else ('moves', int(m.group(2)))
+            size = self.r.const(f'sizeof(((struct BattlePokemon *)0)->{member}[0])')
+            off = self.off('BattlePokemon', member) + slot * size
+        elif field in self.BATTLER_FIELDS:
+            member = self.BATTLER_FIELDS[field]
+            size = self.r.const(f'sizeof(((struct BattlePokemon *)0)->{member})')
+            off = self.off('BattlePokemon', member)
+        else:
+            raise ReplayError(f"unknown battler field '{field}' (species, hp, maxhp, ability, level, status, pp0-3, move0-3)")
+        base = self.r.symbol('gBattleMons') + self.BATTLE_SIDES[side] * self.r.const('sizeof(struct BattlePokemon)')
+        return self.read(base + off, size)
+
+    def battle_tracks(self):
+        """TRACK ops recording a singles battle (see record-battle)."""
+        turn = f"{self.read(self.r.symbol('gBattleTurnCounter'), 2)} 1 +"
+        ops = []
+        for side in self.BATTLE_SIDES:
+            sp, hp = self.battler_field(side, 'species'), self.battler_field(side, 'hp')
+            ops.append(f"TRACK when=change initial=1 skipzero=1 vkind=species text=turn {{turn}} {side} sends out {{new}} (hp {{ctx2}})"
+                       f" | {sp} ;; {turn} ;; 0 ;; {hp}")
+            ops.append(f"TRACK when=change ckind=species text=turn {{turn}} {side} {{ctx}} hp {{old}} -> {{new}}"
+                       f" | {hp} ;; {turn} ;; {sp} ;; 0 ;; {sp}")
+            ops.append(f"TRACK when=rise ckind=species text=turn {{turn}} {side} {{ctx}} faints"
+                       f" | {hp} 0 == {sp} 0 != && ;; {turn} ;; {sp}")
+            ops.append(f"TRACK when=change vkind=ability ckind=species text=turn {{turn}} {side} {{ctx}} ability {{old}} -> {{new}}"
+                       f" | {self.battler_field(side, 'ability')} ;; {turn} ;; {sp} ;; 0 ;; {sp}")
+            ops.append(f"TRACK when=change ckind=species text=turn {{turn}} {side} {{ctx}} status {{old}} -> {{new}}"
+                       f" | {self.battler_field(side, 'status')} ;; {turn} ;; {sp} ;; 0 ;; {sp}")
+            for slot in range(4):
+                ops.append(f"TRACK when=fall ckind=move c2kind=species text=turn {{turn}} {side} {{ctx2}} uses {{ctx}}"
+                           f" | {self.battler_field(side, f'pp{slot}')} ;; {turn} ;; "
+                           f"{self.battler_field(side, f'move{slot}')} ;; {sp} ;; {sp}")
+        ops.append(f"TRACK when=change vkind=outcome text=result {{new}} | {self.r.symbol('gBattleOutcome')} r8")
+        return ops
+
     def bitfield(self, base, st, field, rpn_base=False):
         """RPN reading a bitfield; base is an address, or an RPN fragment when rpn_base."""
         off, low, width = self.r.probes[(st, field)]
@@ -327,6 +407,10 @@ class Compiler:
             return f"{addr} r8 {self.r.const('T_NOT_MOVING')} =="
         if w == 'player-facing' and len(t) == 2:
             return f"{self.bitfield(self.player_object() , 'ObjectEvent', 'facingDirection', rpn_base=True)} {self.number(t[1])} =="
+        if w == 'battler' and len(t) == 5 and t[3] in CMP_OPS:
+            return f"{self.battler_field(t[1], t[2])} {self.number(t[4])} {t[3]}"
+        if w == 'battle-outcome' and len(t) == 3 and t[1] in CMP_OPS:
+            return f"{self.r.symbol('gBattleOutcome')} r8 {self.number(t[2])} {t[1]}"
         if w == 'party-count' and len(t) == 3 and t[1] in CMP_OPS:
             return f"{self.r.symbol('gPlayerPartyCount')} r8 {self.number(t[2])} {t[1]}"
         if w in ('mem8', 'mem16', 'mem32') and len(t) == 4 and t[2] in CMP_OPS:
@@ -458,16 +542,23 @@ def collect_names(lines):
             if re.fullmatch(r'[A-Z][A-Z0-9_]{2,}', w) and w not in BUTTONS and not w.startswith('MAP_'):
                 exprs.add(w)
     exprs |= set(FACING.values())
+    exprs |= {'sizeof(struct BattlePokemon)', 'sizeof(gDisplayedStringBattle)'}
+    for member in ('species', 'hp', 'maxHP', 'ability', 'level', 'status1', 'pp[0]', 'moves[0]'):
+        exprs.add(f'sizeof(((struct BattlePokemon *)0)->{member})')
+    for member in ('species', 'hp', 'maxHP', 'ability', 'level', 'status1', 'pp', 'moves'):
+        exprs.add(f'__builtin_offsetof(struct BattlePokemon, {member})')
     exprs |= {'T_NOT_MOVING', '__builtin_offsetof(struct PlayerAvatar, tileTransitionState)'}
     return exprs, {('Main', 'inBattle'), ('PaletteFadeControl', 'active'), ('ObjectEvent', 'facingDirection')}
 
 
-def compile_scenario(path, params, resolver):
+def compile_scenario(path, params, resolver, artifacts, update_golden=False):
     lines = list(load_lines(path, params))
     for _, _, words, _ in lines:
         if words[0] == 'header':
             resolver.headers.extend(words[1:])
     exprs, probes = collect_names(lines)
+    for kind in Resolver.NAME_KINDS:
+        exprs |= set(resolver.kind_names(kind))
     resolver.resolve_all(exprs, probes)
     comp = Compiler(resolver)
     plan, watches = [], {}
@@ -535,6 +626,24 @@ def compile_scenario(path, params, resolver):
                     plan.append(f"UNTIL mode=hold buttons={BUTTONS[d]} timeout=30 soft=1 | {moved}")
                 plan.append(f"EXPECT {label} | {moved}")
                 captures = []
+            elif verb == 'record-battle':
+                if words[1:] == ['start']:
+                    plan += comp.battle_tracks()
+                    plan.append(f"RECORD start=1 path={os.path.join(artifacts, 'battle.transcript')}")
+                elif words[1:] == ['stop']:
+                    plan.append("RECORD start=0")
+                else:
+                    raise ReplayError('expected: record-battle start|stop')
+            elif verb in ('expect-logged', 'expect-not-logged', 'expect-text'):
+                if len(words) != 2:
+                    raise ReplayError(f'expected: {verb} "TEXT"')
+                section = 1 if verb == 'expect-text' else 0
+                negate = 1 if verb == 'expect-not-logged' else 0
+                plan.append(f"LOGGED section={section} negate={negate} {label} | {words[1]}")
+            elif verb == 'expect-transcript':
+                golden = os.path.join(HERE, words[1])
+                os.makedirs(os.path.dirname(golden), exist_ok=True)
+                plan.append(f"TRANSCRIPT path={golden} update={1 if update_golden else 0} {label}")
             elif verb == 'expect':
                 plan.append(f"EXPECT {label} | {comp.condition(words[1:], captures)}")
             elif verb == 'watch':
@@ -564,6 +673,26 @@ def compile_scenario(path, params, resolver):
 # ---------------------------------------------------------------------------
 # Commands
 # ---------------------------------------------------------------------------
+
+def ctrl_code_lengths(resolver):
+    """EXT_CTRL_CODE lengths, from the game's own table in GetExtCtrlCodeLength."""
+    text = open(os.path.join(ROOT, 'src', 'string_util.c')).read()
+    body = re.search(r'GetExtCtrlCodeLength\(u8 code\)\s*\{.*?\{(.*?)\};', text, re.S).group(1)
+    pairs = re.findall(r'\[(\w+)\]\s*=\s*(\d+)', body)
+    resolver.resolve_all([n for n, _ in pairs if not n.isdigit()], [])
+    return [f"ctrl {int(n) if n.isdigit() else resolver.constants[n]:x}\t{length}" for n, length in pairs]
+
+
+def read_charmap(resolver):
+    """Single-byte characters from charmap.txt as '<hex>\\t<text>' lines, plus control code lengths."""
+    out = ctrl_code_lengths(resolver)
+    for line in open(os.path.join(ROOT, 'charmap.txt'), encoding='utf-8'):
+        m = re.match(r"^'(.+?)'\s*=\s*([0-9A-Fa-f]{2})\s*(?:@.*)?$", line.rstrip())
+        if m:
+            ch = m.group(1).replace("\\'", "'")
+            out.append(f"{m.group(2)}\t{ch}")
+    return '\n'.join(out) + '\n'
+
 
 def build_runner():
     res = subprocess.run(['make', '-s', '-C', HERE, 'replay-runner'], capture_output=True, text=True)
@@ -604,16 +733,23 @@ def cmd_run(args):
 
 
 def run_one(args, scenario, params, resolver):
-    plan, diags = compile_scenario(os.path.abspath(scenario), params, resolver)
-    build_runner()
     name = os.path.splitext(os.path.basename(scenario))[0]
     tag = '-'.join(f'{k}_{v}' for k, v in sorted(params.items()))
     artifacts = os.path.join(CACHE, 'artifacts', name + (f'-{tag}' if tag else ''))
     os.makedirs(artifacts, exist_ok=True)
+    plan, diags = compile_scenario(os.path.abspath(scenario), params, resolver, artifacts, args.update_golden)
+    build_runner()
+    charmap_path = os.path.join(artifacts, 'charmap.tsv')
+    with open(charmap_path, 'w') as f:
+        f.write(read_charmap(resolver))
     names_path = os.path.join(artifacts, 'names.txt')
     with open(names_path, 'w') as f:
         f.write(resolver.name_tables())
-    header = [f"ROM path={os.path.abspath(args.rom)}", f"NAMES path={names_path}", f"ARTIFACTS path={artifacts}"]
+    header = [f"ROM path={os.path.abspath(args.rom)}", f"NAMES path={names_path}", f"ARTIFACTS path={artifacts}",
+              f"CHARMAP path={charmap_path}",
+              f"TEXTSRC addr={resolver.symbol('gDisplayedStringBattle')} len={resolver.const('sizeof(gDisplayedStringBattle)')}",
+              # health boxes reuse the battle message buffer for nicknames; don't log those
+              f"TEXTSKIP addr={resolver.symbol('gText_HealthboxNickname')}"]
     if args.save:
         header.append(f"SAV path={os.path.abspath(args.save)}")
     plan_path = os.path.join(artifacts, 'plan.txt')
@@ -644,6 +780,7 @@ def main():
     r.add_argument('scenarios', nargs='+', help='.replay files or directories of them')
     r.add_argument('--param', action='append', default=[], help='k=v, overrides scenario params')
     r.add_argument('--save', help='start from this .sav instead of a fresh boot')
+    r.add_argument('--update-golden', action='store_true', help='write transcripts as the new golden files')
     nm = sub.add_parser('names')
     nm.add_argument('names', nargs='+')
     args = ap.parse_args()
