@@ -546,7 +546,7 @@ static void TryUpscaleWallyRalts(u16 trainerId)
     // Find the Ralts-line Pokemon in Wally's party
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        mon = &gEnemyParty[i];
+        mon = &gParties[B_TRAINER_OPPONENT_A][i];
         species = GetMonData(mon, MON_DATA_SPECIES, NULL);
 
         if (IsRaltsLine(species))

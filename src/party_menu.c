@@ -7005,7 +7005,7 @@ static void CursorCb_ToggleFollower(u8 taskId)
         StringCopy(gStringVar4, COMPOUND_STRING("{STR_VAR_1} returned to the ball."));
     }
 
-    GetMonNickname(&gPlayerParty[gPartyMenu.slotId], gStringVar1);
+    GetMonNickname(&gParties[B_TRAINER_PLAYER][gPartyMenu.slotId], gStringVar1);
     StringExpandPlaceholders(gStringVar4, gStringVar4);
     DisplayPartyMenuMessage(gStringVar4, FALSE);
     ScheduleBgCopyTilemapToVram(2);

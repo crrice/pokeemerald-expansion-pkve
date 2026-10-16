@@ -1018,10 +1018,10 @@ bool32 RemoveItemFromEverywhere(enum Item itemId)
     // 3. Remove from party Pokemon held items
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE
-            && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == itemId)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE
+            && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM) == itemId)
         {
-            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &none);
+            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &none);
             found = TRUE;
         }
     }
