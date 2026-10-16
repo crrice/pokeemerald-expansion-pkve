@@ -27,7 +27,13 @@ Two layers:
 
 - **Battle weather** (moves and abilities): current-gen rules, 5 turns, or 8 with the matching rock item. This is expansion's default (`B_ABILITY_WEATHER` stays `GEN_LATEST`).
 - **Environmental weather** (the area's own weather, "it's raining here today"): lasts until replaced or dispelled, and comes back when a temporary battle weather wears off. Not implemented, and upstream has nothing like it: its Gen 9 option (`B_OVERWORLD_WEATHER_OVERRIDE`) instead blocks weather moves and abilities entirely while overworld weather is present, which we don't want.
-- Open: what dispels environmental weather for good, as opposed to temporarily replacing it.
+- Open: what dispels environmental weather for good, as opposed to temporarily replacing it. Candidates:
+  - Nothing: it's the environment; you can only override it for a few turns or play around it (Utility Umbrella, Cloud Nine suppression). Simplest, strongest "weather tyranny".
+  - Air Lock dispels it, Cloud Nine only suppresses it: Rayquaza's Air Lock becomes the literal "I'm done with this" button. One ability change.
+  - Defog dispels it: existing move, "clears the skies" (Gen 4 Defog cleared fog). Accessible mid-game tool; how widely it's distributed decides how much area weather matters.
+  - Cloud Nine dispels it: probably not, Psyduck is an early catch and would trivialize it when it should feel oppressive.
+  - A new move or ability: most work; could fold into spreading weather abilities.
+  - Defog (limited tool) and Air Lock (final answer) can be combined.
 
 #### Design Goals
 
