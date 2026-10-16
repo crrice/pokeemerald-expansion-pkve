@@ -13434,7 +13434,7 @@ void BS_TryScriptedBattleWonSlide(void)
         // Set up the message for printstring STRINGID_TRAINERSLIDE
         gBattleStruct->trainerSlideMsg = announcerMsg;
         // Set battler for BS_SCRIPTING to reference in handletrainerslidemsg
-        gBattleScripting.battler = B_POSITION_OPPONENT_LEFT;
+        gBattleScripting.battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         gBattlescriptCurrInstr = cmd->nextInstr;  // Continue to slide-in script
     }
     else

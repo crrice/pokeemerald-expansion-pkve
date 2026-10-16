@@ -445,12 +445,12 @@ void SetControllerToRecordedOpponent(enum BattlerId battler);
 void RecordedOpponentBufferExecCompleted(enum BattlerId battler);
 
 // scripted player controller (for TV battles, etc.)
-void SetControllerToScriptedPlayer(u32 battler);
-void ScriptedPlayerBufferExecCompleted(u32 battler);
+void SetControllerToScriptedPlayer(enum BattlerId battler);
+void ScriptedPlayerBufferExecCompleted(enum BattlerId battler);
 
 // scripted opponent controller (for TV battles, etc.)
-void SetControllerToScriptedOpponent(u32 battler);
-void ScriptedOpponentBufferExecCompleted(u32 battler);
+void SetControllerToScriptedOpponent(enum BattlerId battler);
+void ScriptedOpponentBufferExecCompleted(enum BattlerId battler);
 
 // link opponent
 void SetControllerToLinkOpponent(enum BattlerId battler);
