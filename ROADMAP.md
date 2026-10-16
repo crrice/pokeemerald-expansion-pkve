@@ -30,7 +30,7 @@ This roadmap is guided by several core design philosophies:
 **Design Rationale:**
 This segment isolates the player with their starter to build a foundational bond and plant the seed of a long partnership — these pseudo-legendary lines won't fully evolve until Gym 6-7, so the starter is a *project*, not a weapon. The rival takes the other starter (player Axew → rival Deino, and vice versa), setting up a mirror-match rivalry that persists throughout the game.
 
-The rival battle is a simple, pure test of this initial experience. Both starters are roughly evenly matched at L5-7 — Axew's better physical bulk vs Deino's Dragon Rage floor damage. No type advantage in either direction since both are Dragon-typed.
+The rival battle is a simple, pure test of this initial experience. Both starters are roughly evenly matched at L5 — Axew has Scratch/Leer/Bite, Deino has Tackle/Focus Energy, and neither has STAB until L6 (Metal Claw / Bite). No type advantage in either direction since both are Dragon-typed.
 
 ---
 
@@ -81,8 +81,8 @@ This segment restructures the traditional Emerald opening to front-load the Hero
 *   **Anti-hero diversion:** The player who pursues east emerges in Verdanturf. Wattson is their first challenge — same team as hero's Gym 3, no scaling. The true commitment (the "Rubicon") is not tunnel emergence, but **beating Wattson**. Until that badge is earned, player can retreat through the tunnel and pick up the hero path via the side passage.
 *   **Rival dropped from this segment.** The tunnel scene carries the weight; a rival battle here would dilute the Rubicon moment. The rival's weather identity is introduced later (Segment 4 rework or beyond).
 *   **Starters into Roxanne (if reached on hero path):**
-    *   **Axew:** Dragon/Steel resists Rock and hits Rock 2x SE with Metal Claw (learnt ~L12-15). Dominant matchup — Axew players steamroll.
-    *   **Deino:** Dark/Dragon is neutral into Rock. Bite/Crunch are 1x, Dragon Rage floors 40. Deino leans on team (Wooper, Lotad, Ralts) and wins through composition.
+    *   **Axew:** Dragon/Steel resists Rock and hits Rock 2x SE with Metal Claw (learnt L6). Dominant matchup — Axew players steamroll.
+    *   **Deino:** Dark/Dragon is neutral into Rock. Bite (L6) is 1x. Deino leans on team (Wooper, Lotad, Ralts) and wins through composition.
 *   Asymmetry remains intentional: Axew players get the "my starter is a monster" moment; Deino players get the "I built a team" moment.
 
 ---
@@ -105,6 +105,6 @@ This segment is about empowering the player. After being shown the "problem" of 
 *   **Rewarding Exploration:** The first direct weather counter (**Cloud Nine Psyduck**) and a key strategic item (**Utility Umbrella**) are deliberately placed as rewards for story progression and exploration (using Cut). This teaches the player to engage with the world to solve their problems.
 *   **Foreshadowing:** The player can now find their own weather-synergy Pokémon (Lotad, Poliwag), foreshadowing that they will one day be able to control weather themselves.
 *   **The Universal Skill Check:** Brawly's Fighting-type Gym is where the Late Growers philosophy pays off. **Both starters are 2x-weak to Fighting** — unlike a trio hack where one starter dominates, here Brawly tests *team-building*, not starter-choice.
-    *   **Axew players**, who steamrolled Roxanne, now have to think. Dual Chop (~L18-20) is neutral damage. A caught Wingull (Air Slash SE) or Ralts (Psybeam SE vs Meditite) earns its keep. This is where "easy mode" meets its ceiling and the team matters.
-    *   **Deino players**, who had to build a team for Roxanne, find that same team carries here too. **Crunch at L20** is 2x SE on Meditite (Psychic), a genuine answer. The hardship of Gym 1 pays forward — Deino players are ahead of the curve in team-building.
+    *   **Axew players**, who steamrolled Roxanne, now have to think. Dragon Claw (L18) is neutral damage. A caught Wingull (Flying SE on all three) or Ralts (Psychic SE vs Machop and Makuhita) earns its keep. This is where "easy mode" meets its ceiling and the team matters.
+    *   **Deino players**, who had to build a team for Roxanne, find that same team carries here too. Bite is their STAB, but it's only neutral on Meditite (Fighting/Psychic cancels out Dark); Crunch doesn't arrive until L32. The hardship of Gym 1 pays forward — Deino players are ahead of the curve in team-building.
     *   **Makuhita and pure Fighting mons** wall both starters. Team coverage (Abra, Ralts, Wingull) isn't optional — it's the point.

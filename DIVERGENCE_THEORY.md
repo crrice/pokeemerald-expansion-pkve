@@ -36,7 +36,7 @@ Two starters. A pair, not a trio.
 | Evolution | Fraxure @ 46, Haxorus @ 68 — steady climb | Zweilous @ 48, Hydreigon @ 72 — late apotheosis |
 | Vibe | Honorable, knightly. A dragon on a coat of arms. | Chaotic, destructive. Learns by biting everything. |
 | Gym 1 (Roxanne) | Resists Rock, Steel STAB 2x SE — dominates | Neutral — struggles without team support |
-| Gym 2 (Brawly) | 2x Fighting weak — team skill check | 2x Fighting weak — Crunch answers Meditite |
+| Gym 2 (Brawly) | 2x Fighting weak — team skill check | 2x Fighting weak — team skill check |
 
 **Neither starter gates a route.** A Hero-route Deino is perfectly valid, and an Anti-hero Axew is a beautiful contradiction. But the *aesthetic* alignment is real: Axew maps cleanly onto the Hero archetype, Deino onto the Anti-hero. Players who resonate with one vibe tend to choose the starter that matches.
 

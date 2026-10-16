@@ -177,15 +177,16 @@ Starters: **Axew** (Dragon/Steel) and **Deino** (Dark/Dragon). A pair, not a tri
 
 *Identity*: Physical attacker. Steady, honorable, reliable. "The hero starter" in vibe, not in route gating.
 
-*Target learnset adjustments*:
-- L3-5: **Assurance** — early non-STAB Dark coverage, double power if opponent moved. Thematic vs Deino mirror match.
-- L12-15: **Metal Claw** — 50 BP Steel STAB, 10% Atk-up. The Gym 1 (Roxanne) unlock — 2x SE on Rock, addictive chain.
-- L18-20: **Dual Chop** — 40 BP × 2, Dragon STAB, Sub/Sturdy breaker. Online for Gym 2.
-- Keep Dragon Rage at L10 (40 flat damage scales out well).
+*Learnset adjustments* (live in `gen_9.h`, on top of the SV learnset):
+- L3: **Bite** (SV default) — early non-STAB Dark coverage. Thematic vs Deino mirror match.
+- L6: **Metal Claw** (added) — 50 BP Steel STAB, 10% Atk-up. The Gym 1 (Roxanne) unlock — 2x SE on Rock, addictive chain. Fraxure/Haxorus get it at L1.
+- L9 False Swipe, L12 Assurance (both pushed back 3 levels to make room).
+- L18: **Dragon Claw** (SV default) — Dragon STAB online for Gym 2.
+- No Dragon Rage: SV learnsets dropped it.
 
 *Gym matchup notes*:
 - Gym 1 (Roxanne, Rock): **Dominates.** Steel STAB + Rock resistance.
-- Gym 2 (Brawly, Fighting): **2x weak.** Must rely on Dual Chop neutral damage + team support (Wingull, Abra, Ralts).
+- Gym 2 (Brawly, Fighting): **2x weak.** Must rely on Dragon Claw neutral damage + team support (Wingull, Abra, Ralts).
 
 #### Deino Line (Dark/Dragon)
 
@@ -197,15 +198,15 @@ Starters: **Axew** (Dragon/Steel) and **Deino** (Dark/Dragon). A pair, not a tri
 
 *Early-game problem*: Hustle + limited moveset through L48 is rough. Leaning on minimal learnset buffs rather than ability/stat intervention — the payoff story reads better when the climb is real.
 
-*Target learnset adjustments*:
-- L5-6: **Bite** (pulled from L9) — earlier Dark STAB, thematic ("learns by biting").
-- L12-15: Headbutt or Assurance for non-STAB coverage.
-- L18-20: **Crunch** — natural learn level, keep. *The Gym 2 answer* — 2x SE on Meditite (Psychic).
-- L20-22: **Dragon Breath** (pulled from L32) — Dragon STAB online by Gym 2, paralysis chance.
+*Learnset adjustments* (live in `gen_9.h`, on top of the SV learnset):
+- L6: **Bite** (pulled from L8) — Dark STAB at the same level as Axew's Metal Claw, thematic ("learns by biting").
+- L16: **Dragon Breath** (pulled from L4) + Assurance — Dragon STAB online by Gym 2, paralysis chance. Kept off L4 so Deino doesn't lopside the L5 rival mirror.
+- L32: **Crunch** (SV default, kept) — straight upgrade to Bite, no need to pull it earlier.
+- No Dragon Rage: SV learnsets dropped it.
 
 *Gym matchup notes*:
 - Gym 1 (Roxanne, Rock): **Neutral-negative.** No SE STAB on Rock. Must lean on team (Wooper, Lotad, Ralts).
-- Gym 2 (Brawly, Fighting): **2x weak** but **Crunch is a legit answer vs Meditite** (Psychic 2x SE). Pure Fighting still walls — team support needed.
+- Gym 2 (Brawly, Fighting): **2x weak.** Dark STAB is only neutral on Meditite (Fighting/Psychic), so no starter-side answer — team support needed.
 
 #### Open Questions
 
@@ -450,8 +451,8 @@ Only starters available. Rival takes the other starter (mirror match).
 
 | Player | Rival | Notes |
 |--------|-------|-------|
-| Axew | Deino | Pure Dragon-on-Dragon. Axew's physical bulk + Steel typing advantage vs most early non-STAB moves; Deino's Dragon Rage floors 40 damage. Test: does Axew 2-shot, or does Deino's Dragon Rage + Bite bring it close? |
-| Deino | Axew | Same battle inverted. Deino's special bulk is worse but Dragon Rage doesn't scale off Atk. Test: is the flat damage enough to threaten Axew? |
+| Axew | Deino | Pure Dragon-on-Dragon. Axew's physical bulk + Steel typing advantage vs most early non-STAB moves. At L5 neither side has STAB (Axew: Scratch/Leer/Bite, Deino: Tackle/Focus Energy). Test: does Axew's Bite edge it, or does Deino's Focus Energy crit chance keep it close? |
+| Deino | Axew | Same battle inverted. Deino's special bulk is worse and Tackle into a Steel type is resisted. Test: can a Focus Energy crit carry Deino, or is this the harder side of the mirror? |
 
 No type advantage either way — both are Dragon. The fight is about stats, abilities (Rivalry vs Hustle), and move access at L5-7.
 
