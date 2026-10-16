@@ -51,6 +51,16 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
 - [ ] [refine] Automated tests for design values (starter learnsets, key configs) and story-flag logic. Scope it after the expansion upgrade's merge-hygiene review.
+
+### Testing tools
+
+Replay harness in `tools/replay/` (usage: `testing` skill). Remaining build order:
+
+- [ ] [ready] Save depot: `export-save` scenarios that generate saves, committed under `tools/replay/saves/` with a manifest (how it was made, build, save-format fingerprint); the runner refuses a save whose fingerprint doesn't match. First save: `new_game_to_tv` for both genders.
+- [ ] [refine] Save converter: copy fields by name between the old and new layouts (read from `make debug` struct info), remap flag/var/item/species IDs by constant name, per-migration hooks for meaning changes, automatic old-vs-new snapshot comparison. Build against the first real save-format change after the expansion upgrade. Open: hook format.
+- [ ] [ready] Screenshot checks: `expect-screen NAME [region ...]` against `tools/replay/golden/NAME.png`, exact pixel match, writes actual + diff on mismatch, `--update-golden` to accept.
+- [ ] [ready] Failure diagnostic: decode the last dialogue line on screen from game memory (`charmap.txt`).
+- [ ] [refine] Speed: test saves use max text speed and battle animations off; `set-time HH:MM` writes the fake RTC directly; run scenarios in parallel. Open: measure whether skipping frame rendering helps.
 - [ ] [ready] Demo build reverts the testing values (see Pre-Release Checklist).
 
 ### Optional
@@ -140,4 +150,5 @@ What exists today, one line per feature. Details live in git history and the des
 - QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
 - Machop learnset tune (Pound at L1, Low Kick at L6)
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
+- Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines) with the TV broadcast test for both genders
 - Fixes: scripted battle crash after the upstream merge, quest state on new game, Wally's silhouette sprite, follower/DexNav flag clash, quest menu out-of-bounds sprite write
