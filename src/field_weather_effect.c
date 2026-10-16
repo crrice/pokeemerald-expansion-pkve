@@ -6,6 +6,7 @@
 #include "overworld.h"
 #include "random.h"
 #include "script.h"
+#include "constants/region_map_sections.h"
 #include "constants/weather.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
@@ -187,7 +188,7 @@ static void CreateCloudSprites(void)
     LoadCustomWeatherSpritePalette(gCloudsWeatherPalette);
     for (i = 0; i < NUM_CLOUD_SPRITES; i++)
     {
-        spriteId = CreateSprite(&sCloudSpriteTemplate, 0, 0, 0xFF);
+        spriteId = CreateSpriteUnchecked(&sCloudSpriteTemplate, 0, 0, 0xFF);
         if (spriteId != MAX_SPRITES)
         {
             gWeatherPtr->sprites.s1.cloudSprites[i] = &gSprites[spriteId];
@@ -676,7 +677,7 @@ static bool8 CreateRainSprite(void)
         return FALSE;
 
     spriteIndex = gWeatherPtr->rainSpriteCount;
-    spriteId = CreateSpriteAtEnd(&sRainSpriteTemplate,
+    spriteId = CreateSpriteAtEndUnchecked(&sRainSpriteTemplate,
       sRainSpriteCoords[spriteIndex].x, sRainSpriteCoords[spriteIndex].y, 78);
 
     if (spriteId != MAX_SPRITES)
@@ -903,7 +904,7 @@ static const struct SpriteTemplate sSnowflakeSpriteTemplate =
 
 static bool8 CreateSnowflakeSprite(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSnowflakeSpriteTemplate, 0, 0, 78);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sSnowflakeSpriteTemplate, 0, 0, 78);
     if (spriteId == MAX_SPRITES)
         return FALSE;
 
@@ -1483,7 +1484,7 @@ static void CreateFogHorizontalSprites(void)
         LoadSpriteSheet(&fogHorizontalSpriteSheet);
         for (i = 0; i < NUM_FOG_HORIZONTAL_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sFogHorizontalSpriteTemplate, 0, 0, 0xFF);
+            spriteId = CreateSpriteAtEndUnchecked(&sFogHorizontalSpriteTemplate, 0, 0, 0xFF);
             if (spriteId != MAX_SPRITES)
             {
                 sprite = &gSprites[spriteId];
@@ -1670,7 +1671,7 @@ static void CreateAshSprites(void)
     {
         for (i = 0; i < NUM_ASH_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sAshSpriteTemplate, 0, 0, 0x4E);
+            spriteId = CreateSpriteAtEndUnchecked(&sAshSpriteTemplate, 0, 0, 0x4E);
             if (spriteId != MAX_SPRITES)
             {
                 sprite = &gSprites[spriteId];
@@ -1887,7 +1888,7 @@ static void CreateFogDiagonalSprites(void)
         LoadSpriteSheet(&fogDiagonalSpriteSheet);
         for (i = 0; i < NUM_FOG_DIAGONAL_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sFogDiagonalSpriteTemplate, 0, (i / 5) * 64, 0xFF);
+            spriteId = CreateSpriteAtEndUnchecked(&sFogDiagonalSpriteTemplate, 0, (i / 5) * 64, 0xFF);
             if (spriteId != MAX_SPRITES)
             {
                 sprite = &gSprites[spriteId];
@@ -2149,7 +2150,7 @@ static void CreateSandstormSprites(void)
         LoadCustomWeatherSpritePalette(gSandstormWeatherPalette);
         for (i = 0; i < NUM_SANDSTORM_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sSandstormSpriteTemplate, 0, (i / 5) * 64, 1);
+            spriteId = CreateSpriteAtEndUnchecked(&sSandstormSpriteTemplate, 0, (i / 5) * 64, 1);
             if (spriteId != MAX_SPRITES)
             {
                 gWeatherPtr->sprites.s2.sandstormSprites1[i] = &gSprites[spriteId];
@@ -2177,7 +2178,7 @@ static void CreateSwirlSandstormSprites(void)
     {
         for (i = 0; i < NUM_SWIRL_SANDSTORM_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sSandstormSpriteTemplate, i * 48 + 24, 208, 1);
+            spriteId = CreateSpriteAtEndUnchecked(&sSandstormSpriteTemplate, i * 48 + 24, 208, 1);
             if (spriteId != MAX_SPRITES)
             {
                 gWeatherPtr->sprites.s2.sandstormSprites2[i] = &gSprites[spriteId];
@@ -2385,7 +2386,7 @@ static void CreateBubbleSprite(u16 coordsIndex)
 {
     s16 x = sBubbleStartCoords[coordsIndex][0];
     s16 y = sBubbleStartCoords[coordsIndex][1] - gSpriteCoordOffsetY;
-    u8 spriteId = CreateSpriteAtEnd(&sBubbleSpriteTemplate, x, y, 0);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sBubbleSpriteTemplate, x, y, 0);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].oam.priority = 1;
@@ -2509,6 +2510,7 @@ static void CreateAbnormalWeatherTask(void)
 
 static u8 TranslateWeatherNum(u8);
 static void UpdateRainCounter(u8, u8);
+static u8 GetDynamicWeather(void);
 
 void SetSavedWeather(u32 weather)
 {
@@ -2596,6 +2598,76 @@ static const u8 sWeatherCycleRoute123[WEATHER_CYCLE_LENGTH] =
     WEATHER_SUNNY,
 };
 
+#define DYNAMIC_WEATHER_POOL(pool) pool, ARRAY_COUNT(pool)
+
+struct DynamicWeatherPool
+{
+    mapsec_u16_t mapSec;
+    const u8 *weathers;
+    u8 count;
+};
+
+static const u8 sDefaultDynamicWeathers[] =
+{
+    WEATHER_SUNNY,
+    WEATHER_RAIN,
+    WEATHER_SNOW,
+    WEATHER_SANDSTORM,
+    WEATHER_VOLCANIC_ASH,
+    WEATHER_RAIN_THUNDERSTORM,
+    WEATHER_DROUGHT,
+};
+
+/*static const u8 sDynamicWeathers_DewfordTown[] =
+{
+    WEATHER_SUNNY,
+    WEATHER_RAIN,
+    WEATHER_RAIN_THUNDERSTORM,
+};*/
+
+static const struct DynamicWeatherPool sDynamicWeatherPools[] =
+{
+    /*{ MAPSEC_DEWFORD_TOWN, DYNAMIC_WEATHER_POOL(sDynamicWeathers_DewfordTown) },*/
+};
+
+static const u8 *GetDynamicWeatherPool(u8 *count)
+{
+    u16 mapSec = gMapHeader.regionMapSectionId;
+
+    for (u32 i = 0; i < ARRAY_COUNT(sDynamicWeatherPools); i++)
+    {
+        if (sDynamicWeatherPools[i].mapSec == mapSec && sDynamicWeatherPools[i].count != 0)
+        {
+            *count = sDynamicWeatherPools[i].count;
+            return sDynamicWeatherPools[i].weathers;
+        }
+    }
+
+    *count = ARRAY_COUNT(sDefaultDynamicWeathers);
+    return sDefaultDynamicWeathers;
+}
+
+static u8 GetDynamicWeather(void)
+{
+    u8 count;
+    const u8 *weathers = GetDynamicWeatherPool(&count);
+    rng_value_t localRngState;
+    const u32 hashPieces[] =
+    {
+        gSaveBlock1Ptr->dailySeed,
+        gSaveBlock1Ptr->location.mapGroup,
+        gSaveBlock1Ptr->location.mapNum,
+        gMapHeader.mapLayoutId,
+        gMapHeader.regionMapSectionId,
+    };
+
+    if (count == 0)
+        return WEATHER_NONE;
+
+    localRngState = LocalRandomSeed(Crc32B((const u8 *)hashPieces, sizeof(hashPieces)));
+    return weathers[LocalRandom32(&localRngState) % count];
+}
+
 static u8 TranslateWeatherNum(u8 weather)
 {
     switch (weather)
@@ -2618,6 +2690,7 @@ static u8 TranslateWeatherNum(u8 weather)
     case WEATHER_ABNORMAL:           return WEATHER_ABNORMAL;
     case WEATHER_ROUTE119_CYCLE:     return sWeatherCycleRoute119[gSaveBlock1Ptr->weatherCycleStage];
     case WEATHER_ROUTE123_CYCLE:     return sWeatherCycleRoute123[gSaveBlock1Ptr->weatherCycleStage];
+    case WEATHER_DYNAMIC:            return GetDynamicWeather();
     default:                         return WEATHER_NONE;
     }
 }

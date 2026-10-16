@@ -26,7 +26,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move);
 
 struct GMaxMove
 {
-    u16 species;
+    enum Species species;
     enum Type moveType;
     u16 gmaxMove;
 };
@@ -72,7 +72,7 @@ static const struct GMaxMove sGMaxMoveTable[] =
 // Returns whether a battler can Dynamax.
 bool32 CanDynamax(enum BattlerId battler)
 {
-    u16 species = GetBattlerVisualSpecies(battler);
+    enum Species species = GetBattlerVisualSpecies(battler);
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
@@ -131,8 +131,10 @@ bool32 IsGigantamaxed(enum BattlerId battler)
 // Applies the HP Multiplier for Dynamaxed Pokemon and Raid Bosses.
 void ApplyDynamaxHPMultiplier(struct Pokemon* mon)
 {
-    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_SHEDINJA)
+    if (HasShedinjaHPHandling(GetMonData(mon, MON_DATA_SPECIES)))
+    {
         return;
+    }
     else
     {
         uq4_12_t multiplier = GetDynamaxLevelHPMultiplier(GetMonData(mon, MON_DATA_DYNAMAX_LEVEL), FALSE);
@@ -146,8 +148,10 @@ void ApplyDynamaxHPMultiplier(struct Pokemon* mon)
 // Returns the non-Dynamax HP of a Pokemon.
 u32 GetNonDynamaxHP(enum BattlerId battler)
 {
-    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || gBattleMons[battler].species == SPECIES_SHEDINJA)
+    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || HasShedinjaHPHandling(gBattleMons[battler].species))
+    {
         return gBattleMons[battler].hp;
+    }
     else
     {
         struct Pokemon *mon = GetBattlerMon(battler);
@@ -160,8 +164,10 @@ u32 GetNonDynamaxHP(enum BattlerId battler)
 // Returns the non-Dynamax Max HP of a Pokemon.
 u32 GetNonDynamaxMaxHP(enum BattlerId battler)
 {
-    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || gBattleMons[battler].species == SPECIES_SHEDINJA)
+    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || HasShedinjaHPHandling(gBattleMons[battler].species))
+    {
         return gBattleMons[battler].maxHP;
+    }
     else
     {
         struct Pokemon *mon = GetBattlerMon(battler);
@@ -171,9 +177,25 @@ u32 GetNonDynamaxMaxHP(enum BattlerId battler)
     }
 }
 
+static void ActivateDynamax_ContinueAfterSlide(void)
+{
+    gBattleResources->battleCallbackStack->size--;
+    gBattleMainFunc = gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size];
+    ActivateDynamax(gBattleScripting.battler);
+}
+
 // Sets flags used for Dynamaxing and checks Gigantamax forms.
 void ActivateDynamax(enum BattlerId battler)
 {
+    if (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_DYNAMAX))
+    {
+        gBattleScripting.battler = battler;
+        gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
+        gBattleMainFunc = ActivateDynamax_ContinueAfterSlide;
+
+        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
+        return;
+    }
     // Set appropriate use flags.
     SetActiveGimmick(battler, GIMMICK_DYNAMAX);
     SetGimmickAsActivated(battler, GIMMICK_DYNAMAX);
@@ -238,8 +260,8 @@ static enum Move GetTypeBasedMaxMove(enum BattlerId battler, enum Type type)
 {
     // Gigantamax check
     u32 i;
-    u32 species = gBattleMons[battler].species;
-    u32 targetSpecies = species;
+    enum Species species = gBattleMons[battler].species;
+    enum Species targetSpecies = species;
     enum Ability ability = GetBattlerAbility(battler);
 
     if (!gSpeciesInfo[species].isGigantamax)
@@ -302,14 +324,14 @@ enum MaxPowerTier
 };
 
 // Gets the base power of a Max Move.
-u32 GetMaxMovePower(enum Move move)
+u32 GetMaxMovePower(enum Move baseMove, enum Move move)
 {
     // G-Max Drum Solo, G-Max Hydrosnipe, and G-Max Fireball always have 160 base power.
     if (MoveHasAdditionalEffect(move, MOVE_EFFECT_FIXED_POWER))
         return 160;
 
     // Exceptions to all other rules below:
-    switch (move)
+    switch (baseMove)
     {
     case MOVE_TRIPLE_KICK:   return 80;
     case MOVE_GEAR_GRIND:    return 100;
@@ -318,11 +340,11 @@ u32 GetMaxMovePower(enum Move move)
     default: break;
     }
 
-    enum MaxPowerTier tier = GetMaxPowerTier(move);
-    enum Type moveType = GetMoveType(move);
+    enum MaxPowerTier tier = GetMaxPowerTier(baseMove);
+    enum Type moveType = GetMoveType(baseMove);
     if (moveType == TYPE_FIGHTING
      || moveType == TYPE_POISON
-     || move == MOVE_MULTI_ATTACK)
+     || baseMove == MOVE_MULTI_ATTACK)
     {
         switch (tier)
         {

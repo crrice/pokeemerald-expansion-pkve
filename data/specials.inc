@@ -211,7 +211,7 @@ gSpecials::
 	def_special ChooseSendDaycareMon, waitstate=1
 	def_special ShowDaycareLevelMenu, waitstate=1
 	def_special GetNumLevelsGainedFromDaycare
-	def_special GetDaycareCost
+	def_special GetDaycareCostAndPrepareString
 	def_special TakePokemonFromDaycare
 	def_special ScriptHatchMon
 	def_special EggHatch, waitstate=1
@@ -348,7 +348,7 @@ gSpecials::
 	def_special GetContestMultiplayerId
 	def_special ScriptGetPartyMonSpecies
 	def_special IsSelectedMonEgg
-	def_special HasMovesToRelearn
+	def_special Special_HasMoveToRelearn
 	def_special TryInitBattleTowerAwardManObjectEvent
 	def_special MoveOutOfSecretBaseFromOutside
 	def_special LoadPlayerBag
@@ -543,7 +543,6 @@ gSpecials::
 	def_special RemoveRecordsWindow
 	def_special CloseDeptStoreElevatorWindow
 	def_special TrySetBattleTowerLinkType
-	def_special TrySpecialOverworldEvo
 	def_special GetNumberSprayStrength
 	def_special GetSprayId
 	def_special GetLastUsedSprayType
