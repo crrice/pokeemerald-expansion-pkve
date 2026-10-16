@@ -29,7 +29,7 @@
 
 #define PLAYER_LEVEL    6
 #define PLAYER_IV       15
-#define BATTLE_TURNS    MAX_TURNS
+#define BATTLE_TURNS    6
 
 static struct Pokemon sRivalParty[PARTY_SIZE];
 

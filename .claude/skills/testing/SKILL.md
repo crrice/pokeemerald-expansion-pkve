@@ -82,7 +82,17 @@ Upstream's battle runner rigs randomness (every move hits, no crits, secondary e
 - Give the opponent a Splash-only filler so the battle survives its lead fainting and every scripted TURN runs; a player loss ends the battle early and fails the run.
 - Check results on the live battlers (`opponent->species`, `player->hp` in THEN), not `OPPONENT_PARTY` (party HP isn't synced from the battle).
 - Parties are built once per test, so random creation details (IVs, nature, ability) are fixed per test; make one test per profile.
-- Example: `test/verdant/route103_rival.c`.
+- Keep scripted TURNs close to the real fight length: every extra turn is filler time (16 turns ran ~3x slower than 6).
+- Example guard: `test/verdant/route103_rival.c`.
+
+Measurement suites (many rolls, report a table) follow `test/verdant/route103_rival_measure.c`: tests named `Verdant: [measure] ...`, one test per (bucket, starter roll), starter rolled per `ScriptGiveMon` rules from a fixed seed, one `MEASURE-WIN` line printed per won battle. Run and summarize:
+
+```bash
+TESTS="Verdant: [measure] Route 103" make check -j$(nproc) > /tmp/measure.log 2>&1
+python3 test/verdant/summarize_measure.py /tmp/measure.log
+```
+
+Don't rely on the runner's "observed X" messages for many tests: its failure summary lists at most 50 tests per process. When not selected by name, measurement tests play a trivial one-turn battle and pass, so normal runs stay clean (an empty battle test is INVALID; ASSUME would flood the skipped list). About 60 ms per battle on 4 cores: the 4000-battle Route 103 suite takes ~4-5 minutes including the build.
 
 ### Triage
 
