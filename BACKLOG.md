@@ -1,316 +1,142 @@
 # Backlog
 
-High-level tasks to implement.
+Tasks only, grouped by milestone in priority order. Each task appears once.
 
-## Milestones
+**Tags:** `[ready]` no open questions, can be picked up · `[refine]` shape known, questions still open · `[idea]` needs breakdown · `(you: …)` waiting on the project owner (design call, playtest, map edit).
 
-### Pre-Demo (current target)
+Principles and vague plans don't live here: see `DIVERGENCE_THEORY.md`, `ROADMAP.md` and `BALANCE.md`. How this file is kept in sync: `CLAUDE.md` → "How we track work".
 
-Polished build that ends at **beating Wattson on both routes**. Hero: badge 3 (Roxanne, Brawly, Wattson), almost all vanilla. Anti-hero: badge 1, the Rubicon. Everything done so far plus the pieces below.
+## Pre-Demo (current target)
 
-- [ ] Rustboro / tunnel pivot (both routes) — see Rusturf Tunnel Divergence Scene
-  - [ ] Rustboro gym closed until the tunnel scene (key off `VAR_PETALBURG_WOODS_STATE` = 2), NPCs/Devon redirect east
-  - [ ] Rusturf Tunnel: breach, Roxanne cutscene, hidden side passage + grunt fight
-  - [ ] Hero: return goods → Cut HM, Roxanne's gym opens
-- [ ] Anti-hero route to Wattson
-  - [ ] East-side gauntlet wilds (L15-18), Route 117, Verdanturf
-  - [ ] Audit vanilla triggers that assume arriving in Mauville from Slateport (Wally etc.)
-  - [ ] Wattson 0-badge pre-fight and post-victory dialogue, Rubicon flags
-  - [ ] Difficulty pass: Wattson's Gym 3 team vs a 0-badge team
-  - [ ] Clean "end of pre-demo" stop after Wattson
-- [ ] Polish in range (both routes)
-  - [ ] VAR_STARTER_MON cleanup for maps in range
-  - [ ] Rival battles in range use the new starters and teams
-  - [ ] Confirm 2-starter flow (TV Dad battle, Birch rescue)
-  - [ ] Encounter tables: Petalburg Woods, Route 116, Rusturf Tunnel, Route 117
-  - [ ] Automated tests for design values (starter learnsets, key configs) and story flag logic
-  - [ ] Demo build reverts the testing values (see Pre-Release Checklist)
-- [ ] Optional: Route 104 weather cycle prototype (easier after the expansion 1.17 upgrade via `setstartingstatus`)
+Polished build that ends at **beating Wattson on both routes**. Hero: badge 3 (Roxanne, Brawly, Wattson), almost all vanilla. Anti-hero: badge 1, the Rubicon.
 
-### Demo 1
+### Story: tunnel pivot (both routes)
 
-Ends at the **Weather Institute on both routes** — the minimum for a real evaluation, since the anti-hero route gets there so much faster. Hero: after Norman (5 badges, vanilla order). Anti-hero: Wattson → Flannery → Norman (3 badges), then Surf to Route 119.
+Spec: `DIVERGENCE_THEORY.md` (The Tunnel, The Rubicon, The Devon Goods) and `ROADMAP.md` Segment 3.
 
-- [ ] Everything in Pre-Demo
-- [ ] Anti-hero Flannery and Norman (badge-count dialogue, scaling, "came through the mountain?" beats)
-- [ ] Mt. Chimney on the anti-hero route (open question: Aqua, Magma or both)
-- [ ] Devon Goods "never recovered" world state for anti-hero
-- [ ] Weather cycles live in the areas reached by the Weather Institute
-- [ ] Encounter and trainer passes through Route 119 on both routes
+- [ ] [ready] Rustboro gym closure: sign or attendant ("Leader Roxanne is assisting the Devon Corporation."), Rustboro NPCs and Devon staff point the player toward Route 116. Key off `VAR_PETALBURG_WOODS_STATE` = 2, set by the Route 104 theft and not read yet. The gym reopens once the goods are returned (hero).
+- [ ] [refine] Rusturf Tunnel map rework: remove the east-side Rock Smash gate (no Wally event there), add a visible broken-rocks breach at the old gate, add the hidden side passage revealed on retreat after the scene. Open: side passage placement.
+- [ ] [refine] Tunnel scene: Roxanne's overworld sprite walks to the tunnel ahead of the player; cutscene at the breach (grunt seen fleeing east, Roxanne's line, she heads back to Rustboro); on retreat, the grunt in the side passage: fight, recover the goods. Open: choreography, and the final flag set (tentative: `FLAG_TUNNEL_SCENE_COMPLETE`, `FLAG_GOODS_RECOVERED`, `FLAG_ANTI_HERO_COMMITTED`, `FLAG_CUT_DIVERGENCE_ANTI_AVAILABLE`) and which free IDs they take.
+- [ ] [ready] Hero: return the goods to Devon → Cut HM (plus Exp Share if not already given), Roxanne back in her gym. Depends on the tunnel scene.
 
-## To Do
+### Story: anti-hero route to Wattson
 
-- [ ] Starter Redesign Follow-ups (Axew + Deino pair — core swap done, rest outstanding)
-  - [ ] **VAR_STARTER_MON case cleanup** — Route 103 done. Routes 104, 110, 119, Rustboro, Lilycove, Mauville Game Corner, Petalburg Pokecenter still have 3-case switches. Remove case 2.
-  - [ ] **Later rival battles** — Route 104, 110, 119, Rustboro, Lilycove rival teams still reference old starter lines (Grovyle/Combusken/Marshtomp etc). Full rival team redesign.
-  - [ ] **Rival identity pass** — Brendan aggro (sun→rain weathers), May stall (sand→hail weathers). Team comp should reflect.
-  - [x] **Learnset adjustments** — live in `gen_9.h` (the gen_5.h edits never took effect)
-    - Axew: Bite L3, Metal Claw L6 (Gym 1 Steel STAB), Dragon Claw L18 (Gym 2 Dragon STAB). Fraxure/Haxorus get Metal Claw at L1.
-    - Deino: Bite L6, Dragon Breath L16, Crunch L32 (kept as the upgrade to Bite)
-  - [ ] **Birch's lab narrative** — 2 pokeballs on the table instead of 3, dialogue pass
-  - [ ] **Old trio re-placement** — Pikipek/Machop/Roggenrola as wild/gift mons
-    - Machop → Granite Cave (already planned per ROADMAP Segment 4)
-    - Roggenrola → Granite Cave or Rusturf Tunnel
-    - Pikipek → early route slot (Route 116 area?)
-  - [ ] **Starter BST / ability review** — deferred, open question whether Dragon/Steel Haxorus needs any compensatory tuning
-  - [ ] **Starter encounter flags / overworld sprites** — confirm 2-starter flow doesn't break anywhere (TV Dad battle script, Birch rescue, etc.). Starter selection freeze already fixed; rest needs a playtest.
+- [ ] [ready] Audit vanilla events that assume the player reaches Mauville from Slateport / Route 110 (Wally's Mauville battle, Verdanturf, etc.) and list what breaks when arriving from Route 117 with 0 badges. Fixes become follow-up items.
+- [ ] [ready] Wattson dialogue: pre-fight line when the badge count is 0 ("No badges?! WAHAHA! Prove yourself!"), post-victory "You... you actually did it. WAHAHA!"
+- [ ] [ready] Rubicon flag: set `FLAG_ANTI_HERO_COMMITTED` on Wattson's badge if the goods weren't recovered. World-state consequences are Demo 1.
+- [ ] [refine] (you: playtest) Wattson difficulty for a 0-badge team. Design is "same team, no scaling" (resolved in `DIVERGENCE_THEORY.md`); this checks it's beatable and fair with what's catchable by then.
+- [ ] [refine] (you: design call) End-of-pre-demo stop after Wattson on both routes: what the player sees (message, block, credits?).
 
-- [ ] DexNav customizations (core is done, see Done)
-  - Optionally enable `USE_DEXNAV_SEARCH_LEVELS` for per-species tracking (costs 1 save byte per species)
-  - Show all species as silhouettes
-  - Allow search when only seen (with penalties)
+### Encounters
 
-- [ ] Early Route Pokemon Additions (in progress)
-  - Goal: Give players team options that cover starter weaknesses and carry the "late grower" early game
-  - **Done:**
-    - Skwovet - Route 101 day (20%)
-    - Wooper - Route 103 night (20%) - Water/Ground, neutral into Gym 1 for Deino players; general utility tank for both
-    - Azurill - Route 102 day (9%) - Huge Power payoff
-    - Oddish/Hoothoot - Route 102 night (20% each)
-    - Route 104 day/night tables - Krabby, Dwebble, Marill, Pincurchin, Finneon fishing
-  - **Remaining:** Petalburg Woods, Route 116, Granite Cave, etc.
-  - Note: "starter carries you to Gym 4" is no longer the plan — both starters are late growers and team Pokemon matter more than before.
+One area at a time: design the table in `BALANCE.md` first, then implement.
 
-- [ ] Rusturf Tunnel Divergence Scene (core story rework)
-  - Goal: Front-load the Hero/Anti-hero choice to BEFORE the first gym. Players face the Rubicon while seasoned Emerald veterans go "wait, something's wrong."
-  - See `DIVERGENCE_THEORY.md` (The Tunnel, The Rubicon, The Devon Goods) and `ROADMAP.md` Segment 3 for the full design spec.
-  - **Petalburg Woods rewrite (done, v2):**
-    - Woods: no grunts. Researcher finds his Shroomish, says he's heading back to Rustboro, exits north. No battle, no Great Ball.
-    - Route 104, just north of the woods: a grunt runs in, takes the papers on-screen and escapes east before the player can reach him. Researcher: "He's gone… and so are my papers! I have to get to RUSTBORO at once!"
-    - `VAR_PETALBURG_WOODS_STATE` = 2 (theft witnessed) is set but not read yet — the Rustboro gym closure should key off it.
-  - **Rustboro gym closure:**
-    - Sign on gym door / attendant NPC: "Leader Roxanne is assisting the Devon Corporation."
-    - Rustboro NPCs and Devon Corp staff redirect player toward Route 116
-    - Gym opens post-tunnel-scene + goods-returned (hero path)
-  - **Rusturf Tunnel redesign:**
-    - Remove east-side Rock Smash gate entirely (no Wally event needed here)
-    - Add visible broken-rocks breach at former gate location
-    - Add hidden side passage (triggers on retreat after the tunnel scene)
-    - East-side gauntlet: L15-18 wilds (soft gate, not hard)
-  - **Tunnel scene (Roxanne + grunt):**
-    - Overworld Roxanne sprite walks to tunnel ahead of player
-    - Cutscene at broken rocks: grunt visible fleeing east, Roxanne delivers her line, departs back to Rustboro
-    - Grunt in side passage (revealed on retreat): fight, recover goods
-    - Post-grunt-fight: return to Rustboro, Devon thanks, receives **Cut HM** + Exp Share if not already given
-  - **Wattson Rubicon hook:**
-    - Post-Wattson-badge flag fires world-state update
-    - Grunt sprite removed from tunnel side passage permanently
-    - Roxanne's gym dialogue permanently shifts to "secret final boss" waiting state
-    - Devon Corp dialogue shifts to "we never recovered the goods" permanent state
-  - **Wattson dialogue:**
-    - Pre-fight line keyed on badge count == 0 (anti-hero Rubicon pre-battle text)
-    - Post-victory line: "You... you actually did it. WAHAHA!" (the Rubicon acknowledgment)
-  - **Cut HM audit (Hoenn-wide):**
-    - Survey all Cut-gated content from Petalburg Woods through Route 121
-    - Ensure no story-critical content is locked behind Cut for anti-hero players pre-Gym-8
-    - Flavor/exploration content can remain gated
-    - Document gated content for anti-hero post-climax "cut unlocks Hoenn" exploration phase
-  - **Flags needed (tentative):**
-    - `FLAG_TUNNEL_SCENE_COMPLETE`
-    - `FLAG_GOODS_RECOVERED`
-    - `FLAG_ANTI_HERO_COMMITTED` (set on Wattson badge if `FLAG_GOODS_RECOVERED` not set)
-    - `FLAG_CUT_DIVERGENCE_ANTI_AVAILABLE` (set on Roxanne-as-final-gym defeat for anti-hero)
+- [ ] [refine] Petalburg Woods
+- [ ] [refine] Route 116
+- [ ] [refine] Rusturf Tunnel interior
+- [ ] [refine] Rusturf east-side gauntlet (L15-18, soft gate), anti-hero
+- [ ] [refine] Route 117, anti-hero (optional for hero)
 
-- [ ] Area Weather Cycles System
-  - Goal: Weather introduced as ambient worldbuilding, not just battle mechanic. Each signature area sets a default permanent weather at battle start, cycling by time of day.
-  - **Core rule:** Encounter tables are NOT affected by weather cycles. Weather and encounters are independent axes.
-  - **Narrative arc:** Natural cycles (Act 1) → Aqua/Magma disruption (Act 2) → planetary tyranny (Act 3) → Rayquaza restores. Rayquaza = restoration, not erasure.
-  - **Signature cycle map (first pass):**
-    - Route 104: Sun day / Rain night (prototype — implement first)
-    - Route 116, Route 111 desert: Sandstorm (always)
-    - Mt. Chimney / Fiery Path: Sun (always)
-    - Shoal Cave / north ice: Hail (always)
-    - Sootopolis basin: Rain (always)
-    - Weather Institute: broken cycle (puzzle zone)
-    - Sky Pillar: none (Rayquaza's Air Lock domain)
-    - All other routes: clear (cycles should feel special, not noise)
-  - **Implementation MVP:** Just Route 104. Battle-start weather hook. NPC tutorial dialogue.
-  - **Later polish:** Overworld particles/tints, DexNav weather icon, NPC dialogue variation.
-  - **Override:** Story scripts can force weather/clear for cutscenes.
-  - See `BALANCE.md` (Weather, and the Route 104 Weather Cycle section).
+### Starter follow-ups
 
-- [ ] Buff existing early route Pokemon
-  - Goal: Make vanilla Gen 3 mons competitive with new additions - avoid "old mon bad, new mon good"
-  - Candidates (Routes 101-103):
-    - Poochyena/Mightyena - ?
-    - Zigzagoon/Linoone - already has Pickup utility, maybe enough?
-    - Wurmple line - probably hopeless? or lean into early game niche
-    - Lotad line - ?
-    - Seedot line - ?
-    - Wingull/Pelipper - Drizzle already strong (Gen 7+), maybe fine
-    - Ralts line - already popular, probably fine
-    - Surskit/Masquerain - notoriously underwhelming, good buff target
-  - Options: stat tweaks, better abilities, earlier/better learnsets, new evolutions?
-  - TODO: Review what pokeemerald-expansion already changed for these (may have Gen 6+ buffs baked in)
+- [ ] [ready] Remove the dead third-starter branches (`MUDKIP` slot, `VAR_STARTER_MON` = 2) from the rival scripts (Routes 104, 110, 119, Rustboro, Lilycove) and the Petalburg Pokemon Center, and write Axew/Deino type lines for the Pokemon Center NPC. Keep the dead `*_MUDKIP` trainer entries (removing them shifts trainer IDs). The Mauville Game Corner keeps its branches until the dolls exist (Later). Slot mapping: `CLAUDE.md` → Custom Starters.
+- [ ] [ready] Audit everything players see around the starter choice: Birch's bag art, the rescue dialogue, the lab, Mom/Dad lines. Art problems go to `ART_ASSETS.md`; fixes become separate items.
+- [ ] [ready] Code audit for three-starter assumptions: rival scripts, Petalburg Pokemon Center, Game Corner, `battle_setup.c`, `field_specials.c` (`IsStarterInParty`), `credits.c`, the scripted TV battle with Dad. Includes fixing the off-by-one guard in `GetStarterPokemon` (`>` should be `>=`).
+- [ ] [ready] (you: playtest) Per starter: Birch's rescue → Route 103 rival → TV battle with Dad → credits show the right starter.
 
-- [ ] Weather system balance pass
-  - Goal: Weather prominent but not mandatory - clear counterplay options
-  - Current plan: Permanent ability weather (Gen 3 style), move weather stays 5/8 turns
-  - Map out availability timeline:
-    - When do players get weather setters? (Pelipper ~25, others?)
-    - When do enemies start using weather?
-    - When is counterplay available?
-  - Counterplay options to make accessible:
-    - Utility Umbrella (Gen 8 item) - holder ignores rain/sun effects, give early-ish
-    - Cloud Nine / Air Lock users - Psyduck early is good, who else?
-    - Safety Goggles - for sand/hail chip
-  - Investigate: Give underused mons weather counter/synergy abilities
-    - Candidates for Cloud Nine or similar?
-    - Mons that could get Swift Swim / Sand Rush / Slush Rush as new ability?
-    - Other weather-based buffs to unused Pokemon?
-  - Note: Early routes already have rain team skeleton (Wingull, Lotad, Surskit) - consider if that's too easy to assemble
+### Polish
 
-- [ ] Weather as core design pillar
-  - Philosophy: Weather is THE system of this hack - players must engage (join or counter)
-  - Story arc:
-    - Early: Weather emerges, players notice synergies
-    - Mid: Weather tyranny - commit to a team or find counterplay
-    - Late: Rayquaza = "I'm done with this" button - Air Lock feels EARNED
-  - Rival weather identities:
-    - Brendan (aggro): Sun early → Rain late (sweeper weathers)
-    - May (stall): Sand early → Hail late (defensive weathers)
-  - Team Aqua/Magma:
-    - Aqua grunts: Rain / Aqua admins: Hail (ice+water theme)
-    - Magma grunts: Sun / Magma admins: Sand (ground+fire theme)
-  - Gym leaders: Some should use weather strategically (not all)
-  - Expand weather ability distribution:
-    - Weather setters (Drizzle/Drought/Sand Stream/Snow Warning) are too monopolized
-    - Give more mons access to setting abilities - lots of options, not "must-haves"
-    - Same for Swift Swim/Chlorophyll/Sand Rush/Slush Rush and defensive options
-    - Goal: Many viable weather team cores, not just "Pelipper or bust"
-  - Thematic payoff: Groudon/Kyogre war is something player LIVED, not watched
-  - Ties into: Weather balance pass, early route mons, buff existing mons
+- [ ] (you: design call) Rival battles 2-3 (Rustboro, Route 110, hero): undecided, see `DIVERGENCE_THEORY.md` open questions. Until then hero testers meet the vanilla teams (Grovyle/Marshtomp lines).
+- [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
+- [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
+- [ ] [refine] Automated tests for design values (starter learnsets, key configs) and story-flag logic. Scope it after the expansion upgrade's merge-hygiene review.
+- [ ] [ready] Demo build reverts the testing values (see Pre-Release Checklist).
 
-- [ ] Wally's Ralts - gender-based trainer splits
-  - Core system implemented (personality/IVs persist, upscaler applies to all Wally battles)
-  - TODO: Create 12 trainer definitions (6 battles × 2 genders) for Gardevoir/Gallade split
-  - TODO: Add gender check in map scripts to select correct trainer ID
+### Optional
 
-- [ ] Oldale Town Enhancements (partially done)
-  - [x] Oldale Ruins area east of Oldale with Berry Farmer's House
-  - [x] Girl NPC hints at berry quest ("farmer hasn't been at market")
-  - [ ] Mart potion guy: "Berries have been scarce lately, these are in demand" → gives potion
-  - [ ] Footprint guy: Keep the gag initially, bring back later
-    - He's found REAL footprints somewhere, needs help investigating
-    - Could lead to rare encounter or hidden area
-    - "30 years and FINALLY" energy
+- [ ] [refine] Route 104 weather cycle prototype (sun by day, rain by night; see `BALANCE.md` Area Weather Cycles). Waits on the expansion 1.17 upgrade (`setstartingstatus`). Open: NPC tutorial dialogue.
 
-- [ ] Oldale Ruins Expansion (anime-inspired from EP276 "A Ruin with a View")
-  - [ ] Azurill encounter - add to Serene Pond or ruins water area (already on Route 102 day; this is in addition)
-  - [ ] "Living fossils" theme - Pokemon unchanged since ancient times (Relicanth, etc.)
-  - [ ] Four keys mechanic - sealed inner door, keys found throughout Hoenn
-    - Could tie to weather conditions, story beats, or Team Magma/Aqua encounters
-  - [ ] Main chamber with murals - ancient weather war, Groudon/Kyogre, Rayquaza foreshadowing
-  - [ ] Time-locked secret - sunrise/morning triggers hidden staircase (uses time-of-day system)
-  - [ ] Underground lake - Relicanth static encounter as puzzle reward
-  - [ ] Team Magma/Aqua connection - possibly involved in key collection or ruins storyline
+## Demo 1
 
-- [ ] Sunflora rework (Grass/Fire sun sweeper)
-  - **Type:** Grass → Grass/Fire
-  - **Abilities:** Chlorophyll / Solar Power / Drought (HA)
-  - **Stats:**
-    | Stat | Old | New |
-    |------|-----|-----|
-    | HP | 75 | 95 |
-    | Atk | 75 | 55 |
-    | Def | 55 | 85 |
-    | SpA | 105 | 125 |
-    | SpD | 85 | 100 |
-    | Spe | 30 | 60 |
-    | BST | 425 | 520 |
-  - **Level-up (Sunflora):**
-    - 0: Sunny Day, Ember, Flower Shield
-    - 16: Razor Leaf, 19: Flame Burst, 22: Synthesis, 25: Giga Drain
-    - 28: Morning Sun, 31: Fire Spin, 34: Solar Beam, 37: Flamethrower
-    - 40: Petal Dance, 43: Heat Wave, 46: Solar Blade, 50: Fire Blast, 55: Overheat
-  - **Coverage to add:** Earth Power (TM/tutor), Weather Ball, Sludge Bomb, Dazzling Gleam
-  - **Note:** With permanent weather, Chlorophyll = permanent 120 Spe, Solar Power = sustained pressure + HP drain
+Ends at the **Weather Institute on both routes**, the minimum for a real evaluation, since the anti-hero route gets there so much faster. Hero: after Norman (5 badges, vanilla order). Anti-hero: Wattson → Flannery → Norman (3 badges), then Surf to Route 119. Includes everything in Pre-Demo.
 
-## Quick Notes
+### Story: anti-hero
 
-- Buff Castform: +1 Atk/SpAtk/Speed on form change? Rewards weather chaos, fits the weather-heavy design pillar
-- Non-Euclidean geometry ideas for ruins/puzzles: Penrose stairs, mirror worlds, wraparound maps (inspired by HyperRogue)
+- [ ] [refine] Anti-hero Flannery and Norman: badge-count dialogue and arrival beats (lines in `DIVERGENCE_THEORY.md` gym order).
+- [ ] [idea] (you: design call) Mt. Chimney on the anti-hero route: Aqua, Magma or both (open question in `DIVERGENCE_THEORY.md`).
+- [ ] [refine] Rubicon world state after Wattson: grunt removed from the side passage for good, Roxanne's gym dialogue switches to the secret-final-boss waiting state, Devon switches to "we never recovered the goods".
+- [ ] [ready] Cut HM audit (Petalburg Woods through Route 121): nothing story-critical behind Cut for anti-hero players before Gym 8; flavor can stay gated; document what's gated for the post-climax "Cut unlocks Hoenn" phase.
+
+### Weather
+
+- [ ] [ready] Permanent ability weather: set `B_ABILITY_WEATHER` to `GEN_5` (`BALANCE.md`: ability weather is permanent). After the upgrade.
+- [ ] (you: design call) Move-based weather duration: `BALANCE.md` says permanent, an older backlog note said 5/8 turns.
+- [ ] [refine] Area weather cycles for the areas reached by the Weather Institute, after the Route 104 prototype (`BALANCE.md` Area Weather Cycles).
+- [ ] [refine] Weather counterplay timeline: when players get weather setters (Pelipper ~L25, others?), when enemies start using weather, when counters (Utility Umbrella, Cloud Nine/Air Lock users like Psyduck, Safety Goggles) become available. Feeds item placement.
+
+### Encounters
+
+- [ ] [refine] Granite Cave (hero)
+- [ ] [refine] Dewford (hero)
+- [ ] [refine] Route 109 fishing (hero)
+- [ ] [refine] Route 110 (hero)
+- [ ] [refine] Slateport area (hero)
+- [ ] [idea] Encounter and trainer passes for the remaining areas up to Route 119 on both routes (break down per area when we get there)
+
+### DexNav
+
+- [ ] [idea] Silhouettes for all species. Open: where they show and what's shown.
+- [ ] [idea] Search for species that have only been seen, with penalties. Open: which penalties.
+- [ ] [idea] Per-species search levels (`USE_DEXNAV_SEARCH_LEVELS`). Open: costs ~1 save byte per species.
+
+## Later
+
+- [ ] [refine] Mauville Game Corner starter-doll prize: Axew and Deino dolls. Blocked on art (`ART_ASSETS.md`); remove the dead Mudkip-doll branch then.
+- [ ] [ready] Wally's Ralts gender split: 12 trainer definitions (6 battles × 2 genders) for Gardevoir/Gallade, plus a gender check in the map scripts. Persistence is done; this only matters once Wally's Ralts evolves.
+- [ ] [idea] Buff vanilla early-route Pokemon so they stay competitive with the additions (avoid "old mon bad, new mon good"). Surskit/Masquerain is the clearest target; also Poochyena, Zigzagoon, Wurmple, Lotad, Seedot. First check what expansion already buffed. Options: stats, abilities, learnsets, evolutions.
+- [ ] [idea] Spread weather abilities: more setters (Drizzle/Drought/Sand Stream/Snow Warning) and Swift Swim/Chlorophyll/Sand Rush/Slush Rush or defensive weather abilities on underused Pokemon (`BALANCE.md` Weather design goals).
+- [ ] [ready] Sunflora rework (spec in `BALANCE.md` Pokemon Reworks). No home yet; it gets placed when an area calls for it.
+- [ ] [idea] Castform buff: +1 Atk/SpA/Spe on form change? Rewards weather chaos.
+- [ ] [idea] Weather cycle polish: overworld particles/tints, DexNav weather icon, NPC dialogue variation.
+- [ ] [refine] Azurill at Serene Pond or the Oldale Ruins water area, in addition to Route 102.
+- [ ] [idea] Oldale footprint guy: keep the gag for now; later he's found REAL footprints ("30 years and FINALLY"), leading to a rare encounter or hidden area.
+- [ ] [idea] Oldale Ruins expansion (inspired by anime EP276 "A Ruin with a View"):
+  - "Living fossils" theme: Pokemon unchanged since ancient times (Relicanth, etc.)
+  - Four keys found throughout Hoenn open a sealed inner door; could tie to weather, story beats or Aqua/Magma
+  - Main chamber murals: ancient weather war, Groudon/Kyogre, Rayquaza foreshadowing
+  - Time-locked secret: sunrise/morning reveals a hidden staircase (time-of-day system)
+  - Underground lake with a Relicanth static encounter as the puzzle reward
+  - Puzzle geometry ideas: Penrose stairs, mirror worlds, wraparound maps (HyperRogue)
+- [ ] [ready] Upstream PR for the `GetStarterPokemon` off-by-one (upstream 1.17.1 has it too).
+- [ ] [ready] Hold B during ball shakes (childhood myth), approach B below.
+
+  Today the B-button boost only applies when the ball is selected, because the catch is calculated before the animation.
+  - **Remove:** the B-button check in `Cmd_handleballthrow` (`src/battle_script_commands.c:13747-13749`).
+  - **Architecture:** `Cmd_handleballthrow` calculates odds and the shake result (0-3 or SUCCESS); `gBattleSpritesDataPtr->animationData->ballThrowCaseId` stores it; in `battle_anim_throw.c`, `SpriteCB_Ball_Release` is the breakout and `SpriteCB_Ball_Capture` the catch.
+  - **Approach A (check at breakout):** in `SpriteCB_Ball_Release` (line 1495), if B is held, recalculate with the bonus and re-roll; on success swap to `SpriteCB_Ball_Capture` and redirect `gBattlescriptCurrInstr` to the success script (tricky).
+  - **Approach B (preferred, track B during shakes):** in the `BALL_WAIT_NEXT_SHAKE` case (lines 1468-1482) check B each shake and set a flag (new animationData field?); at the final shake, if the flag is set and the throw would fail, apply the bonus and re-roll. Feels like mashing B, which matches the myth.
+  - **Complications:** the battle script path is set before the animation and must be redirected on success; the original catch parameters are needed for the recalculation; edge cases (critical captures, Safari Zone).
+  - **Effort:** medium, ~20-40 lines across 2 files.
 
 ## Pre-Release Checklist
 
 - [ ] Revert shiny odds to normal (`SHINY_ODDS` at `include/constants/pokemon.h:101` - change 21845 back to 8)
 - [ ] Reduce B button catch boost to ~1% (`src/battle_script_commands.c:13749` in `Cmd_handleballthrow` - change `odds *= 10` to `odds = (odds * 101) / 100`)
 
-## Small Features
-
-- [x] Auto-run toggle - Hold B to walk instead of run (`src/field_player_avatar.c:844`)
-- [ ] Quest menu: Hide locked quests entirely instead of showing "??????" (modify list-building in `src/quests.c`)
-
-## Feature: Hold B During Ball Shakes (Childhood Myth)
-
-Currently B button catch boost only works when selecting the ball (calculation happens before animation). To make it work during the shake animation like the real myth:
-
-**Current implementation to remove:**
-- `src/battle_script_commands.c:13747-13749` - B button check in `Cmd_handleballthrow`
-
-**Architecture:**
-- `Cmd_handleballthrow` (battle_script_commands.c) calculates odds, determines shakes (0-3 or SUCCESS), sends to animation
-- `gBattleSpritesDataPtr->animationData->ballThrowCaseId` stores predetermined result
-- Animation callbacks in `battle_anim_throw.c`:
-  - `SpriteCB_Ball_Release` = breakout (failure)
-  - `SpriteCB_Ball_Capture` = catch stars/music (success)
-
-**Approach A - Check at breakout moment:**
-1. In `SpriteCB_Ball_Release` (battle_anim_throw.c:1495), before breakout animation
-2. Check `gMain.heldKeys & B_BUTTON`
-3. If held, recalculate odds with bonus, re-roll
-4. If success, swap callback to `SpriteCB_Ball_Capture`
-5. Also need to change `gBattlescriptCurrInstr` to success script (tricky)
-
-**Approach B - Track B during shakes (preferred):**
-1. In `BALL_WAIT_NEXT_SHAKE` case (battle_anim_throw.c:1468-1482), check B each shake
-2. Set a flag if B held during any shake (new field in animationData?)
-3. At final shake check, if flag set and would fail, apply bonus and re-roll
-4. Feels more like "mashing B during shakes" - matches the myth better
-
-**Complications:**
-- Battle script path already set before animation - need to redirect on success
-- Need access to original catch parameters for recalculation
-- Edge cases: critical captures, safari zone, etc.
-
-**Effort:** Medium (~20-40 lines across 2 files)
-
 ## Done
 
-- [x] Starter swap: Axew/Deino pair replaces the Pikipek/Machop/Roggenrola trio
-  - Axew line is Dragon/Steel; evolution levels adjusted for both lines
-  - Early learnsets tuned (Metal Claw / Bite at L6, Deino Dragon Breath at L16)
-  - Fixed the starter selection freeze and textbox redraw after the trio-to-duo refactor
-- [x] Petalburg Woods / Route 104 Devon Goods theft (v2, see Rusturf Tunnel item)
-- [x] Enable DexNav (enabled, flags/vars assigned, granted in Birch's lab, shown in start menu)
-- [x] Aevian Magikarp and Gyarados regional variants
-- [x] Quest: "Field Research"
-- [x] Berry Thief follow-up: farmer's berry shop after the quest, Phantump holds a Sitrus Berry
-- [x] EV Trainer key item, IV editing behind a flag
-- [x] Compact start menu
-- [x] Gen 8 Pokemon enabled
-- [x] Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) + lookup skill
-- [x] Bug fixes:
-  - Scripted battle crash on return to overworld after upstream merge
-  - Quest state not cleared on new game
-  - Wally tutorial trainer sprite stuck as black silhouette
-  - Follower respawning after Put Away (follower flag clashed with DexNav's search flag)
-- [x] Wally's Ralts persistence system
-  - Tutorial Ralts data (personality, IVs, hidden nature) saved to SaveBlock3
-  - TryUpscaleWallyRalts() applies saved data to all future Wally battles
-  - Supports shiny, gender variance, future mint system
-- [x] Route 102 time-of-day encounters
-  - Day: Azurill added (9%), Lotad day-only
-  - Night: Oddish (20%), Hoothoot (20%) replace Lotad/Azurill
-- [x] Add Quest Menu (Unbound-style) - Ported from [ghoulslash/pokeemerald quest-menu](https://github.com/ghoulslash/pokeemerald/tree/pokemon_unbound/quest-menu)
-- [x] Wimpy Brace item + Oldale NPC gifts (Macho Brace / Wimpy Brace)
-- [x] Machop learnset adjustment (Pound at L1, Low Kick at L6)
-- [x] Enable time-based encounters (day/night exclusive Pokemon)
-  - Routes 101, 102, 103, Serene Pond, Oldale Ruins have day/night variants
-  - Fake RTC at 60x speed for testing
-- [x] Quest: "Berry Thief" (Phantump)
-  - Old farmer in Oldale Ruins complains about missing Watmel Berries
-  - Phantump appears at berry tree at night with full cutscene
-  - Guaranteed Harvest ability (hidden ability) - thematic for berry thief
-  - Reward: 3 Oran Berries, access to rare Watmel Berry tree
-  - Oldale Town girl hints at quest, changes dialogue when complete
+What exists today, one line per feature. Details live in git history and the design docs.
+
+- Starter swap: Axew/Deino pair (Axew line Dragon/Steel, evolution levels, early learnsets in `gen_9.h`)
+- Petalburg Woods rewrite + Route 104 Devon Goods theft (v2), sets `VAR_PETALBURG_WOODS_STATE` = 2
+- Time-of-day encounters: Routes 101-104, Serene Pond, Oldale Ruins (tables in `BALANCE.md`), fake RTC at 60x for testing
+- Oldale Ruins area and Berry Farmer's House; Oldale girl hints at the berry quest
+- Quest menu (ported from [ghoulslash/pokeemerald quest-menu](https://github.com/ghoulslash/pokeemerald/tree/pokemon_unbound/quest-menu)) and quests: Berry Thief (Phantump cutscene, farmer's berry shop), Field Research
+- DexNav enabled (flags/vars assigned, granted in Birch's lab, shown in the start menu)
+- Wally's Ralts persistence (SaveBlock3; applied to every later Wally battle)
+- Aevian Magikarp and Gyarados regional variants
+- Items: EV Trainer (IV editing behind a flag), Wimpy Brace, Exp Share All; Oldale Macho/Wimpy Brace gifts
+- QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
+- Machop learnset tune (Pound at L1, Low Kick at L6)
+- Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
+- Fixes: scripted battle crash after the upstream merge, quest state on new game, Wally's silhouette sprite, follower/DexNav flag clash, quest menu out-of-bounds sprite write
