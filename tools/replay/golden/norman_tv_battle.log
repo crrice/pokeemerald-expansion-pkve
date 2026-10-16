@@ -1,0 +1,36 @@
+# battle
+turn 1 player sends out MIGHTYENA (hp 40)
+turn 1 opponent sends out COFAGRIGUS (hp 25)
+turn 1 player MIGHTYENA uses CRUNCH
+turn 1 opponent COFAGRIGUS hp 25 -> 0
+turn 1 opponent COFAGRIGUS faints
+turn 1 player MIGHTYENA ability MOXIE -> MUMMY
+turn 2 opponent sends out SLAKING (hp 45)
+turn 2 opponent SLAKING uses RETURN
+turn 2 player MIGHTYENA hp 40 -> 0
+turn 2 player MIGHTYENA faints
+turn 2 opponent SLAKING ability TRUANT -> MUMMY
+turn 3 player sends out HARIYAMA (hp 206)
+turn 3 opponent SLAKING uses RETURN
+turn 3 player HARIYAMA hp 206 -> 0
+turn 3 player HARIYAMA faints
+result LOST
+# text
+The challenger faces LEADER~NORMAN!
+LEADER~NORMAN sent out Cofagrigus!
+Go! Mightyena!
+Watch this highlight from PETALBURG GYM! Norman was down to his last two POKéMON!
+Mightyena used Crunch!
+It’s super effective!
+The opposing Cofagrigus fainted!
+Mightyena acquired Mummy!
+LEADER~NORMAN sent out Slaking!
+With COFAGRIGUS down, Norman sent out SLAKING! Could that lazy POKéMON turn things around?
+The opposing Slaking used Return!
+Mightyena fainted!
+The opposing Slaking acquired Mummy!
+Go for it, Hariyama!
+The opposing Slaking used Return!
+Hariyama fainted!
+But SLAKING showed incredible energy! A stunning comeback for Leader Norman!
+The challenger has no more Pokémon that can fight! The challenger lost to LEADER~NORMAN!

@@ -11,8 +11,32 @@ watch replay-ran battle-type has BATTLE_TYPE_SCRIPTED and in-battle
 tap A when script-running until in-battle timeout 3000
 expect battle-type has BATTLE_TYPE_SCRIPTED
 
-# The replay plays itself out and returns to the field
+# Norman's replay (src/data/scripted_battles.h). The comeback hinges on Mummy:
+# Crunch gives Mightyena Mummy, Slaking's Return catches it, so Truant never kicks in.
+tap A when in-battle until battler player hp > 0 and battler opponent hp > 0 timeout 1200
+record-battle start
+expect battler player species == SPECIES_MIGHTYENA and battler opponent species == SPECIES_COFAGRIGUS
+tap A when in-battle until battler opponent species == SPECIES_SLAKING timeout 6000
+expect battler player ability == ABILITY_MUMMY                     # caught Mummy from Crunch
+tap A when in-battle until battler player species == SPECIES_HARIYAMA timeout 6000
+expect battler opponent ability == ABILITY_MUMMY                   # Truant replaced: Slaking acts twice
+tap A when in-battle until battle-outcome != 0 timeout 6000
+expect battle-outcome == B_OUTCOME_LOST                            # the challenger (player side) lost
+
+# The replay ends and returns to the field
 tap A when in-battle until !in-battle and callback2 == CB2_Overworld timeout 30000
+record-battle stop
+expect-logged "turn 1 player MIGHTYENA uses CRUNCH"
+expect-logged "opponent COFAGRIGUS faints"
+expect-not-logged "COFAGRIGUS uses"
+expect-text "Could that lazy"
+expect-logged "turn 2 opponent SLAKING uses RETURN"
+expect-logged "player MIGHTYENA faints"
+expect-logged "turn 3 opponent SLAKING uses RETURN"
+expect-not-logged "HARIYAMA uses"
+expect-logged "player HARIYAMA faints"
+expect-text "stunning comeback"
+expect-transcript golden/norman_tv_battle.log
 
 # Mom's follow-up lines, then the scene releases the player
 tap A when script-running until field-idle for 30 timeout 3000
