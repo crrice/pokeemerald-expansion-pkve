@@ -197,8 +197,8 @@ High-level tasks to implement.
 
 ## Pre-Release Checklist
 
-- [ ] Revert shiny odds to normal (`include/constants/pokemon.h:96` - change 21845 back to 8)
-- [ ] Reduce B button catch boost to ~1% (`src/battle_script_commands.c:15919` - change `odds *= 10` to `odds = (odds * 101) / 100`)
+- [ ] Revert shiny odds to normal (`SHINY_ODDS` at `include/constants/pokemon.h:101` - change 21845 back to 8)
+- [ ] Reduce B button catch boost to ~1% (`src/battle_script_commands.c:13749` in `Cmd_handleballthrow` - change `odds *= 10` to `odds = (odds * 101) / 100`)
 
 ## Small Features
 
@@ -210,7 +210,7 @@ High-level tasks to implement.
 Currently B button catch boost only works when selecting the ball (calculation happens before animation). To make it work during the shake animation like the real myth:
 
 **Current implementation to remove:**
-- `src/battle_script_commands.c:15919-15921` - B button check in `Cmd_handleballthrow`
+- `src/battle_script_commands.c:13747-13749` - B button check in `Cmd_handleballthrow`
 
 **Architecture:**
 - `Cmd_handleballthrow` (battle_script_commands.c) calculates odds, determines shakes (0-3 or SUCCESS), sends to animation
@@ -220,14 +220,14 @@ Currently B button catch boost only works when selecting the ball (calculation h
   - `SpriteCB_Ball_Capture` = catch stars/music (success)
 
 **Approach A - Check at breakout moment:**
-1. In `SpriteCB_Ball_Release` (battle_anim_throw.c:1494), before breakout animation
+1. In `SpriteCB_Ball_Release` (battle_anim_throw.c:1495), before breakout animation
 2. Check `gMain.heldKeys & B_BUTTON`
 3. If held, recalculate odds with bonus, re-roll
 4. If success, swap callback to `SpriteCB_Ball_Capture`
 5. Also need to change `gBattlescriptCurrInstr` to success script (tricky)
 
 **Approach B - Track B during shakes (preferred):**
-1. In `BALL_WAIT_NEXT_SHAKE` case (battle_anim_throw.c:1467-1480), check B each shake
+1. In `BALL_WAIT_NEXT_SHAKE` case (battle_anim_throw.c:1468-1482), check B each shake
 2. Set a flag if B held during any shake (new field in animationData?)
 3. At final shake check, if flag set and would fail, apply bonus and re-roll
 4. Feels more like "mashing B during shakes" - matches the myth better
