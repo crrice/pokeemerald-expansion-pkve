@@ -147,6 +147,7 @@ Rules:
 - Design docs state intent ("Axew gets Steel STAB before Roxanne"); code holds the values and tests pin them. Don't restate code values in docs.
 - Decisions made in conversation go into the relevant design doc in the repo, not only chat or local memory. Cloud sessions can't see local memory.
 - Encounter tables are designed in `BALANCE.md` first, then implemented.
+- New features come with tests that pin their design values. How to write and run them: the `testing` skill (`.claude/skills/testing/SKILL.md`).
 - Art blockers go to `ART_ASSETS.md`.
 - At the start of a session, compare the current milestone against `git log` since `BACKLOG.md` last changed and flag drift.
 - Trim Done at each milestone; git history is the permanent record.
