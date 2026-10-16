@@ -17826,7 +17826,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gShinyOverworldPalette_Magikarp
         )
         .isAevianForm = TRUE,
-        .tmIlliterate = TRUE,
+        .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sMagikarpAevianLevelUpLearnset,
         .teachableLearnset = sMagikarpTeachableLearnset,
         .formSpeciesIdTable = sMagikarpFormSpeciesIdTable,
