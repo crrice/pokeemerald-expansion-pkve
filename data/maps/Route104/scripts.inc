@@ -1166,3 +1166,98 @@ Route104_Text_BrendanPostBattle:
 	.string "making POKéMON battle.\p"
 	.string "Like MR. BRINEY, it's important to\n"
 	.string "become friends with your POKéMON.$"
+
+Route104_EventScript_AquaAmbush::
+	lockall
+	addobject LOCALID_ROUTE104_DEVON_RESEARCHER
+	addobject LOCALID_ROUTE104_AQUA_GRUNT
+	playbgm MUS_ENCOUNTER_AQUA, FALSE
+	applymovement LOCALID_ROUTE104_AQUA_GRUNT, Route104_Movement_GruntRunIn
+	waitmovement 0
+	msgbox Route104_Text_GruntCornering, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ROUTE104_DEVON_RESEARCHER, Common_Movement_ExclamationMark
+	waitmovement 0
+	msgbox Route104_Text_GruntGotEm, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ROUTE104_AQUA_GRUNT, Route104_Movement_GruntRunOff
+	waitmovement 0
+	removeobject LOCALID_ROUTE104_AQUA_GRUNT
+	setflag FLAG_HIDE_ROUTE104_AQUA_GRUNT
+	fadedefaultbgm
+	applymovement LOCALID_ROUTE104_DEVON_RESEARCHER, Route104_Movement_ResearcherApproachPlayer
+	waitmovement 0
+	msgbox Route104_Text_ResearcherReact, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ROUTE104_DEVON_RESEARCHER, Route104_Movement_ResearcherExit
+	waitmovement 0
+	removeobject LOCALID_ROUTE104_DEVON_RESEARCHER
+	setflag FLAG_HIDE_ROUTE104_DEVON_RESEARCHER
+	setvar VAR_PETALBURG_WOODS_STATE, 2
+	releaseall
+	end
+
+Route104_Movement_GruntRunIn:
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	step_end
+
+Route104_Movement_GruntRunOff:
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	step_end
+
+Route104_Movement_ResearcherApproachPlayer:
+	walk_down
+	walk_down
+	walk_down
+	face_player
+	step_end
+
+Route104_Movement_ResearcherExit:
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+Route104_Text_GruntCornering:
+	.string "Hah! There you are, old man.\p"
+	.string "Hand 'em over!$"
+
+Route104_Text_GruntGotEm:
+	.string "Heh.\n"
+	.string "Boss will be pleased.$"
+
+Route104_Text_ResearcherReact:
+	.string "He's gone… and so are my papers!\p"
+	.string "I have to get to RUSTBORO at once!$"
