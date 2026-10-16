@@ -61,6 +61,15 @@ Replay harness in `tools/replay/` (usage: `testing` skill). Remaining build orde
 - [ ] [ready] Screenshot checks: `expect-screen NAME [region ...]` against `tools/replay/golden/NAME.png`, exact pixel match, writes actual + diff on mismatch, `--update-golden` to accept.
 - [ ] [ready] Failure diagnostic: decode the last dialogue line on screen from game memory (`charmap.txt`).
 - [ ] [refine] Speed: test saves use max text speed and battle animations off; `set-time HH:MM` writes the fake RTC directly; run scenarios in parallel. Open: measure whether skipping frame rendering helps.
+- [ ] [refine] Battle transcripts: record a battle as a log (who's out, moves used per turn, HP changes, faints, switch-ins, result) from `gBattleMons[]`, compared exactly against a reviewed golden log (`--update-golden` to accept changes), plus a few explicit checks for headline moments. First use: the Norman TV replay.
+
+Stretch goals (after the above):
+
+- [ ] [idea] Shiny Wally's Ralts: a save with a shiny tutorial Ralts, checking it's still shiny in each later Wally battle.
+- [ ] [idea] Quest saves: a `quest QUEST_X == state` condition and saves that walk quests through their states.
+- [ ] [idea] DexNav encounters: saves that run DexNav searches and check the encountered species, ability and moves.
+- [ ] [idea] Custom moves and abilities: Tier 1 battle tests for each (replays only where they touch the overworld).
+- [ ] [idea] Balance sanity: a move-choice policy plays a battle N times with different RNG (shifted input timing) and must win at least X% of the time.
 - [ ] [ready] Demo build reverts the testing values (see Pre-Release Checklist).
 
 ### Optional
