@@ -1,0 +1,14 @@
+# Truck -> Mom -> May's house -> set the bedroom clock -> back downstairs.
+# Ends on the first frame back on 1F, where Mom calls the player to the TV.
+wait until !controls-locked timeout 3000                             # truck ride
+hold RIGHT until map != MAP_INSIDE_OF_TRUCK timeout 600
+tap A when script-running until map == MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F and field-idle for 30 timeout 6000
+hold UP until map == MAP_LITTLEROOT_TOWN_MAYS_HOUSE_2F timeout 600   # stairs at (2, 2)
+wait until field-idle for 10 timeout 600
+walk RIGHT to 3 2                                                     # clock is the wall tile at (3, 1)
+face UP
+tap A 1
+use lib/set_clock.replay
+tap A when script-running until field-idle for 30 timeout 6000       # Mom comes upstairs
+walk LEFT to 1 2
+hold UP until map == MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F timeout 300   # stairs at (1, 1)

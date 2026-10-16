@@ -1,0 +1,26 @@
+# Mom's TV broadcast: page Mom's text, watch Norman's scripted battle replay,
+# return to the house and get control back. Run once per gender.
+variant gender=boy  house=MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F
+variant gender=girl house=MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F
+
+use lib/new_game_to_tv.replay gender=$gender
+expect var VAR_LITTLEROOT_INTRO_STATE == 6                     # clock set, broadcast not seen yet
+watch replay-ran battle-type has BATTLE_TYPE_SCRIPTED and in-battle
+
+# Mom's lines and "Watch the broadcast?" (YES is the default)
+tap A when script-running until in-battle timeout 3000
+expect battle-type has BATTLE_TYPE_SCRIPTED
+
+# The replay plays itself out and returns to the field
+tap A when in-battle until !in-battle and callback2 == CB2_Overworld timeout 30000
+
+# Mom's follow-up lines, then the scene releases the player
+tap A when script-running until field-idle for 30 timeout 3000
+
+expect-seen replay-ran
+expect map == $house
+expect flag FLAG_SYS_TV_HOME
+expect var VAR_LITTLEROOT_INTRO_STATE == 7
+expect party-count == 0                                         # the real (empty) party was restored
+expect-control                                                  # control really is back
+expect map == $house

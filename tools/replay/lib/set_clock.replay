@@ -1,0 +1,7 @@
+# Bedroom wall clock: accept the time it shows. Start facing the clock, before pressing A.
+# The "Is this the correct time?" prompt starts on NO, so blind A presses would loop forever.
+tap A when script-running until callback2 == CB2_WallClock timeout 1200    # "The clock is stopped..."
+wait until !fading for 10 timeout 300
+tap A until task-active Task_SetClock_HandleConfirmInput timeout 120
+tap UP 1                                                                    # NO -> YES
+tap A until callback2 != CB2_WallClock timeout 300

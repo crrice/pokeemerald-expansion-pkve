@@ -1,0 +1,4 @@
+# Boot -> new game -> moving in -> back downstairs, just as Mom calls the player to the TV.
+param gender=boy
+use lib/new_game.replay gender=$gender
+use lib/moving_in_$gender.replay
