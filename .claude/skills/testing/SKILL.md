@@ -74,6 +74,16 @@ Script logic (`#include "test/overworld_script.h"`): `RUN_OVERWORLD_SCRIPT( setf
 
 Battles (`#include "test/battle.h"`): `SINGLE_BATTLE_TEST` / `DOUBLE_BATTLE_TEST` / `AI_SINGLE_BATTLE_TEST` with `GIVEN { PLAYER(...); OPPONENT(...); } WHEN { TURN { MOVE(player, ...); } } SCENE { MESSAGE("..."); ANIMATION(...); HP_BAR(...); }`. Copy the shape from a nearby file in `test/battle/`; upstream's guide documents the full DSL.
 
+### Measuring odds: unrigged battle tests
+
+Upstream's battle runner rigs randomness (every move hits, no crits, secondary effects always trigger), which is right for mechanics but useless for "how often does this go our way?". `test/verdant/unrigged_battle.h` provides `UNRIGGED_AI_SINGLE_BATTLE_TEST`: same DSL, real RNG. With `PASSES_RANDOMLY(passes, trials)` (no tag) it plays the battle with 50 seeds and compares the win ratio, ±2%.
+
+- To measure, use `PASSES_RANDOMLY(0, 1)`: the failure message reports `observed X` (50/50 shows as 0.989 due to fixed-point rounding).
+- Give the opponent a Splash-only filler so the battle survives its lead fainting and every scripted TURN runs; a player loss ends the battle early and fails the run.
+- Check results on the live battlers (`opponent->species`, `player->hp` in THEN), not `OPPONENT_PARTY` (party HP isn't synced from the battle).
+- Parties are built once per test, so random creation details (IVs, nature, ability) are fixed per test; make one test per profile.
+- Example: `test/verdant/route103_rival.c`.
+
 ### Triage
 
 Known pre-existing failures (baseline before the expansion 1.17 upgrade, 4285 tests):
