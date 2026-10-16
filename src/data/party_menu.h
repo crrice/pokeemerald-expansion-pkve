@@ -571,7 +571,7 @@ static const struct WindowTemplate sLevelUpStatsWindowTemplate =
     .baseBlock = 0x2E9,
 };
 
-static const struct WindowTemplate sUnusedWindowTemplate1 =
+static const struct WindowTemplate sWindowTemplate_FirstBattleOakVoiceover =
 {
     .bg = 2,
     .tilemapLeft = 2,
@@ -805,8 +805,8 @@ static const u8 *const sUnionRoomTradeMessages[] =
     [UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_2 - 1]   = gText_CantTradeWithTrainer,
 };
 
-static const u32 sHeldItemGfx[] = INCBIN_U32("graphics/party_menu/hold_icons.4bpp");
-const u16 gHeldItemPalette[] = INCBIN_U16("graphics/party_menu/hold_icons.gbapal");
+static const u32 sHeldItemGfx[] = INCGFX_U32("graphics/party_menu/hold_icons.png", ".4bpp");
+const u16 gHeldItemPalette[] = INCGFX_U16("graphics/party_menu/hold_icons.png", ".gbapal");
 
 static const struct OamData sOamData_HeldItem =
 {
@@ -859,9 +859,6 @@ static const struct SpriteTemplate sSpriteTemplate_HeldItem =
     .paletteTag = TAG_HELD_ITEM,
     .oam = &sOamData_HeldItem,
     .anims = sSpriteAnimTable_HeldItem,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_MenuPokeball =
@@ -916,9 +913,6 @@ static const struct SpriteTemplate sSpriteTemplate_MenuPokeball =
     .paletteTag = TAG_POKEBALL,
     .oam = &sOamData_MenuPokeball,
     .anims = sSpriteAnimTable_MenuPokeball,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_MenuPokeballSmall =
@@ -997,9 +991,6 @@ static const struct SpriteTemplate sSpriteTemplate_MenuPokeballSmall =
     .paletteTag = TAG_POKEBALL,
     .oam = &sOamData_MenuPokeballSmall,
     .anims = sSpriteAnimTable_MenuPokeballSmall,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_StatusCondition =
@@ -1095,9 +1086,6 @@ const struct SpriteTemplate gSpriteTemplate_StatusIcons =
     .paletteTag = TAG_STATUS_ICONS,
     .oam = &sOamData_StatusCondition,
     .anims = sSpriteTemplate_StatusCondition,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u8 *const sUnused_StatStrings[] =
