@@ -25,23 +25,44 @@ Weather is our main gimmick. Introduced this gen and is the story theme so leani
 
 All weather is permanent until replaced. Weather wars are committal - you override theirs or live with it.
 
-- Ability-based weather: permanent. Not implemented.
-- Move-based weather: permanent. Not implemented.
+- Ability-based weather: permanent. Not implemented (one config line: `B_ABILITY_WEATHER` to `GEN_5`).
+- Move-based weather: permanent. Not implemented. [OPEN: an older backlog note had move weather staying 5/8 turns; decide which.]
 
 #### Design Goals
 
-- Story arc: weather emerges early, becomes oppressive mid-game ("weather tyranny"), Rayquaza is the earned relief.
+- Weather is THE system of this hack: prominent but never mandatory. Players must engage (join it or counter it), and clear counterplay always exists.
+- Story arc: weather emerges early, becomes oppressive mid-game ("weather tyranny"), Rayquaza is the earned relief. The Groudon/Kyogre war is something the player lived, not watched.
 - Counterplay accessible: Utility Umbrella, Cloud Nine/Air Lock users, Safety Goggles available at reasonable points. [TODO: Place these items]
-- Expand availability of weather setters beyond traditional 2-3 (or often just 1 viable) mons. [TODO]
+- Expand availability of weather setters beyond traditional 2-3 (or often just 1 viable) mons. Goal: many viable weather team cores, not "Pelipper or bust". [TODO]
 - Expand availability of weather-related abilities (Swift Swim, Chlorophyll, Sand Rush, etc). [TODO]
 - Improve weak weather abilities (Castform's Forecast is underwhelming). [TODO]
 - Consider modifying existing abilities for weather interplay. [TODO: Brainstorm examples]
+- Open: early routes already have a rain team skeleton (Wingull, Lotad, Surskit). Too easy to assemble?
 
 #### Trainer Themes
 
 - Rivals have weather identities: Brendan (aggro) uses Sun→Rain, May (stall) uses Sand→Hail. [TODO]
-- Rival teams vary based on starter choice? If May gets Roggenrola, a sand team makes thematic sense. [TODO: Design]
-- Teams Aqua/Magma themed around Rain/Hail and Sun/Sand respectively. [TODO]
+- Rival battles after Route 103 are undecided (see `DIVERGENCE_THEORY.md` open questions).
+- Teams Aqua/Magma: Aqua grunts Rain, Aqua admins Hail (water + ice); Magma grunts Sun, Magma admins Sand (fire + ground). [TODO]
+- Some gym leaders use weather strategically, not all.
+
+#### Area Weather Cycles
+
+Weather as ambient worldbuilding, not just a battle mechanic. Each signature area sets a default permanent weather at battle start, cycling by time of day.
+
+- **Core rule:** encounter tables are NOT affected by weather cycles. Weather and encounters are independent axes.
+- **Narrative arc:** natural cycles (Act 1) → Aqua/Magma disruption (Act 2) → planetary tyranny (Act 3) → Rayquaza restores. Rayquaza = restoration, not erasure.
+- **Signature cycle map (first pass):**
+  - Route 104: Sun day / Rain night (prototype, see Route 104 below)
+  - Route 116, Route 111 desert: Sandstorm (always)
+  - Mt. Chimney / Fiery Path: Sun (always)
+  - Shoal Cave / north ice: Hail (always)
+  - Sootopolis basin: Rain (always)
+  - Weather Institute: broken cycle (puzzle zone)
+  - Sky Pillar: none (Rayquaza's Air Lock domain)
+  - All other routes: clear (cycles should feel special, not noise)
+- **MVP:** just Route 104. Battle-start weather hook (expansion 1.17's `setstartingstatus` covers this), NPC tutorial dialogue.
+- **Override:** story scripts can force weather or clear it for cutscenes.
 
 #### Future Ideas
 
@@ -157,7 +178,30 @@ I hate grinding. But I like RP. Overall focus on letting the player customize th
 - No disobey on overlevel.
 - No level cap (except 100 lol).
 
+## Pokemon Reworks
+
+### Sunflora (Grass/Fire sun sweeper)
+
+- **Type:** Grass → Grass/Fire
+- **Abilities:** Chlorophyll / Solar Power / Drought (HA)
+- **Stats:**
+
+  | Stat | Old | New |
+  |------|-----|-----|
+  | HP | 75 | 95 |
+  | Atk | 75 | 55 |
+  | Def | 55 | 85 |
+  | SpA | 105 | 125 |
+  | SpD | 85 | 100 |
+  | Spe | 30 | 60 |
+  | BST | 425 | 520 |
+- **Level-up:** 0: Sunny Day, Ember, Flower Shield · 16: Razor Leaf · 19: Flame Burst · 22: Synthesis · 25: Giga Drain · 28: Morning Sun · 31: Fire Spin · 34: Solar Beam · 37: Flamethrower · 40: Petal Dance · 43: Heat Wave · 46: Solar Blade · 50: Fire Blast · 55: Overheat
+- **Coverage to add:** Earth Power (TM/tutor), Weather Ball, Sludge Bomb, Dazzling Gleam
+- **Note:** with permanent weather, Chlorophyll = permanent 120 Spe, Solar Power = sustained pressure + HP drain.
+
 ## Locations
+
+**Encounter design principle:** areas are designed one at a time, adding the Pokemon that fit the area ecologically or that it needs for gameplay reasons. No species is reserved for a place in advance (including the old Pikipek/Machop/Roggenrola starters).
 
 ### Littleroot
 
