@@ -123,6 +123,10 @@ One step per line, `#` comments.
 | `expect COND` | Assert now |
 | `watch NAME COND` / `expect-seen NAME` | COND must have been true on some frame since the watch started |
 | `expect-control` | The player can move: tries each direction until one moves them |
+| `record-battle start` / `record-battle stop` | Record a battle transcript (see below) |
+| `expect-logged "TEXT"` / `expect-not-logged "TEXT"` | A battle-event line containing TEXT was / wasn't recorded |
+| `expect-text "TEXT"` | An on-screen battle message containing TEXT was recorded |
+| `expect-transcript golden/NAME.log` | The recording matches the reviewed golden transcript exactly |
 | `state` | Print the state dump (for writing scenarios) |
 | `screenshot PATH` / `export-save PATH` | Write the current frame as PNG / the game's save memory |
 | `use lib/x.replay k=v` | Include a routine; `$k` substitutes parameters, `param k=v` sets defaults |
@@ -142,7 +146,18 @@ Conditions combine with `and` / `or` (`and` binds tighter) and `!` / `not`:
 | `in-battle`, `battle-type has BATTLE_TYPE_X` | Battle state |
 | `flag FLAG_X`, `var VAR_X == N` | Event flags and vars (also special flags and `VAR_0x8000`-style vars) |
 | `party-count == N` | Party size |
+| `battler player\|opponent FIELD == N` | Active battler data from `gBattleMons[]`: `species`, `hp`, `maxhp`, `ability`, `level`, `status`, `pp0`-`pp3`, `move0`-`move3` (singles) |
+| `battle-outcome == B_OUTCOME_X` | Battle result (0 while the battle is running) |
 | `mem8/mem16/mem32 SYM[+OFF] == N` | Escape hatch: raw memory |
+
+### Battle transcripts
+
+`record-battle start` (once both battlers are on the field) logs two sections until `record-battle stop`:
+
+- **Battle events**, from battle memory: `turn N SIDE sends out SPECIES (hp N)`, `... uses MOVE`, `... hp A -> B`, `... faints`, `... ability A -> B`, `... status A -> B`, `result OUTCOME`. Move use is detected from PP deductions, so repeated moves are each logged and a move that never goes off (Truant loafing, flinching) isn't.
+- **On-screen text**: every battle message, decoded from `gDisplayedStringBattle` with `charmap.txt` (health-box nickname redraws are skipped).
+
+`expect-transcript golden/NAME.log` compares both sections against a reviewed file in `tools/replay/golden/`. A battle-event mismatch means the battle played out differently; a text-only mismatch is reported as "only the wording changed". Accept an intentional change with `--update-golden`, then review the diff before committing it. Pair the golden file with a few `expect-logged` / `battler` checks for the headline moments, so a failure says what broke.
 
 ### Writing scenarios: lessons so far
 

@@ -61,7 +61,6 @@ Replay harness in `tools/replay/` (usage: `testing` skill). Remaining build orde
 - [ ] [ready] Screenshot checks: `expect-screen NAME [region ...]` against `tools/replay/golden/NAME.png`, exact pixel match, writes actual + diff on mismatch, `--update-golden` to accept.
 - [ ] [ready] Failure diagnostic: decode the last dialogue line on screen from game memory (`charmap.txt`).
 - [ ] [refine] Speed: test saves use max text speed and battle animations off; `set-time HH:MM` writes the fake RTC directly; run scenarios in parallel. Open: measure whether skipping frame rendering helps.
-- [ ] [refine] Battle transcripts: record a battle as a log (who's out, moves used per turn, HP changes, faints, switch-ins, result) from `gBattleMons[]`, compared exactly against a reviewed golden log (`--update-golden` to accept changes), plus a few explicit checks for headline moments. First use: the Norman TV replay.
 
 Stretch goals (after the above):
 
@@ -159,5 +158,5 @@ What exists today, one line per feature. Details live in git history and the des
 - QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
 - Machop learnset tune (Pound at L1, Low Kick at L6)
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
-- Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines) with the TV broadcast test for both genders
+- Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript
 - Fixes: scripted battle crash after the upstream merge, quest state on new game, Wally's silhouette sprite, follower/DexNav flag clash, quest menu out-of-bounds sprite write
