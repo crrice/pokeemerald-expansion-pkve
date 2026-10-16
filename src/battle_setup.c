@@ -471,7 +471,8 @@ void StartWallyTutorialBattle(void)
     struct Pokemon *mon = &gEnemyParty[0];
 
     // Create Ralts with random personality (allows either gender) and player's OT ID
-    CreateMon(mon, SPECIES_RALTS, 5, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
+    CreateMonWithIVs(mon, SPECIES_RALTS, 5, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(mon);
 
     // Save Ralts data for future Wally battles
     gSaveBlock3Ptr->wallyRalts.personality = personality;
