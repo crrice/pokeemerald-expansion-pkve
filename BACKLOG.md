@@ -2,6 +2,42 @@
 
 High-level tasks to implement.
 
+## Milestones
+
+### Pre-Demo (current target)
+
+Polished build that ends at **beating Wattson on both routes**. Hero: badge 3 (Roxanne, Brawly, Wattson), almost all vanilla. Anti-hero: badge 1, the Rubicon. Everything done so far plus the pieces below.
+
+- [ ] Rustboro / tunnel pivot (both routes) — see Rusturf Tunnel Divergence Scene
+  - [ ] Rustboro gym closed until the tunnel scene (key off `VAR_PETALBURG_WOODS_STATE` = 2), NPCs/Devon redirect east
+  - [ ] Rusturf Tunnel: breach, Roxanne cutscene, hidden side passage + grunt fight
+  - [ ] Hero: return goods → Cut HM, Roxanne's gym opens
+- [ ] Anti-hero route to Wattson
+  - [ ] East-side gauntlet wilds (L15-18), Route 117, Verdanturf
+  - [ ] Audit vanilla triggers that assume arriving in Mauville from Slateport (Wally etc.)
+  - [ ] Wattson 0-badge pre-fight and post-victory dialogue, Rubicon flags
+  - [ ] Difficulty pass: Wattson's Gym 3 team vs a 0-badge team
+  - [ ] Clean "end of pre-demo" stop after Wattson
+- [ ] Polish in range (both routes)
+  - [ ] VAR_STARTER_MON cleanup for maps in range
+  - [ ] Rival battles in range use the new starters and teams
+  - [ ] Confirm 2-starter flow (TV Dad battle, Birch rescue)
+  - [ ] Encounter tables: Petalburg Woods, Route 116, Rusturf Tunnel, Route 117
+  - [ ] Automated tests for design values (starter learnsets, key configs) and story flag logic
+  - [ ] Demo build reverts the testing values (see Pre-Release Checklist)
+- [ ] Optional: Route 104 weather cycle prototype (easier after the expansion 1.17 upgrade via `setstartingstatus`)
+
+### Demo 1
+
+Ends at the **Weather Institute on both routes** — the minimum for a real evaluation, since the anti-hero route gets there so much faster. Hero: after Norman (5 badges, vanilla order). Anti-hero: Wattson → Flannery → Norman (3 badges), then Surf to Route 119.
+
+- [ ] Everything in Pre-Demo
+- [ ] Anti-hero Flannery and Norman (badge-count dialogue, scaling, "came through the mountain?" beats)
+- [ ] Mt. Chimney on the anti-hero route (open question: Aqua, Magma or both)
+- [ ] Devon Goods "never recovered" world state for anti-hero
+- [ ] Weather cycles live in the areas reached by the Weather Institute
+- [ ] Encounter and trainer passes through Route 119 on both routes
+
 ## To Do
 
 - [ ] Starter Redesign Follow-ups (Axew + Deino pair — core swap done, rest outstanding)
