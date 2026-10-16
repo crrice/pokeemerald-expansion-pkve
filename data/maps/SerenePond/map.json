@@ -3,6 +3,7 @@
   "name": "SerenePond",
   "layout": "LAYOUT_SERENE_POND",
   "music": "MUS_ROUTE101",
+  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_101",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

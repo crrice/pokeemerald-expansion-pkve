@@ -5528,11 +5528,11 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //P_GENDER_DIFFERENCES
 
     // Aevian Magikarp
-    const u32 gMonFrontPic_MagikarpAevian[] = INCBIN_U32("graphics/pokemon/magikarp/aevian/front.4bpp.lz");
-    const u32 gMonBackPic_MagikarpAevian[] = INCBIN_U32("graphics/pokemon/magikarp/aevian/back.4bpp.lz");
-    const u16 gMonPalette_MagikarpAevian[] = INCBIN_U16("graphics/pokemon/magikarp/aevian/normal.gbapal");
-    const u16 gMonShinyPalette_MagikarpAevian[] = INCBIN_U16("graphics/pokemon/magikarp/aevian/shiny.gbapal");
-    const u8 gMonIcon_MagikarpAevian[] = INCBIN_U8("graphics/pokemon/magikarp/aevian/icon.4bpp");
+    const u32 gMonFrontPic_MagikarpAevian[] = INCGFX_U32("graphics/pokemon/magikarp/aevian/front.png", ".4bpp.lz");
+    const u32 gMonBackPic_MagikarpAevian[] = INCGFX_U32("graphics/pokemon/magikarp/aevian/back.png", ".4bpp.lz");
+    const u16 gMonPalette_MagikarpAevian[] = INCGFX_U16("graphics/pokemon/magikarp/aevian/normal.pal", ".gbapal");
+    const u16 gMonShinyPalette_MagikarpAevian[] = INCGFX_U16("graphics/pokemon/magikarp/aevian/shiny.pal", ".gbapal");
+    const u8 gMonIcon_MagikarpAevian[] = INCGFX_U8("graphics/pokemon/magikarp/aevian/icon.png", ".4bpp");
 
 #if !P_GBA_STYLE_SPECIES_GFX
     const u32 gMonFrontPic_Gyarados[] = INCGFX_U32("graphics/pokemon/gyarados/anim_front.png", ".4bpp.smol");
@@ -5585,10 +5585,10 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //P_MEGA_EVOLUTIONS
 
     // Aevian Forms
-    const u32 gMonFrontPic_GyaradosAevian[] = INCBIN_U32("graphics/pokemon/gyarados/aevian/front.4bpp.lz");
-    const u32 gMonBackPic_GyaradosAevian[] = INCBIN_U32("graphics/pokemon/gyarados/aevian/back.4bpp.lz");
-    const u16 gMonPalette_GyaradosAevian[] = INCBIN_U16("graphics/pokemon/gyarados/aevian/normal.gbapal");
-    const u16 gMonShinyPalette_GyaradosAevian[] = INCBIN_U16("graphics/pokemon/gyarados/aevian/shiny.gbapal");
+    const u32 gMonFrontPic_GyaradosAevian[] = INCGFX_U32("graphics/pokemon/gyarados/aevian/front.png", ".4bpp.lz");
+    const u32 gMonBackPic_GyaradosAevian[] = INCGFX_U32("graphics/pokemon/gyarados/aevian/back.png", ".4bpp.lz");
+    const u16 gMonPalette_GyaradosAevian[] = INCGFX_U16("graphics/pokemon/gyarados/aevian/normal.pal", ".gbapal");
+    const u16 gMonShinyPalette_GyaradosAevian[] = INCGFX_U16("graphics/pokemon/gyarados/aevian/shiny.pal", ".gbapal");
 
 #endif //P_FAMILY_MAGIKARP
 
