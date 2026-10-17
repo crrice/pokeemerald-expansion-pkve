@@ -30,6 +30,7 @@ Design docs state intent; tests pin the values (see `CLAUDE.md` → How We Track
 ### Where our tests live
 
 - Put project tests in `test/verdant/`, one file per feature (`starters.c`, `weather.c`, `quests.c`, ...). The Makefile picks up `test/*.c`, `test/*/*.c` and `test/*/*/*.c` automatically.
+- `customizations.c` pins our edits to upstream data (starters, learnsets, evolutions, typing, forms, item fields, encounter tables): add a case there when you change upstream data.
 - Prefix every test name with `Verdant:` so ours can be run alone.
 - Don't edit upstream test files to fit our changes. If an upstream test fails because of an intentional design change, record it (see Triage) instead of rewriting the test, so merges stay clean.
 

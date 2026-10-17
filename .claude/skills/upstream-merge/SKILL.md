@@ -76,7 +76,7 @@ A build output or generated file in that list gets `git rm --cached` (it stays i
 
 ## Our customizations (audit checklist)
 
-Every stage's audit diffs our delta before (`git diff refs/upstream/<prev> <pre-merge head>`) against after (`git diff refs/upstream/<new> HEAD`), hunk by hunk. Each change must survive, be matched by upstream, or have moved somewhere named. Watch especially:
+`test/verdant/customizations.c` (with `wimpy_brace.c`) pins most of the data below: a failure there after a merge is a lost customization. Every stage's audit still diffs our delta before (`git diff refs/upstream/<prev> <pre-merge head>`) against after (`git diff refs/upstream/<new> HEAD`), hunk by hunk. Each change must survive, be matched by upstream, or have moved somewhere named. Watch especially:
 
 - **Starters:** `src/starter_choose.c` (Axew/Deino, `STARTER_MON_COUNT` 2); Route 103 rival teams in `src/data/trainers.party`.
 - **Quest menu:** `src/quests.c`, `include/quests.h`, `include/constants/quests.h`, `FLAG_SYS_QUEST_MENU_GET`. Quest save data is at the end of SaveBlock2. Script opcodes `questmenu`/`subquestmenu`/`returnqueststate` are 0xf0–0xf2 in `data/script_cmd_table.inc`, with 0xe7–0xef reserved as `ScrCmd_nop` placeholders: upstream's new opcodes replace placeholders in order. If upstream ever reaches 0xf0, stop.

@@ -52,7 +52,6 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
 - [ ] [ready] Norman's TV replay marks Cofagrigus and Slaking as seen in the Pokédex. Scripted battles shouldn't touch save data: skip dex updates when `BATTLE_TYPE_SCRIPTED` (or `IsScriptedBattle()`). Done when a fresh save after the broadcast has 0 seen.
 - [ ] (you: design call) Config defaults that changed in the 1.17.1 upgrade and are live now: catch rate (`B_MISSING_BADGE_CATCH_MALUS`, `B_LOW_LEVEL_CATCH_BONUS`), `OW_SYNCHRONIZE_NATURE` (Gen 8+: no wild-nature effect), `P_TM_MOVES_RELEARNER` (FALSE), `OW_CHOOSE_FROM_PC_AND_PARTY` (TRUE), plus new AI and latest-gen battle defaults. Keep each or override it in `include/config/verdant.h`.
-- [ ] [ready] Customization tests in `test/verdant/customizations.c`: starters, our learnset edits, Axew typing and evolution levels, Aevian forms, custom item fields, time-of-day encounter tables. Spec: `.claude/skills/upstream-merge/hygiene-1.17.md` item 15. Done when `TESTS="Verdant:" make check` covers them.
 - [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
 
 ### Testing tools
@@ -182,7 +181,7 @@ What exists today, one line per feature. Details live in git history and the des
 - QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
 - Machop learnset tune (Pound at L1, Low Kick at L6)
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
-- Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript; unrigged battle tests (real RNG) with the Route 103 rival guard and win-rate measurement suite
+- Testing: `testing` skill; customization tests (`test/verdant/customizations.c`: starters, learnset and evolution edits, Axew typing, Aevian forms, custom items, time-of-day encounter tables); replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript; unrigged battle tests (real RNG) with the Route 103 rival guard and win-rate measurement suite
 - Expansion 1.17.1 (from 1.14.1); our config values in `include/config/verdant.h`; merge procedure and reusable workflow (`upstream-merge` skill)
 - Merge hygiene from the 1.17.1 review (`hygiene-1.17.md`): pre-merge check for generated files (7), empty item IDs named so `test/text.c` passes (8), Wimpy Brace without a hold effect of its own (6), no-op edits to upstream lines reverted and our rewrites turned into added lines (3), notebook Exp. Share menu via `dynmultichoice` with a replay test (4), ID registry in the `save-system` skill and `src/verdant_asserts.c` (9)
 - Fixes: scripted battle crash after the upstream merge, quest state on new game, Wally's silhouette sprite, follower/DexNav flag clash, quest menu out-of-bounds sprite write
