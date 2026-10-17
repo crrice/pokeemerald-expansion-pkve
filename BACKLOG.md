@@ -50,7 +50,9 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] (you: design call) Rival battles 2-3 (Rustboro, Route 110, hero): undecided, see `DIVERGENCE_THEORY.md` open questions. Until then hero testers meet the vanilla teams (Grovyle/Marshtomp lines).
 - [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
-- [ ] [refine] Automated tests for design values (starter learnsets, key configs) and story-flag logic. Scope it after the expansion upgrade's merge-hygiene review.
+- [ ] (you: design call) Config defaults that changed in the 1.17.1 upgrade and are live now: catch rate (`B_MISSING_BADGE_CATCH_MALUS`, `B_LOW_LEVEL_CATCH_BONUS`), `OW_SYNCHRONIZE_NATURE` (Gen 8+: no wild-nature effect), `P_TM_MOVES_RELEARNER` (FALSE), `OW_CHOOSE_FROM_PC_AND_PARTY` (TRUE), plus new AI and latest-gen battle defaults. Keep each or override it in `include/config/verdant.h`.
+- [ ] [ready] Customization tests in `test/verdant/customizations.c`: starters, our learnset edits, Axew typing and evolution levels, Aevian forms, custom item fields, time-of-day encounter tables. Spec: `.claude/skills/upstream-merge/hygiene-1.17.md` item 15. Done when `TESTS="Verdant:" make check` covers them.
+- [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
 
 ### Testing tools
 
@@ -71,9 +73,21 @@ Stretch goals (after the above):
 - [ ] [idea] Balance sanity: a move-choice policy plays a battle N times with different RNG (shifted input timing) and must win at least X% of the time.
 - [ ] [ready] Demo build reverts the testing values (see Pre-Release Checklist).
 
+### Merge hygiene
+
+Cheap fixes from the 1.17.1 upgrade review; details and evidence per item in `.claude/skills/upstream-merge/hygiene-1.17.md`. Procedure for the next upgrade: `upstream-merge` skill.
+
+- [ ] [ready] Revert our no-op edits to upstream lines (Exp. Share item entry, party menu Toss order, Brendan's 2F texts, `VAR_STARTER_MON` comment, ...) and add our lines instead of rewriting upstream's (item 3).
+- [ ] [ready] Exp. Share mode menu via `dynmultichoice`; delete `MULTI_EXP_SHARE_MODE` (item 4).
+- [ ] [ready] Drop `isAevianForm` (unused) and `HOLD_EFFECT_WIMPY_BRACE`; Wimpy Brace checks its item ID instead, same behavior (item 6).
+- [ ] [ready] Untrack the `tools/aif2pcm/aif2pcm` binary; pre-merge check for generated files (item 7).
+- [ ] [ready] Test baseline to zero: name the empty item slots 874-995 (6 `test/text.c` failures); the 3 `test/save.c` failures go with the save break (item 8).
+- [ ] [ready] ID registry in the `save-system` skill, fix stale skill docs (quest opcodes, save location), one `src/verdant_asserts.c` (item 9).
+- [ ] (you: design call) One planned pre-release save/ID break: Aevian species into upstream's custom range, our save data as one struct at the start of SaveBlock3, top-down ID allocation, pinned save sizes (item 5).
+
 ### Optional
 
-- [ ] [refine] Route 104 weather cycle prototype (sun by day, rain by night; see `BALANCE.md` Area Weather Cycles). Waits on the expansion 1.17 upgrade (`setstartingstatus`). Can start without the environmental-weather restore behavior (Demo 1). Open: NPC tutorial dialogue.
+- [ ] [refine] Route 104 weather cycle prototype (sun by day, rain by night; see `BALANCE.md` Area Weather Cycles). Uses `setstartingstatus` (expansion 1.17). Can start without the environmental-weather restore behavior (Demo 1). Open: NPC tutorial dialogue.
 
 ## Demo 1
 
@@ -88,7 +102,7 @@ Ends at the **Weather Institute on both routes**, the minimum for a real evaluat
 
 ### Weather
 
-- [ ] [ready] Keep overworld weather overridable: set `B_OVERWORLD_WEATHER_OVERRIDE` below `GEN_9` after the 1.17 upgrade (Gen 9 makes weather moves and abilities fail while overworld weather is present).
+- [ ] [ready] Keep overworld weather overridable: set `B_OVERWORLD_WEATHER_OVERRIDE` below `GEN_9` in `include/config/verdant.h` (Gen 9 makes weather moves and abilities fail while overworld weather is present).
 - [ ] [refine] Environmental weather layer (`BALANCE.md` Weather → Duration): the area weather set at battle start lasts until replaced or dispelled, and comes back when a temporary move/ability weather wears off. Custom battle code on top of `setstartingstatus`. Open: what dispels it for good.
 - [ ] [refine] Area weather cycles for the areas reached by the Weather Institute, after the Route 104 prototype (`BALANCE.md` Area Weather Cycles).
 - [ ] [refine] Weather counterplay timeline: when players get weather setters (Pelipper ~L25, others?), when enemies start using weather, when counters (Utility Umbrella, Cloud Nine/Air Lock users like Psyduck, Safety Goggles) become available. Feeds item placement.
@@ -127,6 +141,21 @@ Ends at the **Weather Institute on both routes**, the minimum for a real evaluat
   - Underground lake with a Relicanth static encounter as the puzzle reward
   - Puzzle geometry ideas: Penrose stairs, mirror worlds, wraparound maps (HyperRogue)
 - [ ] [ready] Upstream PR for the `GetStarterPokemon` off-by-one (upstream 1.17.1 has it too).
+
+### Merge hygiene (before the next expansion upgrade)
+
+Larger items from `.claude/skills/upstream-merge/hygiene-1.17.md`, each moving our code out of upstream's files:
+
+- [ ] [ready] Scripted battles out of upstream's string IDs, trainer slides, battle-type bit and battle scripts (item 10).
+- [ ] [ready] Quest script commands as `callnative` instead of opcodes; fixes quest state being written during script dry runs (item 11).
+- [ ] [ready] Our functions in our own files: `verdant_items.c`, `wally_ralts.c`, testing catch boost behind one call (item 12).
+- [ ] [ready] Scripted controller tracked as a fork of the recorded-battle controllers, with a diff step in the merge workflow (item 13).
+- [ ] [ready] Our includes as one block per upstream file; flag/var aliases in `include/constants/verdant_flags.h` (item 14).
+- [ ] [ready] `include/verdant_compat.h` wrappers for upstream APIs that keep changing (item 16).
+- [ ] [ready] Upstream PRs: Wally tutorial back-pic fix, Rare Candy consumability, shared recorded-controller intro helpers. Fix our Rare Candy evolve path consuming an Infinite Candy now (item 17).
+- [ ] [ready] Our map scripts in `data/verdant_scripts.s`; Berry Farmer's House into an existing map group with the save break (item 18).
+- [ ] [idea] Spike: play scripted battles through upstream's recorded-battle playback (item 19).
+- [ ] (you: design call) Where custom trainers go before adding the first: reuse vanilla IDs or raise the trainer count in the save break (item 20).
 - [ ] [ready] Hold B during ball shakes (childhood myth), approach B below.
 
   Today the B-button boost only applies when the ball is selected, because the catch is calculated before the animation.
@@ -139,8 +168,8 @@ Ends at the **Weather Institute on both routes**, the minimum for a real evaluat
 
 ## Pre-Release Checklist
 
-- [ ] Revert shiny odds to normal (`SHINY_ODDS` at `include/constants/pokemon.h:101` - change 21845 back to 8)
-- [ ] Reduce B button catch boost to ~1% (`src/battle_script_commands.c:13749` in `Cmd_handleballthrow` - change `odds *= 10` to `odds = (odds * 101) / 100`)
+- [ ] Revert shiny odds to normal (`SHINY_ODDS` at `include/constants/pokemon.h:107` - change 21845 back to 8)
+- [ ] Reduce B button catch boost to ~1% (`src/battle_script_commands.c:8175` in `Cmd_handleballthrow` - change `odds *= 10` to `odds = (odds * 101) / 100`)
 
 ## Done
 
@@ -158,5 +187,6 @@ What exists today, one line per feature. Details live in git history and the des
 - QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
 - Machop learnset tune (Pound at L1, Low Kick at L6)
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
-- Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript
+- Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript; unrigged battle tests (real RNG) with the Route 103 rival guard and win-rate measurement suite
+- Expansion 1.17.1 (from 1.14.1); our config values in `include/config/verdant.h`; merge procedure and reusable workflow (`upstream-merge` skill)
 - Fixes: scripted battle crash after the upstream merge, quest state on new game, Wally's silhouette sprite, follower/DexNav flag clash, quest menu out-of-bounds sprite write

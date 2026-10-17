@@ -5,7 +5,7 @@ description: Merging a new pokeemerald-expansion release into Verdant Emerald. U
 
 # Upstream Merges
 
-How we bring in new pokeemerald-expansion releases. The ranked list of practices that keep merges cheap came out of the 1.14 → 1.17.1 upgrade (59 conflicts, 22 breakages in our code); this skill is the procedure.
+How we bring in new pokeemerald-expansion releases. The ranked list of practices that keep merges cheap came out of the 1.14 → 1.17.1 upgrade (59 conflicts, 22 breakages in our code): `hygiene-1.17.md`, with the evidence for each item. This skill is the procedure.
 
 ## Setup (every new container)
 
@@ -73,7 +73,7 @@ Every stage's audit diffs our delta before (`git diff refs/upstream/<prev> <pre-
 - **Maps:** new OldaleRuins, OldaleRuins_BerryFarmersHouse, SerenePond; edited Oldale, Routes 101/103/104, Petalburg Woods, Littleroot (notebook config in `data/scripts/players_house.inc`), Birch's lab. Story scripts: Devon Goods theft, Petalburg Woods, Berry Thief, Phantump.
 - **Other code:** `src/time_events_custom.c`, start menu layout, party menu follower toggle, hold-B-to-walk in `src/field_player_avatar.c`.
 - **Testing values to keep:** `SHINY_ODDS` 21845, the B-button catch boost in `Cmd_handleballthrow`.
-- **Configs:** B_TRAINERS_KNOCK_OFF_ITEMS, DexNav (DEXNAV_ENABLED and the DN_* flags/vars), I_EXP_SHARE_FLAG, OW_FOLLOWERS_ENABLED, B_FLAG_FOLLOWERS_DISABLED, OW_USE_FAKE_RTC, OW_ALTERED_TIME_RATIO, OW_TIME_OF_DAY_ENCOUNTERS, P_SHEDINJA_BALL, P_SHUCKLE_BERRY_JUICE, P_CAN_FORGET_HIDDEN_MOVE, P_SHOW_DYNAMIC_TYPES, P_GEN_9_POKEMON, P_GIGANTAMAX_FORMS, P_TERA_FORMS, P_SUMMARY_SCREEN_IV_EV_*. If upstream renames one, carry our value to the new name.
+- **Configs:** our values live in `include/config/verdant.h`, which fails the build if upstream renames an option (carry our value to the new name). Two exceptions stay in upstream files: OW_TIME_OF_DAY_ENCOUNTERS at the bottom of `config/overworld.h`, and the Gen 9 / Gigantamax / Tera toggles in `config/species_enabled.h`. Every other `include/config/*.h` should match upstream exactly; take upstream's side on any conflict there.
 - **Repurposed IDs** (check upstream hasn't claimed them): flags 0x020–0x024, 0x02A, 0x1AA, 0x1AB, 0x2D5, 0x2D9, SYSTEM_FLAGS+0x3; vars 0x404E, 0x4083; items 996–999; the two Aevian species IDs; berry tree 90.
 
 Then: `make` succeeds, `TESTS="Verdant:" make check` passes, and the Norman TV replay matches its golden transcript (`testing` skill).
