@@ -45,6 +45,8 @@ make tidy         # Clean ROM/ELF only, keep tools
 
 **Build gotcha:** Incremental builds do not reliably pick up changes to `.s` (assembly) files. Always run `make tidy` before `make` after editing any `.s` file. If a code change has zero observable effect in-game, suspect a stale build before investigating further.
 
+After pulling an upstream upgrade, run `make clean` once. Generated files cached in the source tree (e.g. audio samples converted next to their `.wav`) survive `make tidy` and aren't rebuilt when upstream changes the converter tools; after 1.17.1 that left a different Galarian Slowpoke cry.
+
 **Build command pattern:** When piping build output (e.g. to `tail`), the pipe does not wait for `make` to finish, giving misleading results. Always redirect to a file first, then read it:
 ```bash
 make tidy && make -j$(nproc) > /tmp/build.log 2>&1 && tail -5 /tmp/build.log

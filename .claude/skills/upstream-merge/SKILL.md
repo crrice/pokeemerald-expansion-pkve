@@ -30,7 +30,9 @@ git fetch --no-tags https://github.com/rh-hideout/pokeemerald-expansion \
 2. Merge in stages: the latest patch of each minor in turn (1.14.4 → 1.15.3 → 1.16.4 → 1.17.1). Each stage: merge, run that range's `migration_scripts/`, build, `make check`, audit, push.
 3. Changelogs come from the tag, before the merge: `git show refs/upstream/<tag>:docs/changelogs/<minor>.x/<version>.md`.
 4. Big upgrades run as the `upstream-merge` workflow (`.claude/workflows/upstream-merge.js`), ideally from a separate cloud session: interrupting the conversation that runs a workflow kills it.
-5. When every stage is green, the owner reviews, then master gets a `Merge upgrade-<target> into master.` commit.
+5. Save format: build the old and new trees and run `tools/save_convert/compare_builds.py OLD NEW`. If anything moved, write a converter for the owner's dev saves (`tools/save_convert/README.md`).
+6. Compare ROMs only from clean builds (`make clean`): the source tree caches generated files (audio samples) that `make tidy` keeps.
+7. When every stage is green, the owner reviews, then master gets a `Merge upgrade-<target> into master.` commit.
 
 Commit style is the usual (`commit-style` skill). Merge commits are titled `Merge pokeemerald-expansion <version>.` (see `d987fb4465` for the body: preserved features, notable upstream changes). Migrations and build fixes are separate commits after the merge commit.
 
