@@ -96,11 +96,12 @@ Don't rely on the runner's "observed X" messages for many tests: its failure sum
 
 ### Triage
 
-Known pre-existing failures (expansion 1.17.1, 5946 tests: 9 failed, 2 assumptions failed):
+Known pre-existing failures (expansion 1.17.1: 3 failed, 2 assumptions failed):
 
-- `test/save.c`: SaveBlock1/2/3 "is backwards compatible" — expected, we added save fields.
-- `test/text.c`: six item name/description width tests reporting a NULL item — our custom items count down from ID 999 (merge-safe numbering), leaving empty IDs 874-995 that these tests walk.
+- `test/save.c`: SaveBlock1/2/3 "is backwards compatible" — expected, we added save fields. They go away with the planned save break (merge hygiene item 5).
 - `test/battle/move_effect/steal_item.c` assumptions — `B_TRAINERS_KNOCK_OFF_ITEMS` is FALSE.
+
+`test/text.c` walks every item ID: the empty IDs between upstream's last item and ours (which count down from 999) are filled with a "????????" range entry in `src/data/items.h`, and our own item names and descriptions must fit the same boxes as upstream's. A test that reports a failing PARAMETRIZE case shows only one case, so fix it and rerun until it passes.
 
 A new failure is either a bug (fix it), an upstream test contradicting an intentional design change (record it here with the reason), or a test bug in our own file (fix the test).
 
