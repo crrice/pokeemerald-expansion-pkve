@@ -24,8 +24,10 @@
 //
 // Starter rolls follow the game's ScriptGiveMon rules (pure random, no IV floor):
 // IVs 0-31 each, random nature, gender by the species ratio, ability slot 0 or 1.
+// The rival is built from the real trainer data (level, 0 IVs, ability, moves);
+// its nature and gender aren't in the data, so the game rolls them per save, and
+// each roll here does too (nature, gender by the rival species' ratio).
 // Rolls are generated from a fixed seed per roll number, so runs are reproducible.
-// The rival is built from the real trainer data (0 IVs, as defined there).
 
 #define MEASURE_PREFIX  "Verdant: [measure]"
 #define PLAYER_LEVEL    6
@@ -37,6 +39,8 @@ struct StarterRoll
     u8 nature;
     u8 gender;
     u8 abilitySlot;
+    u8 rivalNature;
+    u8 rivalGenderRoll;     // 0-255, compared with the rival species' gender ratio
 };
 
 static struct Pokemon sRivalParty[PARTY_SIZE];
@@ -63,6 +67,8 @@ static void MakeStarterRoll(u32 species, u32 rollIndex, struct StarterRoll *roll
     roll->abilitySlot = NextRoll() % 2;
     if (GetSpeciesAbility(species, roll->abilitySlot) == ABILITY_NONE)
         roll->abilitySlot = 0;
+    roll->rivalNature = NextRoll() % NUM_NATURES;
+    roll->rivalGenderRoll = NextRoll() % 256;
 }
 
 static void GetDefaultMoves(u32 species, u32 level, u16 *moves)
@@ -159,9 +165,9 @@ static void RunMeasuredRivalBattle(u32 trainerId, u32 starterSlot, u32 rollIndex
         }
         OPPONENT(GetMonData(rival, MON_DATA_SPECIES)) {
             Level(GetMonData(rival, MON_DATA_LEVEL));
-            Nature(GetNature(rival));
+            Nature(roll.rivalNature);
             Ability(GetMonAbility(rival));
-            Gender(GetMonGender(rival));
+            Gender(roll.rivalGenderRoll < gSpeciesInfo[GetMonData(rival, MON_DATA_SPECIES)].genderRatio ? MON_FEMALE : MON_MALE);
             HPIV(GetMonData(rival, MON_DATA_HP_IV)); AttackIV(GetMonData(rival, MON_DATA_ATK_IV));
             DefenseIV(GetMonData(rival, MON_DATA_DEF_IV)); SpeedIV(GetMonData(rival, MON_DATA_SPEED_IV));
             SpAttackIV(GetMonData(rival, MON_DATA_SPATK_IV)); SpDefenseIV(GetMonData(rival, MON_DATA_SPDEF_IV));

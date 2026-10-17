@@ -50,6 +50,7 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] (you: design call) Rival battles 2-3 (Rustboro, Route 110, hero): undecided, see `DIVERGENCE_THEORY.md` open questions. Until then hero testers meet the vanilla teams (Grovyle/Marshtomp lines).
 - [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
+- [ ] (you: design call) Route 103 rival's nature and gender: `trainers.party` doesn't set them, so the game rolls them per save (seeded from the trainer data and the player's trainer ID). Gender matters: Axew's Rivalry is ±25% against the player's starter. Pin them for a consistent fight, or keep the variety? The measurement suite rolls them; the guard test pins the harder case.
 - [ ] [ready] Norman's TV replay marks Cofagrigus and Slaking as seen in the Pokédex. Scripted battles shouldn't touch save data: skip dex updates when `BATTLE_TYPE_SCRIPTED` (or `IsScriptedBattle()`). Done when a fresh save after the broadcast has 0 seen.
 - [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
 

@@ -12,8 +12,11 @@
 // (accuracy, crits, damage rolls, secondary effects, AI) over 50 seeds.
 //
 // Scenario: the player's starter is level 6 and only ever uses its strongest
-// STAB move. The rival's party is generated from the real trainer data, so its
-// level, IVs, nature, gender, ability and moves are exactly what the game builds.
+// STAB move. The rival's party comes from the real trainer data (level, IVs,
+// ability, moves). Its nature and gender aren't in the data: the game rolls them
+// per save (seeded from the trainer struct and the player's trainer ID), so the
+// struct's party pointer makes them change with every ROM layout change. The
+// guard pins them instead (see below); the measurement suite rolls them.
 //
 // Axes (see CLAUDE.md, Custom Starters):
 //   player gender picks the rival: boy -> May, girl -> Brendan
@@ -22,6 +25,8 @@
 //
 // Player starter profile (fixed per test; the real game rolls these randomly):
 // level 6, all IVs 15, neutral nature, first ability slot, male.
+// Rival profile: neutral nature, male (same gender as the player's starter, so
+// Axew's Rivalry boosts it: the harder case).
 //
 // How a win is counted: the rival also gets a filler Pokemon that only Splashes,
 // so the battle survives the rival's lead fainting and all scripted turns run.
@@ -78,16 +83,16 @@ static u32 GetStrongestStabMove(u32 species, const u16 *moves)
     return best;
 }
 
-#define ROUTE103_RIVAL_BATTLE(trainerId, starterSlot)                                                       \
+#define ROUTE103_RIVAL_BATTLE(trainerId, starterSlot, wins)                                                 \
     u32 starter = GetStarterPokemon(starterSlot);                                                            \
     u16 playerMoves[MAX_MON_MOVES];                                                                          \
     u32 stabMove;                                                                                            \
     struct Pokemon *rival = &sRivalParty[0];                                                                 \
     GetDefaultMoves(starter, PLAYER_LEVEL, playerMoves);                                                     \
     stabMove = GetStrongestStabMove(starter, playerMoves);                                                   \
-    /* Pinned to the measured rate (Oct 2026: 50/50 in every combination). Pending a design decision on   \
-       what's acceptable; set PASSES_RANDOMLY(0, 1) to re-measure (the failure message reports the ratio). */ \
-    PASSES_RANDOMLY(50, 50);                                                                                 \
+    /* wins/50: pinned to the measured rate (Oct 2026, expansion 1.17.1). Pending a design decision on    \
+       what's acceptable; pass 0 to re-measure (the failure message reports the ratio). */                  \
+    PASSES_RANDOMLY(wins, 50);                                                                               \
     GIVEN {                                                                                                  \
         ASSUME(stabMove != MOVE_NONE);                                                                       \
         CreateNPCTrainerPartyFromTrainer(sRivalParty, GetGameTrainer(trainerId));                            \
@@ -103,9 +108,9 @@ static u32 GetStrongestStabMove(u32 species, const u16 *moves)
         }                                                                                                    \
         OPPONENT(GetMonData(rival, MON_DATA_SPECIES)) {                                                      \
             Level(GetMonData(rival, MON_DATA_LEVEL));                                                        \
-            Nature(GetNature(rival));                                                                        \
+            Nature(NATURE_HARDY);                                                                            \
             Ability(GetMonAbility(rival));                                                                   \
-            Gender(GetMonGender(rival));                                                                     \
+            Gender(MON_MALE);                                                                                \
             HPIV(GetMonData(rival, MON_DATA_HP_IV));                                                         \
             AttackIV(GetMonData(rival, MON_DATA_ATK_IV));                                                    \
             DefenseIV(GetMonData(rival, MON_DATA_DEF_IV));                                                   \
@@ -126,21 +131,21 @@ static u32 GetStrongestStabMove(u32 species, const u16 *moves)
 
 UNRIGGED_AI_SINGLE_BATTLE_TEST("Verdant: Route 103 rival win rate - boy, Axew vs May")
 {
-    ROUTE103_RIVAL_BATTLE(TRAINER_MAY_ROUTE_103_TREECKO, 0);
+    ROUTE103_RIVAL_BATTLE(TRAINER_MAY_ROUTE_103_TREECKO, 0, 50);
 }
 
 UNRIGGED_AI_SINGLE_BATTLE_TEST("Verdant: Route 103 rival win rate - boy, Deino vs May")
 {
-    ROUTE103_RIVAL_BATTLE(TRAINER_MAY_ROUTE_103_TORCHIC, 1);
+    ROUTE103_RIVAL_BATTLE(TRAINER_MAY_ROUTE_103_TORCHIC, 1, 49);
 }
 
 UNRIGGED_AI_SINGLE_BATTLE_TEST("Verdant: Route 103 rival win rate - girl, Axew vs Brendan")
 {
-    ROUTE103_RIVAL_BATTLE(TRAINER_BRENDAN_ROUTE_103_TREECKO, 0);
+    ROUTE103_RIVAL_BATTLE(TRAINER_BRENDAN_ROUTE_103_TREECKO, 0, 50);
 }
 
 UNRIGGED_AI_SINGLE_BATTLE_TEST("Verdant: Route 103 rival win rate - girl, Deino vs Brendan")
 {
-    ROUTE103_RIVAL_BATTLE(TRAINER_BRENDAN_ROUTE_103_TORCHIC, 1);
+    ROUTE103_RIVAL_BATTLE(TRAINER_BRENDAN_ROUTE_103_TORCHIC, 1, 49);
 }
 
