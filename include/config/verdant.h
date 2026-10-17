@@ -21,8 +21,8 @@
 #include "constants/flags.h"
 #include "constants/vars.h"
 
-#if !defined(B_TRAINERS_KNOCK_OFF_ITEMS)
-#error "config/battle.h: B_TRAINERS_KNOCK_OFF_ITEMS was renamed or removed upstream"
+#if !defined(B_TRAINERS_KNOCK_OFF_ITEMS) || !defined(B_MISSING_BADGE_CATCH_MALUS) || !defined(B_OVERWORLD_WEATHER_OVERRIDE)
+#error "config/battle.h: an option was renamed or removed upstream"
 #endif
 #if !defined(DEXNAV_ENABLED) || !defined(DN_FLAG_SEARCHING) || !defined(DN_FLAG_DEXNAV_GET) || !defined(DN_FLAG_DETECTOR_MODE) || !defined(DN_VAR_SPECIES) || !defined(DN_VAR_STEP_COUNTER)
 #error "config/dexnav.h: a DexNav option was renamed or removed upstream"
@@ -30,7 +30,7 @@
 #if !defined(I_EXP_SHARE_FLAG)
 #error "config/item.h: I_EXP_SHARE_FLAG was renamed or removed upstream"
 #endif
-#if !defined(OW_FOLLOWERS_ENABLED) || !defined(B_FLAG_FOLLOWERS_DISABLED) || !defined(OW_USE_FAKE_RTC) || !defined(OW_ALTERED_TIME_RATIO)
+#if !defined(OW_FOLLOWERS_ENABLED) || !defined(B_FLAG_FOLLOWERS_DISABLED) || !defined(OW_USE_FAKE_RTC) || !defined(OW_ALTERED_TIME_RATIO) || !defined(OW_SYNCHRONIZE_NATURE)
 #error "config/overworld.h: an option was renamed or removed upstream"
 #endif
 #if !defined(P_LVL_UP_LEARNSETS) || !defined(P_SHEDINJA_BALL) || !defined(P_SHUCKLE_BERRY_JUICE) || !defined(P_CAN_FORGET_HIDDEN_MOVE) || !defined(P_SHOW_DYNAMIC_TYPES)
@@ -43,6 +43,12 @@
 // config/battle.h
 #undef B_TRAINERS_KNOCK_OFF_ITEMS
 #define B_TRAINERS_KNOCK_OFF_ITEMS      FALSE
+#undef B_MISSING_BADGE_CATCH_MALUS
+#define B_MISSING_BADGE_CATCH_MALUS     GEN_3  // off: the anti-hero route has fewer badges at the same point in the story
+#if !TESTING  // upstream's "(Gen9)" overworld weather tests rely on the default without setting it
+#undef B_OVERWORLD_WEATHER_OVERRIDE
+#define B_OVERWORLD_WEATHER_OVERRIDE    GEN_8  // weather moves and abilities can replace area weather (BALANCE.md, Weather > Duration)
+#endif
 
 // config/dexnav.h
 #undef DEXNAV_ENABLED
@@ -71,6 +77,8 @@
 #define OW_USE_FAKE_RTC                 TRUE
 #undef OW_ALTERED_TIME_RATIO
 #define OW_ALTERED_TIME_RATIO           GEN_8_PLA
+#undef OW_SYNCHRONIZE_NATURE
+#define OW_SYNCHRONIZE_NATURE           GEN_8  // a Synchronize lead always passes its nature to wild mons (Gen 9 removed the effect)
 
 // config/pokemon.h
 #undef P_LVL_UP_LEARNSETS

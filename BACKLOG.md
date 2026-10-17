@@ -51,7 +51,6 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
 - [ ] [ready] Norman's TV replay marks Cofagrigus and Slaking as seen in the Pokédex. Scripted battles shouldn't touch save data: skip dex updates when `BATTLE_TYPE_SCRIPTED` (or `IsScriptedBattle()`). Done when a fresh save after the broadcast has 0 seen.
-- [ ] (you: design call) Config defaults that changed in the 1.17.1 upgrade and are live now: catch rate (`B_MISSING_BADGE_CATCH_MALUS`, `B_LOW_LEVEL_CATCH_BONUS`), `OW_SYNCHRONIZE_NATURE` (Gen 8+: no wild-nature effect), `P_TM_MOVES_RELEARNER` (FALSE), `OW_CHOOSE_FROM_PC_AND_PARTY` (TRUE), plus new AI and latest-gen battle defaults. Keep each or override it in `include/config/verdant.h`.
 - [ ] [ready] Customization tests in `test/verdant/customizations.c`: starters, our learnset edits, Axew typing and evolution levels, Aevian forms, custom item fields, time-of-day encounter tables. Spec: `.claude/skills/upstream-merge/hygiene-1.17.md` item 15. Done when `TESTS="Verdant:" make check` covers them.
 - [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
 
@@ -103,7 +102,6 @@ Ends at the **Weather Institute on both routes**, the minimum for a real evaluat
 
 ### Weather
 
-- [ ] [ready] Keep overworld weather overridable: set `B_OVERWORLD_WEATHER_OVERRIDE` below `GEN_9` in `include/config/verdant.h` (Gen 9 makes weather moves and abilities fail while overworld weather is present).
 - [ ] [refine] Environmental weather layer (`BALANCE.md` Weather → Duration): the area weather set at battle start lasts until replaced or dispelled, and comes back when a temporary move/ability weather wears off. Custom battle code on top of `setstartingstatus`. Open: what dispels it for good.
 - [ ] [refine] Area weather cycles for the areas reached by the Weather Institute, after the Route 104 prototype (`BALANCE.md` Area Weather Cycles).
 - [ ] [refine] Weather counterplay timeline: when players get weather setters (Pelipper ~L25, others?), when enemies start using weather, when counters (Utility Umbrella, Cloud Nine/Air Lock users like Psyduck, Safety Goggles) become available. Feeds item placement.

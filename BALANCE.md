@@ -26,7 +26,7 @@ Weather is our main gimmick. Introduced this gen and is the story theme so leani
 Two layers:
 
 - **Battle weather** (moves and abilities): current-gen rules, 5 turns, or 8 with the matching rock item. This is expansion's default (`B_ABILITY_WEATHER` stays `GEN_LATEST`).
-- **Environmental weather** (the area's own weather, "it's raining here today"): lasts until replaced or dispelled, and comes back when a temporary battle weather wears off. Not implemented, and upstream has nothing like it: its Gen 9 option (`B_OVERWORLD_WEATHER_OVERRIDE`) instead blocks weather moves and abilities entirely while overworld weather is present, which we don't want.
+- **Environmental weather** (the area's own weather, "it's raining here today"): lasts until replaced or dispelled, and comes back when a temporary battle weather wears off. Not implemented, and upstream has nothing like it: its Gen 9 option (`B_OVERWORLD_WEATHER_OVERRIDE`) instead blocks weather moves and abilities entirely while overworld weather is present, which we don't want, so we set it below Gen 9.
 - Open: what dispels environmental weather for good, as opposed to temporarily replacing it. Candidates:
   - Nothing: it's the environment; you can only override it for a few turns or play around it (Utility Umbrella, Cloud Nine suppression). Simplest, strongest "weather tyranny".
   - Air Lock dispels it, Cloud Nine only suppresses it: Rayquaza's Air Lock becomes the literal "I'm done with this" button. One ability change.
