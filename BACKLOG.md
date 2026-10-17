@@ -50,6 +50,7 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] (you: design call) Rival battles 2-3 (Rustboro, Route 110, hero): undecided, see `DIVERGENCE_THEORY.md` open questions. Until then hero testers meet the vanilla teams (Grovyle/Marshtomp lines).
 - [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
+- [ ] [ready] Norman's TV replay marks Cofagrigus and Slaking as seen in the Pokédex. Scripted battles shouldn't touch save data: skip dex updates when `BATTLE_TYPE_SCRIPTED` (or `IsScriptedBattle()`). Done when a fresh save after the broadcast has 0 seen.
 - [ ] (you: design call) Config defaults that changed in the 1.17.1 upgrade and are live now: catch rate (`B_MISSING_BADGE_CATCH_MALUS`, `B_LOW_LEVEL_CATCH_BONUS`), `OW_SYNCHRONIZE_NATURE` (Gen 8+: no wild-nature effect), `P_TM_MOVES_RELEARNER` (FALSE), `OW_CHOOSE_FROM_PC_AND_PARTY` (TRUE), plus new AI and latest-gen battle defaults. Keep each or override it in `include/config/verdant.h`.
 - [ ] [ready] Customization tests in `test/verdant/customizations.c`: starters, our learnset edits, Axew typing and evolution levels, Aevian forms, custom item fields, time-of-day encounter tables. Spec: `.claude/skills/upstream-merge/hygiene-1.17.md` item 15. Done when `TESTS="Verdant:" make check` covers them.
 - [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
@@ -59,7 +60,7 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 Replay harness in `tools/replay/` (usage: `testing` skill). Remaining build order:
 
 - [ ] [ready] Save depot: `export-save` scenarios that generate saves, committed under `tools/replay/saves/` with a manifest (how it was made, build, save-format fingerprint); the runner refuses a save whose fingerprint doesn't match. First save: `new_game_to_tv` for both genders.
-- [ ] [refine] Save converter: copy fields by name between the old and new layouts (read from `make debug` struct info), remap flag/var/item/species IDs by constant name, per-migration hooks for meaning changes, automatic old-vs-new snapshot comparison. Build against the first real save-format change after the expansion upgrade. Open: hook format.
+- [ ] [refine] General save converter: copy fields by name between the old and new layouts, remap IDs by constant name, per-migration hooks for meaning changes. Foundation exists: `tools/save_convert/compare_builds.py` measures both; `expansion_1_17.py` is the hand-written one-off it would replace. Build it with the planned pre-release save break (merge hygiene item 5). Open: hook format.
 - [ ] [ready] Screenshot checks: `expect-screen NAME [region ...]` against `tools/replay/golden/NAME.png`, exact pixel match, writes actual + diff on mismatch, `--update-golden` to accept.
 - [ ] [ready] Failure diagnostic: decode the last dialogue line on screen from game memory (`charmap.txt`).
 - [ ] [refine] Speed: test saves use max text speed and battle animations off; `set-time HH:MM` writes the fake RTC directly; run scenarios in parallel. Open: measure whether skipping frame rendering helps.
