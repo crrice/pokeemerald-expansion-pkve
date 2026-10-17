@@ -11,10 +11,10 @@ The notebook in the player's bedroom provides configuration options that persist
 
 | File | Purpose |
 |------|---------|
-| `data/scripts/players_house.inc` | Notebook script and option handlers |
-| `src/data/script_menu.h` | Multichoice menu definitions |
-| `include/constants/script_menu.h` | Multichoice menu ID constants |
-| `include/config/item.h` | Feature flags (e.g., I_EXP_SHARE_FLAG) |
+| `data/scripts/players_house.inc` | Notebook script (`PlayersHouse_2F_EventScript_VerdantNotebook`) and option handlers |
+| `data/maps/LittlerootTown_{Brendans,Mays}House_2F/map.json` | The notebook bg_event in each house points at our script |
+| `include/config/verdant.h` | Config flags we assign (e.g. `I_EXP_SHARE_FLAG`) |
+| `tools/replay/scenarios/notebook_exp_share.replay` | Replay test: each Exp. Share choice in both houses |
 
 ## Current Options
 
@@ -23,50 +23,31 @@ Lets players choose between:
 - **Single** - Held item, gives exp to holder only
 - **All** - Key item, toggleable, all party Pokemon gain exp
 
-Uses `MULTI_EXP_SHARE_MODE` multichoice and swaps between `ITEM_EXP_SHARE` and `ITEM_EXP_SHARE_ALL`.
+A `dynmultichoice` menu; swaps between `ITEM_EXP_SHARE` and `ITEM_EXP_SHARE_ALL` and clears/sets `I_EXP_SHARE_FLAG`. A new game starts with Exp. Share All, on (`src/new_game.c`).
 
 ## Adding a New Notebook Option
 
-### Step 1: Define Multichoice Constant
-In `include/constants/script_menu.h`:
-```c
-#define MULTI_MY_OPTION    116
-```
+### Step 1: Menu
+Every custom menu uses `dynmultichoice`: the choices are text labels in the script, so there are no `MULTI_*` constants or `sMultichoiceLists` entries in upstream's files (those caused merge conflicts and an ID collision). B returns 127 (`MULTI_B_PRESSED`) unless `ignoreBPress` is TRUE.
 
-### Step 2: Create Menu Entries
-In `src/data/script_menu.h`:
-```c
-static const struct MenuAction MultichoiceList_MyOption[] =
-{
-    {COMPOUND_STRING("Choice A")},
-    {COMPOUND_STRING("Choice B")},
-    {COMPOUND_STRING("Choice C")},
-};
-```
-
-Add to `sMultichoiceLists` array:
-```c
-[MULTI_MY_OPTION] = MULTICHOICE(MultichoiceList_MyOption),
-```
-
-### Step 3: Add Flag or Var (if needed)
-For persistent settings, use an unused flag or var:
+### Step 2: Add Flag or Var (if needed)
+For persistent settings, take the next free flag or var as the `save-system` skill's ID registry says (top-down, through upstream's `FLAG_UNUSED_*` / `VAR_UNUSED_*` name) and add a row there:
 ```c
 // In include/constants/flags.h
-#define FLAG_MY_SETTING    0x23  // Pick an unused flag
+#define FLAG_MY_SETTING    FLAG_UNUSED_0x4EF
 
 // Or in include/constants/vars.h for multiple states
-#define VAR_MY_SETTING    0x40XX
+#define VAR_MY_SETTING     VAR_UNUSED_0x40FF
 ```
 
-### Step 4: Add Script Handler
+### Step 3: Add Script Handler
 In `data/scripts/players_house.inc`, add to the notebook script:
 ```
-PlayersHouse_2F_EventScript_Notebook::
+PlayersHouse_2F_EventScript_VerdantNotebook::
     lockall
     @ ... existing options ...
     msgbox PlayersHouse_2F_Text_MyOptionQuestion, MSGBOX_DEFAULT
-    multichoice 14, 6, MULTI_MY_OPTION, FALSE
+    dynmultichoice 14, 6, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, PlayersHouse_2F_Text_MyOptionA, PlayersHouse_2F_Text_MyOptionB
     switch VAR_RESULT
     case 0, PlayersHouse_2F_EventScript_MyOptionA
     case 1, PlayersHouse_2F_EventScript_MyOptionB
@@ -80,8 +61,14 @@ PlayersHouse_2F_EventScript_MyOptionA::
     end
 ```
 
-### Step 5: Add Text Strings
+### Step 4: Add Text Strings
 ```
+PlayersHouse_2F_Text_MyOptionA:
+    .string "Choice A$"
+
+PlayersHouse_2F_Text_MyOptionB:
+    .string "Choice B$"
+
 PlayersHouse_2F_Text_MyOptionQuestion:
     .string "Description of the option.$"
 
@@ -109,7 +96,7 @@ Defined in `src/item.c` with script wrapper `Script_RemoveItemFromEverywhere`.
 
 ## Design Notes
 
-- Notebook is in both Brendan's and May's house (shared script)
+- Notebook is in both Brendan's and May's house (shared script). Upstream's own `PlayersHouse_2F_EventScript_Notebook` and texts in `LittlerootTown_BrendansHouse_2F/scripts.inc` stay untouched (unused script, reused texts), so upstream edits there merge cleanly.
 - Options should work regardless of game progress
 - Use flags for on/off settings, vars for multiple states
 - Cancel (case 127) should exit cleanly without changes

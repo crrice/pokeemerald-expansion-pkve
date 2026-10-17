@@ -2423,11 +2423,11 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
 void BtlController_HandleSwitchInAnim(enum BattlerId battler)
 {
     bool32 isPlayerSide = (IsControllerPlayer(battler)
+                        || IsControllerScriptedPlayer(battler)
                         || IsControllerPlayerPartner(battler)
                         || IsControllerRecordedPlayer(battler)
                         || IsControllerRecordedPartner(battler)
-                        || IsControllerLinkPartner(battler)
-                        || IsControllerScriptedPlayer(battler));
+                        || IsControllerLinkPartner(battler));
 
     if (IsControllerPlayer(battler))
     {
@@ -2749,11 +2749,11 @@ void BtlController_HandleHealthBarUpdate(enum BattlerId battler)
     {
         SetBattleBarStruct(battler, gHealthboxSpriteIds[battler], maxHP, 0, hpVal);
         if (IsControllerPlayer(battler)
+         || IsControllerScriptedPlayer(battler)
          || IsControllerRecordedPlayer(battler)
          || IsControllerRecordedPartner(battler)
          || IsControllerOakOldMan(battler)
-         || IsControllerWally(battler)
-         || IsControllerScriptedPlayer(battler))
+         || IsControllerWally(battler))
             UpdateHpTextInHealthbox(gHealthboxSpriteIds[battler], HP_CURRENT, 0, maxHP);
         TestRunner_Battle_RecordHP(battler, curHP, 0);
     }

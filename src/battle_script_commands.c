@@ -68,6 +68,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_slide.h"
 #include "constants/trainers.h"
+#include "test/battle.h"
 #include "scripted_battle.h"
 #include "battle_util.h"
 #include "constants/pokemon.h"
@@ -2107,6 +2108,8 @@ static bool32 BattleTypeAllowsExp(void)
 {
     if (RECORDED_WILD_BATTLE)
         return TRUE;
+    else if (gBattleTypeFlags & BATTLE_TYPE_SCRIPTED)
+        return FALSE;
     else if (gBattleTypeFlags &
               ( BATTLE_TYPE_LINK
               | BATTLE_TYPE_RECORDED_LINK
@@ -2114,8 +2117,7 @@ static bool32 BattleTypeAllowsExp(void)
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_SAFARI
               | BATTLE_TYPE_BATTLE_TOWER
-              | BATTLE_TYPE_EREADER_TRAINER
-              | BATTLE_TYPE_SCRIPTED))
+              | BATTLE_TYPE_EREADER_TRAINER))
         return FALSE;
     else
         return TRUE;

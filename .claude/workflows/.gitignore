@@ -1,0 +1,2 @@
+# Upstream ignores *.js; our workflow scripts are source.
+!*.js

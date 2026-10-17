@@ -51,7 +51,6 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
 - [ ] [ready] Norman's TV replay marks Cofagrigus and Slaking as seen in the Pokédex. Scripted battles shouldn't touch save data: skip dex updates when `BATTLE_TYPE_SCRIPTED` (or `IsScriptedBattle()`). Done when a fresh save after the broadcast has 0 seen.
-- [ ] [ready] Customization tests in `test/verdant/customizations.c`: starters, our learnset edits, Axew typing and evolution levels, Aevian forms, custom item fields, time-of-day encounter tables. Spec: `.claude/skills/upstream-merge/hygiene-1.17.md` item 15. Done when `TESTS="Verdant:" make check` covers them.
 - [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
 
 ### Testing tools
@@ -77,12 +76,6 @@ Stretch goals (after the above):
 
 Cheap fixes from the 1.17.1 upgrade review; details and evidence per item in `.claude/skills/upstream-merge/hygiene-1.17.md`. Procedure for the next upgrade: `upstream-merge` skill.
 
-- [ ] [ready] Revert our no-op edits to upstream lines (Exp. Share item entry, party menu Toss order, Brendan's 2F texts, `VAR_STARTER_MON` comment, ...) and add our lines instead of rewriting upstream's (item 3).
-- [ ] [ready] Exp. Share mode menu via `dynmultichoice`; delete `MULTI_EXP_SHARE_MODE` (item 4).
-- [ ] [ready] Drop `isAevianForm` (unused) and `HOLD_EFFECT_WIMPY_BRACE`; Wimpy Brace checks its item ID instead, same behavior (item 6).
-- [ ] [ready] Untrack the `tools/aif2pcm/aif2pcm` binary; pre-merge check for generated files (item 7).
-- [ ] [ready] Test baseline to zero: name the empty item slots 874-995 (6 `test/text.c` failures); the 3 `test/save.c` failures go with the save break (item 8).
-- [ ] [ready] ID registry in the `save-system` skill, fix stale skill docs (quest opcodes, save location), one `src/verdant_asserts.c` (item 9).
 - [ ] (you: design call) One planned pre-release save/ID break: Aevian species into upstream's custom range, our save data as one struct at the start of SaveBlock3, top-down ID allocation, pinned save sizes (item 5).
 
 ### Optional
@@ -186,6 +179,7 @@ What exists today, one line per feature. Details live in git history and the des
 - QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
 - Machop learnset tune (Pound at L1, Low Kick at L6)
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
-- Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript; unrigged battle tests (real RNG) with the Route 103 rival guard and win-rate measurement suite
+- Testing: `testing` skill; customization tests (`test/verdant/customizations.c`: starters, learnset and evolution edits, Axew typing, Aevian forms, custom items, time-of-day encounter tables); replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript; unrigged battle tests (real RNG) with the Route 103 rival guard and win-rate measurement suite
 - Expansion 1.17.1 (from 1.14.1); our config values in `include/config/verdant.h`; merge procedure and reusable workflow (`upstream-merge` skill)
+- Merge hygiene from the 1.17.1 review (`hygiene-1.17.md`): pre-merge check for generated files (7), empty item IDs named so `test/text.c` passes (8), Wimpy Brace without a hold effect of its own (6), no-op edits to upstream lines reverted and our rewrites turned into added lines (3), notebook Exp. Share menu via `dynmultichoice` with a replay test (4), ID registry in the `save-system` skill and `src/verdant_asserts.c` (9)
 - Fixes: scripted battle crash after the upstream merge, quest state on new game, Wally's silhouette sprite, follower/DexNav flag clash, quest menu out-of-bounds sprite write

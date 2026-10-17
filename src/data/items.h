@@ -9803,8 +9803,6 @@ const struct ItemInfo gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
-        .type = ITEM_USE_FIELD,
-        .fieldUseFunc = ItemUseOutOfBattle_ExpShare,
     #else
         .description = COMPOUND_STRING(
             "A held item that\n"
@@ -9813,9 +9811,9 @@ const struct ItemInfo gItemsInfo[] =
         .price = (I_PRICE == GEN_1) ? 1 : 3000,
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_HELD_ITEM,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
     #endif
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_ExpShare,
         .flingPower = 30,
         .iconPic = gItemIcon_ExpShare,
         .iconPalette = gItemIconPalette_ExpShare,
@@ -16104,14 +16102,30 @@ const struct ItemInfo gItemsInfo[] =
 
 // Custom items
 
+    // Our items count down from 999, leaving a gap after upstream's last item.
+    // Fill it like ITEM_NONE. If upstream adds an item past ITEM_GLIMMORANITE,
+    // -Woverride-init fails the build: raise the lower bound to upstream's new last item.
+    [ITEM_GLIMMORANITE + 1 ... ITEM_EV_TRAINER - 1] =
+    {
+        .name = ITEM_NAME("????????"),
+        .price = 0,
+        .description = COMPOUND_STRING("?????"),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_UNCATEGORIZED,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
     [ITEM_EV_TRAINER] =
     {
         .name = ITEM_NAME("EV Trainer"),
         .price = 0,
         .description = COMPOUND_STRING(
             "A device for\n"
-            "adjusting a Pokémon's\n"
-            "base points."),
+            "adjusting the base\n"
+            "points of Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
@@ -16124,7 +16138,6 @@ const struct ItemInfo gItemsInfo[] =
     {
         .name = ITEM_NAME("Wimpy Brace"),
         .price = 3000,
-        .holdEffect = HOLD_EFFECT_WIMPY_BRACE,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "prevents growth."),
@@ -16159,7 +16172,7 @@ const struct ItemInfo gItemsInfo[] =
         .description = COMPOUND_STRING(
             "A mystical candy\n"
             "that raises level\n"
-            "without being used up."),
+            "and never runs out."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,

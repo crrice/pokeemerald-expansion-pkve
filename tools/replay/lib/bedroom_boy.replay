@@ -1,0 +1,12 @@
+# Truck -> Mom -> Brendan's house -> set the bedroom clock -> Mom's visit.
+# Ends in the bedroom with control, standing below the clock at (5, 2).
+wait until !controls-locked timeout 3000                             # truck ride
+hold RIGHT until map != MAP_INSIDE_OF_TRUCK timeout 600
+tap A when script-running until map == MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F and field-idle for 30 timeout 6000
+hold UP until map == MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F timeout 600   # stairs at (8, 2)
+wait until field-idle for 10 timeout 600
+walk LEFT to 5 2                                                      # clock is the wall tile at (5, 1)
+face UP
+tap A 1
+use lib/set_clock.replay
+tap A when script-running until field-idle for 30 timeout 6000       # Mom comes upstairs

@@ -57,12 +57,26 @@ git log --merges --format='%H %P' upgrade-<target> wip/<tag>-interrupted 2>/dev/
 - Data files (wild_encounters.json, map_groups.json, layouts.json, trainers.party, items, species): keep both sides' entries.
 - New upstream config options: take upstream's default, and list any that change gameplay for the owner (catch rates, weather, Synchronize, ...).
 - When a release did a whitespace or formatting sweep, merge with `-Xignore-space-change`, then take upstream's whitespace for those hunks in a separate commit.
-- Stage resolutions by path or `git add -u`, never `git add -A`. Before the merge commit: no conflict markers (`git grep -nE '^(<<<<<<<|>>>>>>>) '`), no `*.backup` files, no generated files (anything saying "DO NOT MODIFY" or "auto-generated").
+- Stage resolutions by path or `git add -u`, never `git add -A`.
 - Adapt our code to upstream's new API rather than editing upstream code to fit ours.
+
+### Before the merge commit: no leftovers, no generated files
+
+Run on the staged merge; each command must print what the comment says:
+
+```bash
+git grep -nE '^(<<<<<<<|>>>>>>>) '            # nothing: no conflict markers
+git ls-files -ci --exclude-standard            # only upstream's own: tools/mgba/mgba-rom-test.exe, tools/compresSmol/*
+git diff --cached --name-only --diff-filter=d refs/upstream/<tag> -- . ':!.claude' \
+    | xargs -d '\n' grep -l -I -E 'DO NOT MODIFY|auto-generated'    # nothing: no generated file differs from upstream
+ls *.backup *.orig *.rej 2>/dev/null; git ls-files '*.backup' '*.orig' '*.rej'   # nothing
+```
+
+A build output or generated file in that list gets `git rm --cached` (it stays ignored). Past cases: the generated `include/constants/script_commands.h` committed in the 1.14.1 merge (a modify/delete conflict once upstream untracked it), the `tools/aif2pcm/aif2pcm` binary, and `.backup` files in the repo root.
 
 ## Our customizations (audit checklist)
 
-Every stage's audit diffs our delta before (`git diff refs/upstream/<prev> <pre-merge head>`) against after (`git diff refs/upstream/<new> HEAD`), hunk by hunk. Each change must survive, be matched by upstream, or have moved somewhere named. Watch especially:
+`test/verdant/customizations.c` (with `wimpy_brace.c`) pins most of the data below: a failure there after a merge is a lost customization. Every stage's audit still diffs our delta before (`git diff refs/upstream/<prev> <pre-merge head>`) against after (`git diff refs/upstream/<new> HEAD`), hunk by hunk. Each change must survive, be matched by upstream, or have moved somewhere named. Watch especially:
 
 - **Starters:** `src/starter_choose.c` (Axew/Deino, `STARTER_MON_COUNT` 2); Route 103 rival teams in `src/data/trainers.party`.
 - **Quest menu:** `src/quests.c`, `include/quests.h`, `include/constants/quests.h`, `FLAG_SYS_QUEST_MENU_GET`. Quest save data is at the end of SaveBlock2. Script opcodes `questmenu`/`subquestmenu`/`returnqueststate` are 0xf0–0xf2 in `data/script_cmd_table.inc`, with 0xe7–0xef reserved as `ScrCmd_nop` placeholders: upstream's new opcodes replace placeholders in order. If upstream ever reaches 0xf0, stop.
@@ -76,6 +90,6 @@ Every stage's audit diffs our delta before (`git diff refs/upstream/<prev> <pre-
 - **Other code:** `src/time_events_custom.c`, start menu layout, party menu follower toggle, hold-B-to-walk in `src/field_player_avatar.c`.
 - **Testing values to keep:** `SHINY_ODDS` 21845, the B-button catch boost in `Cmd_handleballthrow`.
 - **Configs:** our values live in `include/config/verdant.h`, which fails the build if upstream renames an option (carry our value to the new name). Two exceptions stay in upstream files: OW_TIME_OF_DAY_ENCOUNTERS at the bottom of `config/overworld.h`, and the Gen 9 / Gigantamax / Tera toggles in `config/species_enabled.h`. Every other `include/config/*.h` should match upstream exactly; take upstream's side on any conflict there.
-- **Repurposed IDs** (check upstream hasn't claimed them): flags 0x020–0x024, 0x02A, 0x1AA, 0x1AB, 0x2D5, 0x2D9, SYSTEM_FLAGS+0x3; vars 0x404E, 0x4083; items 996–999; the two Aevian species IDs; berry tree 90.
+- **Claimed IDs** (check upstream hasn't claimed them): every row of the ID registry in the `save-system` skill (flags, vars, opcodes, items, species, berry tree, battle-type bit, maps, layouts, save offsets). `src/verdant_asserts.c` checks some of them at build time.
 
 Then: `make` succeeds, `TESTS="Verdant:" make check` passes, and the Norman TV replay matches its golden transcript (`testing` skill).

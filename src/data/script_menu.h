@@ -1122,12 +1122,6 @@ static const struct MenuAction sMultichoiceList_HOF_Eggs_Victories_Quit[] = {
     {gText_ShopQuit}
 };
 
-static const struct MenuAction MultichoiceList_ExpShareMode[] =
-{
-    {COMPOUND_STRING("Single")},
-    {COMPOUND_STRING("All")},
-};
-
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1300,7 +1294,6 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_HOF_VICTORIES_QUIT]                         = MULTICHOICE(sMultichoiceList_HOF_Victories_Quit),
     [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
     [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
-    [MULTI_EXP_SHARE_MODE]             = MULTICHOICE(MultichoiceList_ExpShareMode),
 };
 
 const u8 *const gStdStrings[] =

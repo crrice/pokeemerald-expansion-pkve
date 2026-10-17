@@ -75,7 +75,9 @@ struct SaveBlock2 {
     struct Pokedex pokedex;     // Dex mode, special personalities
     u32 encryptionKey;          // XOR key for money/items
     struct BattleFrontier frontier;  // All Battle Frontier data
-    u8 questData[];             // Quest menu state (expansion)
+    // Upstream's struct ends here (0xF2C). Ours, appended:
+    u8 questData[QUEST_FLAGS_COUNT * QUEST_STATES];  // Quest menu state
+    u8 subQuests[SUB_FLAGS_COUNT];
 };
 ```
 
@@ -138,7 +140,10 @@ struct SaveBlock3 {
     u8 dexNavSearchLevels[NUM_SPECIES];
 #endif
     u8 dexNavChain;
-    // Add new expansion features here
+#if APRICORN_TREE_COUNT > 0
+    u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
+#endif
+    struct WallyRaltsData wallyRalts;   // ours: last, so it moves when a config-gated block above is enabled
 };
 ```
 
@@ -225,8 +230,9 @@ The most common way to persist simple data.
 ### Flags (1 bit each)
 
 ```c
-// In include/constants/flags.h
-#define FLAG_MY_EVENT_HAPPENED (FLAG_UNUSED_0x001 + 0)
+// In include/constants/flags.h: rename the next free flag from the top of
+// 0x493-0x4EF (see "ID registry" below) and add a row to the registry
+#define FLAG_MY_EVENT_HAPPENED FLAG_UNUSED_0x4EF
 
 // In scripts:
 setflag FLAG_MY_EVENT_HAPPENED
@@ -242,8 +248,8 @@ if (FlagGet(FLAG_MY_EVENT_HAPPENED)) { ... }
 ### Vars (16 bits each)
 
 ```c
-// In include/constants/vars.h
-#define VAR_MY_COUNTER (VAR_UNUSED_0x001 + 0)
+// In include/constants/vars.h: the next free var from 0x40FF down
+#define VAR_MY_COUNTER VAR_UNUSED_0x40FF
 
 // In scripts:
 setvar VAR_MY_COUNTER, 5
@@ -254,6 +260,52 @@ goto_if_eq VAR_MY_COUNTER, 10, Label
 VarSet(VAR_MY_COUNTER, 5);
 VarGet(VAR_MY_COUNTER);
 ```
+
+## ID registry
+
+Every ID we claim from a range upstream also allocates from. This table is the one place to look before claiming a new one, and the checklist for the ID-collision audit of every upstream merge (`upstream-merge` skill). Add a row in the same commit that claims the ID. Build-time checks on these live in `src/verdant_asserts.c`.
+
+| Kind | ID | Name | Defined in |
+|------|----|------|------------|
+| Flag | 0x020 | `DN_FLAG_SEARCHING` | `include/config/verdant.h` (as `FLAG_UNUSED_0x020`) |
+| Flag | 0x021 | `I_EXP_SHARE_FLAG` (Exp. Share All on) | `include/config/verdant.h` |
+| Flag | 0x022 | `DN_FLAG_DETECTOR_MODE` | `include/config/verdant.h` |
+| Flag | 0x023 | `DN_FLAG_DEXNAV_GET` (also `setflag FLAG_UNUSED_0x023` in Birch's lab) | `include/config/verdant.h` |
+| Flag | 0x024 | `FLAG_STAT_EDITOR_IV_UNLOCK` | `include/constants/flags.h` |
+| Flag | 0x02A | `B_FLAG_FOLLOWERS_DISABLED` | `include/config/verdant.h` |
+| Flag | 0x1AA | `FLAG_RECEIVED_MACHO_BRACE_OLDALE` | `include/constants/flags.h` |
+| Flag | 0x1AB | `FLAG_RECEIVED_WIMPY_BRACE_OLDALE` | `include/constants/flags.h` |
+| Flag | 0x2D5 | `FLAG_HIDE_ROUTE104_DEVON_RESEARCHER` (upstream's `FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT`, renamed) | `include/constants/flags.h` |
+| Flag | 0x2D9 | `FLAG_HIDE_ROUTE104_AQUA_GRUNT` | `include/constants/flags.h` |
+| Flag | `SYSTEM_FLAGS` + 0x3 (0x863) | `FLAG_SYS_QUEST_MENU_GET` | `include/constants/flags.h` |
+| Var | 0x404E | `DN_VAR_SPECIES` | `include/config/verdant.h` |
+| Var | 0x4083 | `DN_VAR_STEP_COUNTER` | `include/config/verdant.h` |
+| Var value | `VAR_STARTER_MON` 0 / 1 | player picked Axew / Deino (2 is dead) | `CLAUDE.md` → Custom Starters |
+| Script opcode | 0xf0-0xf2 | `questmenu`, `subquestmenu`, `returnqueststate` | `data/script_cmd_table.inc` |
+| Script opcode | 0xe7-0xef | reserved `ScrCmd_nop` placeholders: upstream's next opcodes replace them in order | `data/script_cmd_table.inc` |
+| Item | 996-999 | `ITEM_EV_TRAINER`, `ITEM_WIMPY_BRACE`, `ITEM_EXP_SHARE_ALL`, `ITEM_INFINITE_CANDY` | `include/constants/items.h` |
+| Item | 874-995 | empty slots, filled with one "????????" range entry | `src/data/items.h` |
+| Species | 1550, 1551 | `SPECIES_MAGIKARP_AEVIAN`, `SPECIES_GYARADOS_AEVIAN` (upstream's Z-A megas shifted to 1552-1574) | `include/constants/species.h` |
+| Berry tree | 90 | `BERRY_TREE_OLDALE_RUINS_1` | `include/constants/berry.h` |
+| Battle-type bit | `1 << 30` | `BATTLE_TYPE_SCRIPTED` (upstream's `BATTLE_TYPE_30`; bit 31 is taken, so it's the last free bit) | `include/constants/battle.h` |
+| Map | group 0, nums 57, 58 | `MAP_SERENE_POND`, `MAP_OLDALE_RUINS` (appended to `gMapGroup_TownsAndRoutes`) | `data/maps/map_groups.json` |
+| Map group | 34, num 0 | `gMapGroup_IndoorOldaleRuins`: `MAP_OLDALE_RUINS_BERRY_FARMERS_HOUSE` | `data/maps/map_groups.json` |
+| Layout | 442-444 | `LAYOUT_SERENE_POND`, `LAYOUT_OLDALE_RUINS`, `LAYOUT_OLDALE_RUINS_BERRY_FARMERS_HOUSE` | `data/layouts/layouts.json` |
+| Enum entry | last before `_COUNT` | `STRINGID_CHALLENGERLOSTTOENEMYTRAINER`, `TRAINER_SLIDE_BATTLE_WON` (not saved; renumbering is harmless) | `battle_string_ids.h`, `trainer_slide.h` |
+| Save field | SaveBlock2 0xF2C, 20 bytes | `questData` (upstream's struct ends at 0xF2C) | `include/global.h` |
+| Save field | SaveBlock2 0xF40, 4 bytes | `subQuests` (SaveBlock2 is 3908 bytes) | `include/global.h` |
+| Save field | SaveBlock3 0x10, 12 bytes | `wallyRalts` (`struct WallyRaltsData`), last member, after the config-gated blocks: enabling one moves it (SaveBlock3 is 28 bytes with our configs) | `include/global.h` |
+
+Map, layout and save offsets come from the build: `include/constants/map_groups.h` and `layouts.h` are generated, and `tools/save_convert/compare_builds.py` measures the save layout.
+
+### Allocation rules
+
+- Fixed-size ranges are allocated from the top down, so upstream (which fills from the bottom) and we meet last: items from 999 down, berry trees from 127 down, opcodes from 0xf0 up past upstream's reserved block. Every low-first claim we made was hit by upstream (opcode 0xe5, battle-type bit 28, `MULTI` 115, species 1550); the high-first ones never were.
+- New flags: 0x4EF down to 0x493 (`FLAG_UNUSED_*`). New vars: 0x40FF down. Don't take 0x264 or 0x404E for anything new: upstream's config comments suggest them as examples (we already hold 0x404E).
+- Claim a free ID through upstream's `FLAG_UNUSED_*` / `VAR_UNUSED_*` name, so the build breaks if upstream takes it.
+- New custom menus use `dynmultichoice`, not a `MULTI_*` ID. New script commands are `callnative`, not opcodes.
+- Enum entries that aren't saved (string IDs, trainer slides) can be appended; prefer keeping them out of upstream's enums entirely.
+- IDs are frozen at the first public release; until then a planned save break may move them (merge hygiene item 5).
 
 ## How Saving Works
 
@@ -308,8 +360,8 @@ STATIC_ASSERT(sizeof(struct SaveBlock3) <= SAVE_BLOCK_3_CHUNK_SIZE * 14, SaveBlo
 // include/global.h - Add to SaveBlock3
 struct WallyRaltsData {
     u32 personality;    // Nature, ability, gender, shiny
-    u8 ivs[6];          // HP, Atk, Def, SpA, SpD, Spe
-    bool8 caught;       // Tutorial completed?
+    u8 ivs[NUM_STATS];  // HP, Atk, Def, Spe, SpA, SpD
+    u8 hiddenNature;    // For mint system
     u8 padding;         // Alignment
 }; // 12 bytes
 

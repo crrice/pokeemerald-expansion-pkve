@@ -30,6 +30,7 @@ Design docs state intent; tests pin the values (see `CLAUDE.md` → How We Track
 ### Where our tests live
 
 - Put project tests in `test/verdant/`, one file per feature (`starters.c`, `weather.c`, `quests.c`, ...). The Makefile picks up `test/*.c`, `test/*/*.c` and `test/*/*/*.c` automatically.
+- `customizations.c` pins our edits to upstream data (starters, learnsets, evolutions, typing, forms, item fields, encounter tables): add a case there when you change upstream data.
 - Prefix every test name with `Verdant:` so ours can be run alone.
 - Don't edit upstream test files to fit our changes. If an upstream test fails because of an intentional design change, record it (see Triage) instead of rewriting the test, so merges stay clean.
 
@@ -96,11 +97,12 @@ Don't rely on the runner's "observed X" messages for many tests: its failure sum
 
 ### Triage
 
-Known pre-existing failures (expansion 1.17.1, 5946 tests: 9 failed, 2 assumptions failed):
+Known pre-existing failures (expansion 1.17.1: 3 failed, 2 assumptions failed):
 
-- `test/save.c`: SaveBlock1/2/3 "is backwards compatible" — expected, we added save fields.
-- `test/text.c`: six item name/description width tests reporting a NULL item — our custom items count down from ID 999 (merge-safe numbering), leaving empty IDs 874-995 that these tests walk.
+- `test/save.c`: SaveBlock1/2/3 "is backwards compatible" — expected, we added save fields. They go away with the planned save break (merge hygiene item 5).
 - `test/battle/move_effect/steal_item.c` assumptions — `B_TRAINERS_KNOCK_OFF_ITEMS` is FALSE.
+
+`test/text.c` walks every item ID: the empty IDs between upstream's last item and ours (which count down from 999) are filled with a "????????" range entry in `src/data/items.h`, and our own item names and descriptions must fit the same boxes as upstream's. A test that reports a failing PARAMETRIZE case shows only one case, so fix it and rerun until it passes.
 
 A new failure is either a bug (fix it), an upstream test contradicting an intentional design change (record it here with the reason), or a test bug in our own file (fix the test).
 
@@ -123,7 +125,7 @@ Requires `libmgba-dev`, `libpng-dev` and the ARM toolchain (`apt install ...`); 
 
 - `runner.c`: game-agnostic C runner (libmgba). Executes a compiled plan of input steps and RPN memory predicates.
 - `replay.py`: compiles scenarios, resolves every name against the current build, runs the runner. All game knowledge lives here.
-- `lib/`: reusable routines (`new_game`, `moving_in_<gender>`, `set_clock`, `new_game_to_tv`, `save_game` (start menu save; `down=` presses to SAVE), `continue` (boot a `--save` file into the field)).
+- `lib/`: reusable routines (`new_game`, `bedroom_<gender>` (truck to Mom's bedroom visit, ends upstairs with control), `moving_in_<gender>` (the same, then back downstairs), `set_clock`, `new_game_to_tv`, `save_game` (start menu save; `down=` presses to SAVE), `continue` (boot a `--save` file into the field)).
 - `scenarios/`: the tests.
 
 Names resolve against the build, never hardcoded: symbols (including statics) from `pokeemerald.elf` via `nm`; constants, enums, struct offsets and bitfield positions by compiling a small file with the ARM toolchain against the project headers. Upstream renumbering or struct changes don't break scenarios.
