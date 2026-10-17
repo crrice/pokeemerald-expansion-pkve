@@ -90,6 +90,6 @@ Every stage's audit diffs our delta before (`git diff refs/upstream/<prev> <pre-
 - **Other code:** `src/time_events_custom.c`, start menu layout, party menu follower toggle, hold-B-to-walk in `src/field_player_avatar.c`.
 - **Testing values to keep:** `SHINY_ODDS` 21845, the B-button catch boost in `Cmd_handleballthrow`.
 - **Configs:** our values live in `include/config/verdant.h`, which fails the build if upstream renames an option (carry our value to the new name). Two exceptions stay in upstream files: OW_TIME_OF_DAY_ENCOUNTERS at the bottom of `config/overworld.h`, and the Gen 9 / Gigantamax / Tera toggles in `config/species_enabled.h`. Every other `include/config/*.h` should match upstream exactly; take upstream's side on any conflict there.
-- **Repurposed IDs** (check upstream hasn't claimed them): flags 0x020–0x024, 0x02A, 0x1AA, 0x1AB, 0x2D5, 0x2D9, SYSTEM_FLAGS+0x3; vars 0x404E, 0x4083; items 996–999; the two Aevian species IDs; berry tree 90.
+- **Claimed IDs** (check upstream hasn't claimed them): every row of the ID registry in the `save-system` skill (flags, vars, opcodes, items, species, berry tree, battle-type bit, maps, layouts, save offsets). `src/verdant_asserts.c` checks some of them at build time.
 
 Then: `make` succeeds, `TESTS="Verdant:" make check` passes, and the Norman TV replay matches its golden transcript (`testing` skill).

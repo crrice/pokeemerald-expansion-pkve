@@ -18,8 +18,8 @@ Ported from [ghoulslash/pokeemerald quest-menu](https://github.com/ghoulslash/po
 | `src/scrcmd.c` | Script command implementations |
 | `asm/macros/event.inc` | Script macros for quest commands |
 | `data/event_scripts.s` | Must include `constants/quests.h` for scripts to work |
-| `data/script_cmd_table.inc` | Opcode definitions (0xe5-0xe7) |
-| `include/global.h` | Save data in SaveBlock2 |
+| `data/script_cmd_table.inc` | Opcode definitions (0xf0-0xf2; 0xe7-0xef are reserved placeholders) |
+| `include/global.h` | Save data at the end of SaveBlock2 |
 | `graphics/quest_menu/` | Menu graphics |
 
 ## Quest States
@@ -214,7 +214,7 @@ bool8 isActive = QuestMenu_GetSetQuestState(QUEST_ID, FLAG_GET_ACTIVE);
 
 ## Save Data
 
-Quest state is stored in `SaveBlock2`:
+Quest state is stored at the end of `SaveBlock2`, after upstream's last field (offsets in the `save-system` skill's ID registry):
 - `questData[QUEST_FLAGS_COUNT * QUEST_STATES]` - Main quest flags
 - `subQuests[SUB_FLAGS_COUNT]` - Subquest completion flags
 
@@ -243,5 +243,5 @@ Strings in `src/strings.c` use `gText_SideQuestName_1`, `gText_SideQuestDesc_1`,
 
 - All quests are visible in "All Missions" tab from the start (as "??????" until active)
 - To hide locked quests entirely, modify the list-building functions in `src/quests.c`
-- Quest menu uses opcodes 0xe5, 0xe6, 0xe7 (avoiding conflicts with pokeemerald-expansion)
+- Quest menu uses opcodes 0xf0-0xf2. 0xe7-0xef are `ScrCmd_nop` placeholders reserved for upstream's next opcodes, which replace them in order; if upstream ever reaches 0xf0, stop and move ours
 - Subquests are optional - set `numSubquests = 0` for simple quests
