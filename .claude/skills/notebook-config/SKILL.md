@@ -11,7 +11,8 @@ The notebook in the player's bedroom provides configuration options that persist
 
 | File | Purpose |
 |------|---------|
-| `data/scripts/players_house.inc` | Notebook script and option handlers |
+| `data/scripts/players_house.inc` | Notebook script (`PlayersHouse_2F_EventScript_VerdantNotebook`) and option handlers |
+| `data/maps/LittlerootTown_{Brendans,Mays}House_2F/map.json` | The notebook bg_event in each house points at our script |
 | `src/data/script_menu.h` | Multichoice menu definitions |
 | `include/constants/script_menu.h` | Multichoice menu ID constants |
 | `include/config/item.h` | Feature flags (e.g., I_EXP_SHARE_FLAG) |
@@ -62,7 +63,7 @@ For persistent settings, use an unused flag or var:
 ### Step 4: Add Script Handler
 In `data/scripts/players_house.inc`, add to the notebook script:
 ```
-PlayersHouse_2F_EventScript_Notebook::
+PlayersHouse_2F_EventScript_VerdantNotebook::
     lockall
     @ ... existing options ...
     msgbox PlayersHouse_2F_Text_MyOptionQuestion, MSGBOX_DEFAULT
@@ -109,7 +110,7 @@ Defined in `src/item.c` with script wrapper `Script_RemoveItemFromEverywhere`.
 
 ## Design Notes
 
-- Notebook is in both Brendan's and May's house (shared script)
+- Notebook is in both Brendan's and May's house (shared script). Upstream's own `PlayersHouse_2F_EventScript_Notebook` and texts in `LittlerootTown_BrendansHouse_2F/scripts.inc` stay untouched (unused script, reused texts), so upstream edits there merge cleanly.
 - Options should work regardless of game progress
 - Use flags for on/off settings, vars for multiple states
 - Cancel (case 127) should exit cleanly without changes

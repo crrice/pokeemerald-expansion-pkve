@@ -692,9 +692,11 @@ EventScript_RunningShoesManual::
 	msgbox PlayersHouse_1F_Text_RunningShoesManual, MSGBOX_SIGN
 	end
 
-PlayersHouse_2F_EventScript_Notebook::
+@ Upstream's notebook (PlayersHouse_2F_EventScript_Notebook) plus the Exp. Share mode
+@ choice; both houses' map.json point their notebook at this one.
+PlayersHouse_2F_EventScript_VerdantNotebook::
 	lockall
-	msgbox PlayersHouse_2F_Text_NotebookIntro, MSGBOX_DEFAULT
+	msgbox PlayersHouse_2F_Text_Notebook, MSGBOX_DEFAULT
 	msgbox PlayersHouse_2F_Text_ExpShareQuestion, MSGBOX_DEFAULT
 	multichoice 14, 6, MULTI_EXP_SHARE_MODE, FALSE
 	switch VAR_RESULT
@@ -729,18 +731,6 @@ PlayersHouse_2F_EventScript_ExpShareCancel::
 	releaseall
 	end
 
-PlayersHouse_2F_EventScript_GameCube::
-	msgbox PlayersHouse_2F_Text_ItsAGameCube, MSGBOX_SIGN
-	end
-
-PlayersHouse_2F_Text_NotebookIntro:
-	.string "{PLAYER} flipped open the notebook.\p"
-	.string "ADVENTURE RULE NO. 1\n"
-	.string "Open the MENU with START.\p"
-	.string "ADVENTURE RULE NO. 2\n"
-	.string "Record your progress with SAVE.\p"
-	.string "The remaining pages are blank…$"
-
 PlayersHouse_2F_Text_ExpShareQuestion:
 	.string "A note is attached:\p"
 	.string "Choose how you want EXP. SHARE\n"
@@ -755,22 +745,3 @@ PlayersHouse_2F_Text_ExpShareAllReceived:
 	.string "{PLAYER} put the EXP. SHARE away.\p"
 	.string "All party POKéMON will gain EXP.\n"
 	.string "from battles. Use it to toggle.$"
-
-PlayersHouse_2F_Text_ItsAGameCube:
-	.string "It's a Nintendo GameCube.\p"
-	.string "A Game Boy Advance is connected to\n"
-	.string "serve as the Controller.$"
-
-PlayersHouse_2F_Text_ClockIsStopped:
-	.string "The clock is stopped…\p"
-	.string "Better set it and start it!$"
-
-PlayersHouse_2F_Text_HowDoYouLikeYourRoom:
-	.string "MOM: {PLAYER}, how do you like your\n"
-	.string "new room?\p"
-	.string "Good! Everything's put away neatly!\p"
-	.string "They finished moving everything in\n"
-	.string "downstairs, too.\p"
-	.string "POKéMON movers are so convenient!\p"
-	.string "Oh, you should make sure that\n"
-	.string "everything's all there on your desk.$"

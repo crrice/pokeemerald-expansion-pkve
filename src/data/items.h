@@ -9803,8 +9803,6 @@ const struct ItemInfo gItemsInfo[] =
         .price = 0,
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
-        .type = ITEM_USE_FIELD,
-        .fieldUseFunc = ItemUseOutOfBattle_ExpShare,
     #else
         .description = COMPOUND_STRING(
             "A held item that\n"
@@ -9813,9 +9811,9 @@ const struct ItemInfo gItemsInfo[] =
         .price = (I_PRICE == GEN_1) ? 1 : 3000,
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_HELD_ITEM,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
     #endif
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_ExpShare,
         .flingPower = 30,
         .iconPic = gItemIcon_ExpShare,
         .iconPalette = gItemIconPalette_ExpShare,
