@@ -123,7 +123,7 @@ Requires `libmgba-dev`, `libpng-dev` and the ARM toolchain (`apt install ...`); 
 
 - `runner.c`: game-agnostic C runner (libmgba). Executes a compiled plan of input steps and RPN memory predicates.
 - `replay.py`: compiles scenarios, resolves every name against the current build, runs the runner. All game knowledge lives here.
-- `lib/`: reusable routines (`new_game`, `moving_in_<gender>`, `set_clock`, `new_game_to_tv`).
+- `lib/`: reusable routines (`new_game`, `moving_in_<gender>`, `set_clock`, `new_game_to_tv`, `save_game` (start menu save; `down=` presses to SAVE), `continue` (boot a `--save` file into the field)).
 - `scenarios/`: the tests.
 
 Names resolve against the build, never hardcoded: symbols (including statics) from `pokeemerald.elf` via `nm`; constants, enums, struct offsets and bitfield positions by compiling a small file with the ARM toolchain against the project headers. Upstream renumbering or struct changes don't break scenarios.
@@ -148,7 +148,7 @@ One step per line, `#` comments.
 | `expect-text "TEXT"` | An on-screen battle message containing TEXT was recorded |
 | `expect-transcript golden/NAME.log` | The recording matches the reviewed golden transcript exactly |
 | `state` | Print the state dump (for writing scenarios) |
-| `screenshot PATH` / `export-save PATH` | Write the current frame as PNG / the game's save memory |
+| `screenshot PATH` / `export-save PATH` | Write the current frame as PNG / the game's save memory (after an in-game save; save memory is RAM-only, so `--save` files are never modified) |
 | `use lib/x.replay k=v` | Include a routine; `$k` substitutes parameters, `param k=v` sets defaults |
 | `variant k=v ...` | Run the scenario once per variant line (unless `--param` is given) |
 | `header foo.h` | Extra header for constant lookup |

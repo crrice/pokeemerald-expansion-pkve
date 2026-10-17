@@ -66,6 +66,7 @@ static struct Sym sSyms[MAX_SYMS];
 static int sNumSyms;
 static int64_t sSlots[MAX_SLOTS];
 static char sRom[512], sSav[512], sArtifacts[512];
+static struct VFile *sSaveVf;     // RAM-backed save memory attached to the core
 // ---- battle transcript recording ----
 #define MAX_TRACKS   64
 #define MAX_LINES    4096
@@ -497,10 +498,16 @@ static void writePng(const char *path)
 
 static int exportSave(const char *path)
 {
-    void *data = NULL;
-    size_t size = sCore->savedataClone(sCore, &data);
-    if (!size || !data)
+    // The save memory is our own RAM-backed file (see main), so read it directly.
+    size_t size = sSaveVf ? (size_t)sSaveVf->size(sSaveVf) : 0;
+    if (!size)
+    {
+        printf("    (no save memory to export: the game hasn't saved yet)\n");
         return 0;
+    }
+    uint8_t *data = malloc(size);
+    sSaveVf->seek(sSaveVf, 0, SEEK_SET);
+    sSaveVf->read(sSaveVf, data, size);
     FILE *f = fopen(path, "wb");
     if (!f)
     {
@@ -794,20 +801,24 @@ int main(int argc, char **argv)
     mCoreInitConfig(sCore, NULL);
     if (!mCoreLoadFile(sCore, sRom))
         die("cannot load ROM %s", sRom);
+    // Save memory lives in RAM only: runs never modify a save file, and in-game
+    // saves can be exported (export-save) even on a fresh boot.
+    void *savBuf = NULL;
+    size_t savSize = 0;
     if (sSav[0])
     {
-        // Load the save into memory only (no write-back): runs never modify the depot.
         struct VFile *vf = VFileOpen(sSav, O_RDONLY);
         if (!vf)
             die("cannot open save %s", sSav);
-        size_t size = vf->size(vf);
-        void *buf = malloc(size);
-        vf->read(vf, buf, size);
+        savSize = vf->size(vf);
+        savBuf = malloc(savSize);
+        vf->read(vf, savBuf, savSize);
         vf->close(vf);
-        if (!sCore->savedataRestore(sCore, buf, size, false))
-            die("cannot restore save %s", sSav);
-        free(buf);
     }
+    sSaveVf = VFileMemChunk(savBuf, savSize);
+    if (!sSaveVf || !sCore->loadSave(sCore, sSaveVf))
+        die("cannot attach save memory");
+    free(savBuf);
     sCore->reset(sCore);
 
     int failed = 0;

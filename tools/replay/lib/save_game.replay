@@ -1,0 +1,15 @@
+# Save from the field with the start menu (first save of a file: no overwrite prompt).
+# param down: presses from the first entry to SAVE (2 before the Pokedex/Pokemon/
+# PokeNav/quest menu are unlocked: BAG, PLAYER, SAVE).
+param down=2
+wait until field-idle for 30 timeout 600
+tap START 1
+wait 30
+tap DOWN $down
+wait 10
+tap A 1                     # SAVE
+wait 90                     # save info window, "Would you like to save the game?" (YES)
+tap A 1
+wait 400                    # writing to flash, "PLAYER saved the game."
+tap A 1
+wait until field-idle for 30 timeout 600

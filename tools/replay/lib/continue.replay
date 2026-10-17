@@ -1,0 +1,5 @@
+# Boot with a save (run with --save FILE) and CONTINUE into the field.
+tap A every 15 until callback2 == CB2_MainMenu timeout 1500        # copyright + title screen
+wait until !fading for 10 timeout 300
+tap A every 15 until callback2 == CB2_Overworld timeout 1500      # CONTINUE (the first entry)
+wait until field-idle for 30 timeout 600
