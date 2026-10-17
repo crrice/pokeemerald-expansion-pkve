@@ -4973,7 +4973,7 @@ void MonGainEVs(struct Pokemon *mon, enum Species defeatedSpecies)
         if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
             evIncrease *= 2;
 
-        if (holdEffect == HOLD_EFFECT_WIMPY_BRACE)
+        if (heldItem == ITEM_WIMPY_BRACE)
             evIncrease = 0;
 
         if (totalEVs + (s16)evIncrease > currentEVCap)

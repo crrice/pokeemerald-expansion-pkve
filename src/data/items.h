@@ -16140,7 +16140,6 @@ const struct ItemInfo gItemsInfo[] =
     {
         .name = ITEM_NAME("Wimpy Brace"),
         .price = 3000,
-        .holdEffect = HOLD_EFFECT_WIMPY_BRACE,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "prevents growth."),

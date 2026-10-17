@@ -17972,7 +17972,6 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Magikarp,
             gShinyOverworldPalette_Magikarp
         )
-        .isAevianForm = TRUE,
         .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sMagikarpAevianLevelUpLearnset,
         .teachableLearnset = sMagikarpTeachableLearnset,
@@ -18039,7 +18038,6 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Gyarados,
             gShinyOverworldPalette_Gyarados
         )
-        .isAevianForm = TRUE,
         .levelUpLearnset = sGyaradosAevianLevelUpLearnset,
         .teachableLearnset = sGyaradosTeachableLearnset,
         .formSpeciesIdTable = sGyaradosFormSpeciesIdTable,
