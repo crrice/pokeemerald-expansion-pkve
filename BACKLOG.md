@@ -78,7 +78,6 @@ Stretch goals (after the above):
 
 Cheap fixes from the 1.17.1 upgrade review; details and evidence per item in `.claude/skills/upstream-merge/hygiene-1.17.md`. Procedure for the next upgrade: `upstream-merge` skill.
 
-- [ ] [ready] Exp. Share mode menu via `dynmultichoice`; delete `MULTI_EXP_SHARE_MODE` (item 4).
 - [ ] [ready] ID registry in the `save-system` skill, fix stale skill docs (quest opcodes, save location), one `src/verdant_asserts.c` (item 9).
 - [ ] (you: design call) One planned pre-release save/ID break: Aevian species into upstream's custom range, our save data as one struct at the start of SaveBlock3, top-down ID allocation, pinned save sizes (item 5).
 
@@ -186,5 +185,5 @@ What exists today, one line per feature. Details live in git history and the des
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
 - Testing: `testing` skill; replay harness (headless runner, scenario compiler, intro routines, battle transcripts) with the TV broadcast test for both genders, checking Norman's replay against a reviewed golden transcript; unrigged battle tests (real RNG) with the Route 103 rival guard and win-rate measurement suite
 - Expansion 1.17.1 (from 1.14.1); our config values in `include/config/verdant.h`; merge procedure and reusable workflow (`upstream-merge` skill)
-- Merge hygiene from the 1.17.1 review (`hygiene-1.17.md`): pre-merge check for generated files (7), empty item IDs named so `test/text.c` passes (8), Wimpy Brace without a hold effect of its own (6), no-op edits to upstream lines reverted and our rewrites turned into added lines (3)
+- Merge hygiene from the 1.17.1 review (`hygiene-1.17.md`): pre-merge check for generated files (7), empty item IDs named so `test/text.c` passes (8), Wimpy Brace without a hold effect of its own (6), no-op edits to upstream lines reverted and our rewrites turned into added lines (3), notebook Exp. Share menu via `dynmultichoice` with a replay test (4)
 - Fixes: scripted battle crash after the upstream merge, quest state on new game, Wally's silhouette sprite, follower/DexNav flag clash, quest menu out-of-bounds sprite write

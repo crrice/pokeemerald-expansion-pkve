@@ -1,6 +1,6 @@
 # Merge hygiene: ranked changes from the 1.14 → 1.17.1 upgrade
 
-**Status (Oct 2026):** done: 1 (procedure and workflow in `SKILL.md` / `.claude/workflows/upstream-merge.js`), 2 (`include/config/verdant.h`; the Gen 9 / Gigantamax / Tera toggles stay in `species_enabled.h` because `data/sound_data.s` includes it directly), 3 (`[MENU_TOSS]` already matched upstream), 6 (Wimpy Brace pinned by `test/verdant/wimpy_brace.c`), 7 (check in `SKILL.md`) and 8 (the 3 `test/save.c` failures stay until item 5). Open items are tracked in `BACKLOG.md` (Later → Merge hygiene). Paths below refer to the upgrade worktree; the tree is now master.
+**Status (Oct 2026):** done: 1 (procedure and workflow in `SKILL.md` / `.claude/workflows/upstream-merge.js`), 2 (`include/config/verdant.h`; the Gen 9 / Gigantamax / Tera toggles stay in `species_enabled.h` because `data/sound_data.s` includes it directly), 3 (`[MENU_TOSS]` already matched upstream), 4 (replay `notebook_exp_share.replay`), 6 (Wimpy Brace pinned by `test/verdant/wimpy_brace.c`), 7 (check in `SKILL.md`) and 8 (the 3 `test/save.c` failures stay until item 5). Open items are tracked in `BACKLOG.md` (Later → Merge hygiene). Paths below refer to the upgrade worktree; the tree is now master.
 
 On item 6: hold effects are stored in one byte (`u8 holdEffect`), so the hard limit is 255. The 127 is upstream's documented rule (a comment added in 1.17.1, nothing enforces it). Upstream is at 126. Wimpy Brace used to make ours 127; since item 6 it works without taking a slot in upstream's list.
 

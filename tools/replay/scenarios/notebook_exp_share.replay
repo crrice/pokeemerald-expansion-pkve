@@ -1,0 +1,39 @@
+# Bedroom notebook (data/scripts/players_house.inc), Exp. Share mode menu:
+# Single gives the held Exp. Share and clears I_EXP_SHARE_FLAG, All gives the
+# Exp. Share All key item and sets it, B changes nothing. Run once per house:
+# each house's map.json points its notebook at the script.
+variant gender=boy  dir=LEFT  x=1
+variant gender=girl dir=RIGHT x=7
+
+use lib/new_game.replay gender=$gender
+use lib/bedroom_$gender.replay
+walk $dir to $x 2                                    # the notebook is the desk tile at ($x, 1)
+face UP
+expect flag I_EXP_SHARE_FLAG                         # a new game starts with Exp. Share All, on
+
+# Single (the cursor starts on it)
+tap A 1
+tap A when script-running until task-active Task_HandleScrollingMultichoiceInput timeout 1200
+wait 10
+tap A 1
+tap A when script-running until field-idle for 30 timeout 3000
+expect !flag I_EXP_SHARE_FLAG
+
+# All
+tap A 1
+tap A when script-running until task-active Task_HandleScrollingMultichoiceInput timeout 1200
+wait 10
+tap DOWN 1
+wait 10
+tap A 1
+tap A when script-running until field-idle for 30 timeout 3000
+expect flag I_EXP_SHARE_FLAG
+
+# B backs out without changing anything
+tap A 1
+tap A when script-running until task-active Task_HandleScrollingMultichoiceInput timeout 1200
+wait 10
+tap B 1
+wait until field-idle for 30 timeout 600
+expect flag I_EXP_SHARE_FLAG
+expect-control

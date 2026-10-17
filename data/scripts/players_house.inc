@@ -698,7 +698,7 @@ PlayersHouse_2F_EventScript_VerdantNotebook::
 	lockall
 	msgbox PlayersHouse_2F_Text_Notebook, MSGBOX_DEFAULT
 	msgbox PlayersHouse_2F_Text_ExpShareQuestion, MSGBOX_DEFAULT
-	multichoice 14, 6, MULTI_EXP_SHARE_MODE, FALSE
+	dynmultichoice 14, 6, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, PlayersHouse_2F_Text_Single, PlayersHouse_2F_Text_All
 	switch VAR_RESULT
 	case 0, PlayersHouse_2F_EventScript_ExpShareSingle
 	case 1, PlayersHouse_2F_EventScript_ExpShareAll
@@ -730,6 +730,12 @@ PlayersHouse_2F_EventScript_ExpShareAll::
 PlayersHouse_2F_EventScript_ExpShareCancel::
 	releaseall
 	end
+
+PlayersHouse_2F_Text_Single:
+	.string "Single$"
+
+PlayersHouse_2F_Text_All:
+	.string "All$"
 
 PlayersHouse_2F_Text_ExpShareQuestion:
 	.string "A note is attached:\p"
