@@ -57,8 +57,22 @@ git log --merges --format='%H %P' upgrade-<target> wip/<tag>-interrupted 2>/dev/
 - Data files (wild_encounters.json, map_groups.json, layouts.json, trainers.party, items, species): keep both sides' entries.
 - New upstream config options: take upstream's default, and list any that change gameplay for the owner (catch rates, weather, Synchronize, ...).
 - When a release did a whitespace or formatting sweep, merge with `-Xignore-space-change`, then take upstream's whitespace for those hunks in a separate commit.
-- Stage resolutions by path or `git add -u`, never `git add -A`. Before the merge commit: no conflict markers (`git grep -nE '^(<<<<<<<|>>>>>>>) '`), no `*.backup` files, no generated files (anything saying "DO NOT MODIFY" or "auto-generated").
+- Stage resolutions by path or `git add -u`, never `git add -A`.
 - Adapt our code to upstream's new API rather than editing upstream code to fit ours.
+
+### Before the merge commit: no leftovers, no generated files
+
+Run on the staged merge; each command must print what the comment says:
+
+```bash
+git grep -nE '^(<<<<<<<|>>>>>>>) '            # nothing: no conflict markers
+git ls-files -ci --exclude-standard            # only upstream's own: tools/mgba/mgba-rom-test.exe, tools/compresSmol/*
+git diff --cached --name-only --diff-filter=d refs/upstream/<tag> -- . ':!.claude' \
+    | xargs -d '\n' grep -l -I -E 'DO NOT MODIFY|auto-generated'    # nothing: no generated file differs from upstream
+ls *.backup *.orig *.rej 2>/dev/null; git ls-files '*.backup' '*.orig' '*.rej'   # nothing
+```
+
+A build output or generated file in that list gets `git rm --cached` (it stays ignored). Past cases: the generated `include/constants/script_commands.h` committed in the 1.14.1 merge (a modify/delete conflict once upstream untracked it), the `tools/aif2pcm/aif2pcm` binary, and `.backup` files in the repo root.
 
 ## Our customizations (audit checklist)
 
