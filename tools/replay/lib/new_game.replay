@@ -1,0 +1,12 @@
+# Boot a fresh game (no save) through Birch's speech.
+# Ends on the first overworld frame inside the moving truck.
+param gender=boy
+
+tap A every 15 until callback2 == CB2_MainMenu timeout 1500        # copyright + title screen
+tap A every 15 until task-active Task_NewGameBirchSpeech_ChooseGender timeout 3000
+use lib/gender_$gender.replay
+tap A every 15 until callback2 == CB2_NamingScreen timeout 3000
+wait until !fading for 10 timeout 600                              # input is ignored during the fade-in
+tap START 1                                                        # keep the preset name: jump to OK...
+tap A every 15 until callback2 != CB2_NamingScreen timeout 600     # ...and confirm it
+tap A every 15 until callback2 == CB2_Overworld timeout 3000      # "So it's NAME?" YES, Birch's farewell

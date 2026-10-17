@@ -420,6 +420,7 @@ And you remember everything.
 - [x] Pre-Roxanne rival battle → Dropped. Tunnel scene carries the stakes.
 
 ### Still Open
+- [ ] Rival battles after Route 103 (Rustboro, Route 110, Route 119, Lilycove): whether each happens on each route, its format and its teams. Undecided. ("Pre-Roxanne rival battle → Dropped" above still stands.) Weather identities: see `BALANCE.md` Trainer Themes.
 - [ ] Mt. Chimney on Anti-hero: Fight Aqua? Magma? BOTH? Stakes are higher since Aqua has Devon tech.
 - [ ] Anti-hero exclusive content? Secret dialogue? Hidden area only accessible via tunnel route?
 - [ ] Different Champion battle? Steven comments on your path before fighting?

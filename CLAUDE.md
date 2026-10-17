@@ -15,7 +15,9 @@ Project-specific docs (not from upstream pokeemerald-expansion):
 | `DIVERGENCE_THEORY.md` | Core design document. Defines the dual-path system: Hero route (traditional) vs Anti-hero route (skip Roxanne via Rusturf Tunnel). Covers gym order, story divergence, Devon Goods consequences, Roxanne as secret final boss, NG+ system. **Read this first for project vision.** |
 | `ROADMAP.md` | Gameplay design by act. Currently covers Act 1 (Gyms 1-2): starter balance, weather introduction, rival fair-play doctrine. Will expand as development progresses. |
 | `BALANCE.md` | Encounter tables, per-Pokemon balance notes, and gameplay pillars (weather, berries, doubles, etc.). Reference when working on specific routes or Pokemon. |
-| `BACKLOG.md` | Task tracking. "Done" section shows completed work, "To Do" shows pending features. Check here for current implementation status. |
+| `BACKLOG.md` | Task tracking, grouped by milestone (Pre-Demo, Demo 1, Later) with maturity tags. "Done" is a one-line inventory of what exists. Check here for current implementation status. |
+| `ART_ASSETS.md` | Wishlist of custom art the project needs (brief for a future sprite artist): what, where used, format constraints, placeholder. |
+| `WALKTHROUGH.md` | Player-facing walkthrough and FAQ for this hack. |
 | `JOURNAL.md` | Dev journal / scratch pad. Stream-of-consciousness design thoughts. Not structured, but captures rationale for early decisions (starter selection, evolution changes, etc.). |
 
 ## Build Commands
@@ -114,10 +116,41 @@ Trainers are defined using `.party` files processed by trainerproc:
 
 ### Custom Starters
 
-This hack uses Flying/Fighting/Rock as the starter type triangle:
-- Pikipek line (Flying)
-- Machop line (Fighting)
-- Roggenrola line (Rock)
+Two starters, a pair rather than a trio: **Axew** (Dragon/Steel) and **Deino** (Dark/Dragon). Picked in `src/starter_choose.c` (`STARTER_MON_COUNT` 2).
+
+Upstream's three-slot names are kept (renaming them would cause conflicts in every upstream merge). Slots are named after the *player's* pick:
+
+| Slot name | `VAR_STARTER_MON` | Meaning | Rival uses |
+|-----------|-------------------|---------|------------|
+| `TREECKO` | 0 | Player picked Axew | Deino |
+| `TORCHIC` | 1 | Player picked Deino | Axew |
+| `MUDKIP` | 2 | Dead, never set | - |
+
+Dead-slot script branches can be deleted, but keep the `*_MUDKIP` trainer entries defined: removing them shifts the trainer IDs after them.
+
+## How We Track Work
+
+Each kind of information has exactly one home:
+
+| Level | Where it lives |
+|-------|----------------|
+| Principle / design goal | `DIVERGENCE_THEORY.md`, principles in `ROADMAP.md`, pillars in `BALANCE.md` |
+| Vague plan, open design question | Open-question sections of the design docs, or `JOURNAL.md` |
+| Idea needing breakdown | `BACKLOG.md`, tagged `[idea]` |
+| Needs refinement (questions open) | `BACKLOG.md`, tagged `[refine]`, open questions listed on the item |
+| Ready to work | `BACKLOG.md`, tagged `[ready]`: one-line goal, how we know it's done, files involved, no open questions |
+
+`(you: design call)` / `(you: playtest)` mark items waiting on the project owner.
+
+Rules:
+- Update the backlog in the same commit as the work: check items off, add follow-ups, move finished work to Done.
+- Design docs state intent ("Axew gets Steel STAB before Roxanne"); code holds the values and tests pin them. Don't restate code values in docs.
+- Decisions made in conversation go into the relevant design doc in the repo, not only chat or local memory. Cloud sessions can't see local memory.
+- Encounter tables are designed in `BALANCE.md` first, then implemented.
+- New features come with tests that pin their design values. How to write and run them: the `testing` skill (`.claude/skills/testing/SKILL.md`).
+- Art blockers go to `ART_ASSETS.md`.
+- At the start of a session, compare the current milestone against `git log` since `BACKLOG.md` last changed and flag drift.
+- Trim Done at each milestone; git history is the permanent record.
 
 ## Important Conventions
 
