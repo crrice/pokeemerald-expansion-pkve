@@ -1,10 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
-#include "battle_main.h"
+#include "battle_setup.h"
 #include "data.h"
 #include "move.h"
 #include "starter_choose.h"
 #include "constants/opponents.h"
+#include "game_trainers.h"
 #include "unrigged_battle.h"
 
 // Route 103 rival battle balance, measured with the game's real RNG
@@ -89,8 +90,8 @@ static u32 GetStrongestStabMove(u32 species, const u16 *moves)
     PASSES_RANDOMLY(50, 50);                                                                                 \
     GIVEN {                                                                                                  \
         ASSUME(stabMove != MOVE_NONE);                                                                       \
-        CreateNPCTrainerPartyFromTrainer(sRivalParty, GetTrainerStructFromId(trainerId), TRUE, BATTLE_TYPE_TRAINER); \
-        AI_FLAGS(GetTrainerStructFromId(trainerId)->aiFlags);                                                \
+        CreateNPCTrainerPartyFromTrainer(sRivalParty, GetGameTrainer(trainerId));                            \
+        AI_FLAGS(GetGameTrainer(trainerId)->aiFlags);                                                        \
         PLAYER(starter) {                                                                                    \
             Level(PLAYER_LEVEL);                                                                             \
             Nature(NATURE_HARDY);                                                                            \

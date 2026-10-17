@@ -242,6 +242,10 @@ class Compiler:
     def sb1(self):
         return f"{self.r.symbol('gSaveBlock1Ptr')} r32"
 
+    def player_party_count(self):
+        # gPlayerPartyCount was replaced by gPartiesCount[] in expansion 1.16.
+        return self.r.symbol('gPartiesCount') + self.r.const('B_TRAINER_PLAYER')
+
     def player_object(self):
         """RPN that pushes the address of the player's ObjectEvent."""
         oe = self.r.symbol('gObjectEvents')
@@ -412,7 +416,7 @@ class Compiler:
         if w == 'battle-outcome' and len(t) == 3 and t[1] in CMP_OPS:
             return f"{self.r.symbol('gBattleOutcome')} r8 {self.number(t[2])} {t[1]}"
         if w == 'party-count' and len(t) == 3 and t[1] in CMP_OPS:
-            return f"{self.r.symbol('gPlayerPartyCount')} r8 {self.number(t[2])} {t[1]}"
+            return f"{self.player_party_count()} r8 {self.number(t[2])} {t[1]}"
         if w in ('mem8', 'mem16', 'mem32') and len(t) == 4 and t[2] in CMP_OPS:
             m = re.fullmatch(r'(\w+)(?:\+(\w+))?', t[1])
             addr = self.r.symbol(m.group(1)) + (self.number(m.group(2)) if m.group(2) else 0)
@@ -449,7 +453,7 @@ class Compiler:
             ('player-stopped', '', self.atom(['player-stopped'], [])),
             ('battle-type', '', f"{self.r.symbol('gBattleTypeFlags')} r32"),
             ('in-battle', '', self.atom(['in-battle'], [])),
-            ('party-count', '', f"{self.r.symbol('gPlayerPartyCount')} r8"),
+            ('party-count', '', f"{self.player_party_count()} r8"),
         ]
         return [f"DIAG name={n}" + (f" kind={k}" if k else '') + f" | {rpn}" for n, k, rpn in d]
 
@@ -748,8 +752,8 @@ def run_one(args, scenario, params, resolver):
     header = [f"ROM path={os.path.abspath(args.rom)}", f"NAMES path={names_path}", f"ARTIFACTS path={artifacts}",
               f"CHARMAP path={charmap_path}",
               f"TEXTSRC addr={resolver.symbol('gDisplayedStringBattle')} len={resolver.const('sizeof(gDisplayedStringBattle)')}",
-              # health boxes reuse the battle message buffer for nicknames; don't log those
-              f"TEXTSKIP addr={resolver.symbol('gText_HealthboxNickname')}"]
+              # health boxes reuse the battle message buffer for "<nickname><gender>"; don't log those
+              *[f"TEXTSKIP addr={resolver.symbol(f'gText_HealthboxGender_{g}')} at=end" for g in ('Male', 'Female', 'None')]]
     if args.save:
         header.append(f"SAV path={os.path.abspath(args.save)}")
     plan_path = os.path.join(artifacts, 'plan.txt')

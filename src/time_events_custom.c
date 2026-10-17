@@ -57,7 +57,7 @@ static void UpdateBerryThiefTree(void)
         // Only set if not already in berry state (avoid resetting if player is mid-pickup)
         if (tree->stage != BERRY_STAGE_BERRIES)
         {
-            PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, ITEM_TO_BERRY(ITEM_WATMEL_BERRY), BERRY_STAGE_BERRIES, FALSE);
+            PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, BERRY_ID_WATMEL, BERRY_STAGE_BERRIES, FALSE);
         }
         return;
     }
@@ -68,18 +68,18 @@ static void UpdateBerryThiefTree(void)
         if (gTimeOfDay == TIME_NIGHT)
         {
             // Night: tree appears full (thief is there)
-            PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, ITEM_TO_BERRY(ITEM_WATMEL_BERRY), BERRY_STAGE_BERRIES, FALSE);
+            PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, BERRY_ID_WATMEL, BERRY_STAGE_BERRIES, FALSE);
         }
         else
         {
             // Day: tree stuck at flowering (berries not ready)
-            PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, ITEM_TO_BERRY(ITEM_WATMEL_BERRY), BERRY_STAGE_FLOWERING, FALSE);
+            PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, BERRY_ID_WATMEL, BERRY_STAGE_FLOWERING, FALSE);
         }
         return;
     }
 
     // Quest locked (not started) - tree always stuck at flowering
-    PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, ITEM_TO_BERRY(ITEM_WATMEL_BERRY), BERRY_STAGE_FLOWERING, FALSE);
+    PlantBerryTree(BERRY_TREE_OLDALE_RUINS_1, BERRY_ID_WATMEL, BERRY_STAGE_FLOWERING, FALSE);
 }
 
 // Called on map load to set initial tree state

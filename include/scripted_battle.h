@@ -51,9 +51,9 @@ struct ScriptedBattle
     // Display info
     const u8 *playerName;
     const u8 *opponentName;
-    u8 playerBackPic;       // TRAINER_BACK_PIC_* constant
-    u8 opponentTrainerPic;  // TRAINER_PIC_* constant
-    u8 announcerTrainerPic; // TRAINER_PIC_* constant for slide-in announcer (0 = use opponent pic)
+    enum TrainerPicID playerBackPic;       // TRAINER_PIC_* constant with a back pic
+    enum TrainerPicID opponentTrainerPic;  // TRAINER_PIC_* constant
+    enum TrainerPicID announcerTrainerPic; // TRAINER_PIC_* constant for slide-in announcer (0 = use opponent pic)
     u16 opponentTrainerId;  // TRAINER_* constant for name display (e.g., TRAINER_NORMAN_1)
 
     // Battle configuration
@@ -71,8 +71,8 @@ struct ScriptedBattle
 };
 
 // Controller setup functions (split like RecordedPlayer/RecordedOpponent)
-void SetControllerToScriptedPlayer(u32 battler);
-void SetControllerToScriptedOpponent(u32 battler);
+void SetControllerToScriptedPlayer(enum BattlerId battler);
+void SetControllerToScriptedOpponent(enum BattlerId battler);
 
 // Get custom intro text for scripted battles (returns NULL if not set or not scripted)
 const u8 *GetScriptedBattleIntroText(void);
@@ -84,7 +84,7 @@ const u8 *GetScriptedBattleAnnouncerMsg(u32 slideId);
 void PlayScriptedBattle(const struct ScriptedBattle *battle, void (*callback)(void));
 
 // Get the next action for a battler (used internally by controller)
-const struct ScriptedBattleAction *GetNextScriptedAction(u32 battler);
+const struct ScriptedBattleAction *GetNextScriptedAction(enum BattlerId battler);
 
 // Pre-defined scripted battles
 extern const struct ScriptedBattle gScriptedBattle_NormanTV;

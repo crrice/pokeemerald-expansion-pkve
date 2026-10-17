@@ -3,6 +3,7 @@
   "name": "OldaleRuins_BerryFarmersHouse",
   "layout": "LAYOUT_OLDALE_RUINS_BERRY_FARMERS_HOUSE",
   "music": "MUS_ROUTE101",
+  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_102",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
