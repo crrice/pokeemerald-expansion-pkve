@@ -250,7 +250,7 @@
 #define B_X_ITEMS_BUFF              GEN_LATEST // In Gen7+, X items raise a stat by 2 stages instead of 1.
 #define B_X_ITEMS_CROSSUSE          TRUE       // In Gen3, you can only use X items on the current battler, but in Gen7 you can use an X item on any friendly battler in double battles (we are not sure in which gen the change occured)
 #define B_MENTAL_HERB               GEN_LATEST // In Gen5+, Mental Herb cures Taunt, Encore, Torment, Heal Block, and Disable in addition to Infatuation from before.
-#define B_TRAINERS_KNOCK_OFF_ITEMS  FALSE      // If TRUE, Trainers can steal/swap your items (non-berries are restored after battle). In vanilla games, Trainers cannot steal items outside of facilities.
+#define B_TRAINERS_KNOCK_OFF_ITEMS  TRUE       // If TRUE, Trainers can steal/swap your items (non-berries are restored after battle). In vanilla games, Trainers cannot steal items outside of facilities.
 #define B_RETURN_STOLEN_NPC_ITEMS   GEN_LATEST // In Gen5+, Thief and Covet no longer permanently steal items from NPCs.
 #define B_STEAL_WILD_ITEMS          GEN_LATEST // In Gen9+, Thief and Covet steal a wild Pokémon's item and send it to the Bag. In Gen8 and earlier, the stolen item would be held by the Thief/Covet user.
 #define B_RESTORE_HELD_BATTLE_ITEMS GEN_LATEST // In Gen9+, all non-Berry items are restored after battle.

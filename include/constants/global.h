@@ -227,6 +227,8 @@ enum Connection
     CONNECTION_EMERGE
 };
 
+#include "config/verdant.h"
+
 #if TESTING
 #include "config/test.h"
 #endif
