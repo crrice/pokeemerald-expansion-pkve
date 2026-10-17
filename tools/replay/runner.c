@@ -79,9 +79,16 @@ static uint32_t sTextAddr;
 static int sTextLen;
 static char *sCharmap[256];
 static int sCtrlLen[256];          // EXT_CTRL_CODE_BEGIN code -> length including the code byte
-static uint8_t sSkipPrefix[64];    // ignore captured text starting with these bytes
-static int sSkipPrefixLen;
-static uint32_t sSkipPrefixAddr;
+struct TextSkip                    // ignore captured text starting (or ending) with a ROM string
+{
+    uint32_t addr;
+    int suffix;
+    int loaded;
+    int len;
+    uint8_t bytes[64];
+};
+static struct TextSkip sTextSkips[8];
+static int sTextSkipCount;
 static uint8_t sLastText[1024];
 
 static struct mCore *sCore;
@@ -254,7 +261,13 @@ static void loadPlan(const char *path)
         }
         if (!strcmp(word, "TEXTSKIP"))
         {
-            sSkipPrefixAddr = (uint32_t)strtoul(getKey(head, "addr", buf, sizeof(buf)) ? buf : "0", NULL, 0);
+            // TEXTSKIP addr=<string> [at=end]
+            if (sTextSkipCount < (int)(sizeof(sTextSkips) / sizeof(sTextSkips[0])))
+            {
+                struct TextSkip *skip = &sTextSkips[sTextSkipCount++];
+                skip->addr = (uint32_t)strtoul(getKey(head, "addr", buf, sizeof(buf)) ? buf : "0", NULL, 0);
+                skip->suffix = getKey(head, "at", buf, sizeof(buf)) && !strcmp(buf, "end");
+            }
             continue;
         }
         if (!strcmp(word, "CHARMAP"))
@@ -626,19 +639,29 @@ static void sampleText(void)
     if (!memcmp(cur, sLastText, sTextLen))
         return;
     memcpy(sLastText, cur, sTextLen);
-    if (sSkipPrefixAddr && !sSkipPrefixLen)
+    int eos = 0;
+    while (eos < sTextLen && cur[eos] != 0xFF)
+        eos++;
+    for (int k = 0; k < sTextSkipCount; k++)
     {
-        // read the prefix string from ROM once (up to EOS)
-        for (int i = 0; i < (int)sizeof(sSkipPrefix); i++)
+        struct TextSkip *skip = &sTextSkips[k];
+        if (!skip->loaded)
         {
-            uint8_t b = sCore->rawRead8(sCore, sSkipPrefixAddr + i, -1);
-            if (b == 0xFF)
-                break;
-            sSkipPrefix[sSkipPrefixLen++] = b;
+            // read the string from ROM once (up to EOS)
+            skip->loaded = 1;
+            for (int i = 0; i < (int)sizeof(skip->bytes); i++)
+            {
+                uint8_t b = sCore->rawRead8(sCore, skip->addr + i, -1);
+                if (b == 0xFF)
+                    break;
+                skip->bytes[skip->len++] = b;
+            }
         }
+        if (!skip->len || skip->len > eos)
+            continue;
+        if (!memcmp(skip->suffix ? cur + eos - skip->len : cur, skip->bytes, skip->len))
+            return;
     }
-    if (sSkipPrefixLen && !memcmp(cur, sSkipPrefix, sSkipPrefixLen))
-        return;
     char out[1024] = "";
     for (int i = 0; i < sTextLen && cur[i] != 0xFF && strlen(out) < sizeof(out) - 16; i++)
     {
