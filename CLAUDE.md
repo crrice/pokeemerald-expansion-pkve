@@ -106,6 +106,8 @@ Generation-specific behaviors are controlled by `GEN_LATEST` or specific `GEN_N`
 - `item.h` - Item behaviors
 - `species_enabled.h` - Which Pokemon are available
 
+Our values live in `include/config/verdant.h`, which overrides upstream's defaults. Change options there, not in upstream's config files (exceptions are listed at its top).
+
 ### Trainer Data
 
 Trainers are defined using `.party` files processed by trainerproc:
