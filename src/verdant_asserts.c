@@ -41,4 +41,8 @@ STATIC_ASSERT(DN_VAR_SPECIES >= VARS_START && DN_VAR_SPECIES <= VARS_END, DN_VAR
 STATIC_ASSERT(DN_VAR_STEP_COUNTER >= VARS_START && DN_VAR_STEP_COUNTER <= VARS_END, DN_VAR_STEP_COUNTER_IsNotASavedVar);
 ASSERT_DISTINCT(DN_VAR_SPECIES, DN_VAR_STEP_COUNTER);
 
+// Weather moves and abilities can replace area weather (BALANCE.md, Weather > Duration).
+// Upstream's Gen 9 default blocks them while overworld weather is present.
+STATIC_ASSERT(B_OVERWORLD_WEATHER_OVERRIDE < GEN_9, VerdantWeatherIsOverridable);
+
 #endif // !TESTING
