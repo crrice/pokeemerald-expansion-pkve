@@ -33,7 +33,7 @@
 #if !defined(OW_FOLLOWERS_ENABLED) || !defined(B_FLAG_FOLLOWERS_DISABLED) || !defined(OW_USE_FAKE_RTC) || !defined(OW_ALTERED_TIME_RATIO)
 #error "config/overworld.h: an option was renamed or removed upstream"
 #endif
-#if !defined(P_SHEDINJA_BALL) || !defined(P_SHUCKLE_BERRY_JUICE) || !defined(P_CAN_FORGET_HIDDEN_MOVE) || !defined(P_SHOW_DYNAMIC_TYPES)
+#if !defined(P_LVL_UP_LEARNSETS) || !defined(P_SHEDINJA_BALL) || !defined(P_SHUCKLE_BERRY_JUICE) || !defined(P_CAN_FORGET_HIDDEN_MOVE) || !defined(P_SHOW_DYNAMIC_TYPES)
 #error "config/pokemon.h: an option was renamed or removed upstream"
 #endif
 #if !defined(P_SUMMARY_SCREEN_IV_EV_INFO) || !defined(P_SUMMARY_SCREEN_IV_EV_VALUES)
@@ -73,6 +73,8 @@
 #define OW_ALTERED_TIME_RATIO           GEN_8_PLA
 
 // config/pokemon.h
+#undef P_LVL_UP_LEARNSETS
+#define P_LVL_UP_LEARNSETS              GEN_9  // our learnset edits live in level_up_learnsets/gen_9.h
 #undef P_SHEDINJA_BALL
 #define P_SHEDINJA_BALL                 GEN_3
 #undef P_SHUCKLE_BERRY_JUICE
