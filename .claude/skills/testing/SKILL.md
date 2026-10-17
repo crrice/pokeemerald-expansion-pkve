@@ -82,18 +82,17 @@ Upstream's battle runner rigs randomness (every move hits, no crits, secondary e
 - To measure, use `PASSES_RANDOMLY(0, 1)`: the failure message reports `observed X` (50/50 shows as 0.989 due to fixed-point rounding).
 - Give the opponent a Splash-only filler so the battle survives its lead fainting and every scripted TURN runs; a player loss ends the battle early and fails the run.
 - Check results on the live battlers (`opponent->species`, `player->hp` in THEN), not `OPPONENT_PARTY` (party HP isn't synced from the battle).
-- Parties are built once per test, so random creation details (IVs, nature, ability) are fixed per test; make one test per profile.
+- The party is built once per test and replayed for every trial, so random creation details (IVs, nature, gender, ability) are fixed per test. To vary them per battle, make one test per battle and seed it with `RNGSeed(...)` inside `GIVEN`.
 - Keep scripted TURNs close to the real fight length: every extra turn is filler time (16 turns ran ~3x slower than 6).
-- Example guard: `test/verdant/route103_rival.c`.
 
-Measurement suites (many rolls, report a table) follow `test/verdant/route103_rival_measure.c`: tests named `Verdant: [measure] ...`, one test per (bucket, starter roll), starter rolled per `ScriptGiveMon` rules from a fixed seed, one `MEASURE-WIN` line printed per won battle. Run and summarize:
+Measurement suites are informational: they report rates, there is no target, and nothing should fail a change on them. Follow `test/verdant/route103_rival_measure.c`: tests named `Verdant: [measure] ...` on `gMeasureBattleTestRunner` (they only play when selected by name and pass at once otherwise), one battle per test with everything not on an axis rolled per battle (starter per `ScriptGiveMon` rules, rival nature/gender, battle seed) from a fixed seed per roll number, a `MEASURE-WIN` line per won battle and a `MEASURE-ROLL` line with the starter genders. Run and summarize:
 
 ```bash
 TESTS="Verdant: [measure] Route 103" make check -j$(nproc) > /tmp/measure.log 2>&1
 python3 test/verdant/summarize_measure.py /tmp/measure.log
 ```
 
-Don't rely on the runner's "observed X" messages for many tests: its failure summary lists at most 50 tests per process. When not selected by name, measurement tests play a trivial one-turn battle and pass, so normal runs stay clean (an empty battle test is INVALID; ASSUME would flood the skipped list). About 60 ms per battle on 4 cores: the 4000-battle Route 103 suite takes ~4-5 minutes including the build.
+Don't rely on the runner's pass/fail summary for many tests: it lists at most 50 per process, hence the printed lines. About 70 ms per battle on 4 cores: the 4000-battle Route 103 suite takes ~5 minutes including the build.
 
 ### Triage
 

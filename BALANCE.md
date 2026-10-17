@@ -507,6 +507,8 @@ Only starters available. Rival takes the other starter (mirror match).
 
 No type advantage either way — both are Dragon. The fight is about stats, abilities (Rivalry vs Hustle), and move access at L5-7.
 
+The rival's starter nature and gender stay random per save (game rules; the trainer data doesn't set them), so Axew's Rivalry can help or hurt either side. Win rates are measured for information only, with no target: `test/verdant/route103_rival_measure.c` (how to run: `testing` skill).
+
 ### Next??
 
 

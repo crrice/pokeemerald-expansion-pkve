@@ -50,7 +50,6 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] (you: design call) Rival battles 2-3 (Rustboro, Route 110, hero): undecided, see `DIVERGENCE_THEORY.md` open questions. Until then hero testers meet the vanilla teams (Grovyle/Marshtomp lines).
 - [ ] [ready] Oldale Mart: the potion guy says berries have been scarce lately and are in demand, and gives a Potion.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
-- [ ] (you: design call) Route 103 rival's nature and gender: `trainers.party` doesn't set them, so the game rolls them per save (seeded from the trainer data and the player's trainer ID). Gender matters: Axew's Rivalry is ±25% against the player's starter. Pin them for a consistent fight, or keep the variety? The measurement suite rolls them; the guard test pins the harder case.
 - [ ] [ready] Norman's TV replay marks Cofagrigus and Slaking as seen in the Pokédex. Scripted battles shouldn't touch save data: skip dex updates when `BATTLE_TYPE_SCRIPTED` (or `IsScriptedBattle()`). Done when a fresh save after the broadcast has 0 seen.
 - [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
 
@@ -119,6 +118,7 @@ Ends at the **Weather Institute on both routes**, the minimum for a real evaluat
 
 - [ ] [refine] Mauville Game Corner starter-doll prize: Axew and Deino dolls. Blocked on art (`ART_ASSETS.md`); remove the dead Mudkip-doll branch then.
 - [ ] [ready] Wally's Ralts gender split: 12 trainer definitions (6 battles × 2 genders) for Gardevoir/Gallade, plus a gender check in the map scripts. Persistence is done; this only matters once Wally's Ralts evolves.
+- [ ] [idea] Title Case menu text across the game (e.g. party menu "TRADE" → "Trade"). Much later: every string we change is a line to carry through upstream merges, and an earlier attempt was mostly lost in the 1.14 → 1.17 merges.
 - [ ] [idea] Buff vanilla early-route Pokemon so they stay competitive with the additions (avoid "old mon bad, new mon good"). Surskit/Masquerain is the clearest target; also Poochyena, Zigzagoon, Wurmple, Lotad, Seedot. First check what expansion already buffed. Options: stats, abilities, learnsets, evolutions.
 - [ ] [idea] Spread weather abilities: more setters (Drizzle/Drought/Sand Stream/Snow Warning) and Swift Swim/Chlorophyll/Sand Rush/Slush Rush or defensive weather abilities on underused Pokemon (`BALANCE.md` Weather design goals).
 - [ ] [ready] Sunflora rework (spec in `BALANCE.md` Pokemon Reworks). No home yet; it gets placed when an area calls for it.

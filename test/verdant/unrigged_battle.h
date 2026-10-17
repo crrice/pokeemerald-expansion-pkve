@@ -18,6 +18,11 @@
 
 extern const struct TestRunner gUnriggedBattleTestRunner;
 
+// Same, for informational measurement suites: tests named MEASURE_TEST_PREFIX "..."
+// only play when selected by name and pass at once otherwise.
+#define MEASURE_TEST_PREFIX "Verdant: [measure]"
+extern const struct TestRunner gMeasureBattleTestRunner;
+
 // Same shape as upstream's BATTLE_TEST_ARGS_SINGLE, with our runner.
 #define UNRIGGED_AI_SINGLE_BATTLE_TEST(_name, ...) \
     struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
