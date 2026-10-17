@@ -785,7 +785,7 @@ static const u16 sUnusedData[] =
     0x0121, 0x013b, 0x000f, 0x0013, 0x0039, 0x0046, 0x0094, 0x00f9, 0x007f, 0x0123,
 };
 
-static const u8 sText_Trade4[] = _("Trade");
+static const u8 sText_Trade4[] = _("TRADE");
 
 struct
 {
