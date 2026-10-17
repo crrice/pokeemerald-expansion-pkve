@@ -96,11 +96,11 @@ Don't rely on the runner's "observed X" messages for many tests: its failure sum
 
 ### Triage
 
-Known pre-existing failures (baseline before the expansion 1.17 upgrade, 4285 tests):
+Known pre-existing failures (expansion 1.17.1, 5946 tests: 9 failed, 2 assumptions failed):
 
 - `test/save.c`: SaveBlock1/2/3 "is backwards compatible" — expected, we added save fields.
-- `test/text.c`: six item name/description width tests reporting a NULL item — our custom items count down from ID 999 (merge-safe numbering), leaving empty IDs 855-995 that these tests walk.
-- `test/battle/move_effect_secondary/steal_item.c` assumptions — `B_TRAINERS_KNOCK_OFF_ITEMS` is FALSE.
+- `test/text.c`: six item name/description width tests reporting a NULL item — our custom items count down from ID 999 (merge-safe numbering), leaving empty IDs 874-995 that these tests walk.
+- `test/battle/move_effect/steal_item.c` assumptions — `B_TRAINERS_KNOCK_OFF_ITEMS` is FALSE.
 
 A new failure is either a bug (fix it), an upstream test contradicting an intentional design change (record it here with the reason), or a test bug in our own file (fix the test).
 
