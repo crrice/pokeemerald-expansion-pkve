@@ -3,6 +3,7 @@
 #include "item.h"
 #include "item_use.h"
 #include "starter_choose.h"
+#include "string_util.h"
 #include "wild_encounter.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
@@ -134,12 +135,13 @@ TEST("Verdant: Aevian Magikarp and Gyarados are forms of their species")
     EXPECT_EQ(GetSpeciesType(SPECIES_GYARADOS_AEVIAN, 1), TYPE_DRAGON);
 }
 
-TEST("Verdant: EV Trainer item data")
+TEST("Verdant: QoL Stat Editor item data")
 {
-    EXPECT_EQ(GetItemPocket(ITEM_EV_TRAINER), POCKET_KEY_ITEMS);
-    EXPECT_EQ(GetItemImportance(ITEM_EV_TRAINER), 1);
-    EXPECT_EQ(GetItemType(ITEM_EV_TRAINER), ITEM_USE_PARTY_MENU);
-    EXPECT(GetItemFieldFunc(ITEM_EV_TRAINER) == ItemUseOutOfBattle_EVTrainer);
+    EXPECT_EQ(StringCompare(GetItemName(ITEM_QOL_STAT_EDITOR), COMPOUND_STRING("QoL Stat Editor")), 0);
+    EXPECT_EQ(GetItemPocket(ITEM_QOL_STAT_EDITOR), POCKET_KEY_ITEMS);
+    EXPECT_EQ(GetItemImportance(ITEM_QOL_STAT_EDITOR), 1);
+    EXPECT_EQ(GetItemType(ITEM_QOL_STAT_EDITOR), ITEM_USE_PARTY_MENU);
+    EXPECT(GetItemFieldFunc(ITEM_QOL_STAT_EDITOR) == ItemUseOutOfBattle_StatEditor);
 }
 
 TEST("Verdant: Exp. Share All item data")

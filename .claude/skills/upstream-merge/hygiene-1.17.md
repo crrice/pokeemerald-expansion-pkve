@@ -115,7 +115,7 @@ This list combines the postmortem, IDs and structure reviews of the four merges 
 - **Payoff:** low. **Effort:** trivial.
 
 ### 8. Merge master into the upgrade branch and bring the test baseline to zero
-- **Change:** After item 2's sha1 check, merge master into `upgrade-1.17.1`. Master is `5e907fabf6`, 20 commits past the branch point, and it adds `test/verdant/route103_rival.c` and `tools/replay` with `golden/norman_tv_battle.log`. Branch future upgrades from current master. Then fill the empty item slots 874-995 with one range initializer next to our items: `[ITEM_GLIMMORANITE + 1 ... ITEM_EV_TRAINER - 1] = { .name = ITEM_NAME("????????"), .description = COMPOUND_STRING("?????"), .pocket = <upstream's hidden/none pocket> }`. Because the build uses `-Werror -Woverride-init`, it fails the day upstream adds item 874; the fix is to bump the lower bound. Item 5e removes the 3 save.c failures.
+- **Change:** After item 2's sha1 check, merge master into `upgrade-1.17.1`. Master is `5e907fabf6`, 20 commits past the branch point, and it adds `test/verdant/route103_rival.c` and `tools/replay` with `golden/norman_tv_battle.log`. Branch future upgrades from current master. Then fill the empty item slots 874-995 with one range initializer next to our items: `[ITEM_GLIMMORANITE + 1 ... ITEM_QOL_STAT_EDITOR - 1] = { .name = ITEM_NAME("????????"), .description = COMPOUND_STRING("?????"), .pocket = <upstream's hidden/none pocket> }`. Because the build uses `-Werror -Woverride-init`, it fails the day upstream adds item 874; the fix is to bump the lower bound. Item 5e removes the 3 save.c failures.
 - **Why:** 9 baseline failures (6 test/text.c name/description tests on the NULL gap names, plus 3 test/save.c) were re-triaged at every step, and they hid the 1.15.3 save break. debug.c:3703 ("Fill PC items") also adds all 122 nameless items. The upgrade branch has no project tests at all (`git diff refs/upstream/1.17.1 -- test/` is empty).
 - **Payoff:** medium-high. **Effort:** small.
 
@@ -171,9 +171,9 @@ This list combines the postmortem, IDs and structure reviews of the four merges 
 
 ### 12. Move our functions and prototypes into our own files
 - **Change:**
-  - Add `src/verdant_items.c` and `include/verdant_items.h`. They hold RemoveItemFromEverywhere and Script_RemoveItemFromEverywhere, which use only public bag, PC, party and daycare APIs, plus the ItemUseOutOfBattle_EVTrainer/ExpShareAll prototypes. Include the header once, right after global.h, in item.c and item_use.c. Revert item.h, item_use.h, and the item.c tail and its 3 includes.
+  - Add `src/verdant_items.c` and `include/verdant_items.h`. They hold RemoveItemFromEverywhere and Script_RemoveItemFromEverywhere, which use only public bag, PC, party and daycare APIs, plus the ItemUseOutOfBattle_StatEditor/ExpShareAll prototypes. Include the header once, right after global.h, in item.c and item_use.c. Revert item.h, item_use.h, and the item.c tail and its 3 includes.
   - Move the OnTimeOfDayChange and InitBerryThiefTreeState prototypes to `include/time_events_custom.h`, and revert overworld.h.
-  - ItemUseCB_EVTrainer stays in party_menu.c because it uses sPartyMenuInternal, but declare it in `include/ui_stat_editor.h` and revert party_menu.h.
+  - ItemUseCB_StatEditor stays in party_menu.c because it uses sPartyMenuInternal, but declare it in `include/ui_stat_editor.h` and revert party_menu.h.
   - Declare the scripted controller functions only in `include/scripted_battle.h`, not in battle_controllers.h as well; both copies had to be retyped in 1.15.3.
   - Add `src/wally_ralts.c` with IsRaltsLine, IsWallyTrainer, TryUpscaleWallyRalts and CreateWallyTutorialRalts(mon). DoTrainerBattle gets one call. StartWallyTutorialBattle keeps upstream's CreateMaleMon line and adds one call after it.
   - Reduce the B-button catch boost to `odds = Verdant_TestingCatchOdds(odds);`, gated by a `VERDANT_TESTING` switch in config/verdant.h. That also covers the pre-release revert listed in BACKLOG.md.
@@ -204,7 +204,7 @@ This list combines the postmortem, IDs and structure reviews of the four merges 
 - **Change:**
   - Includes: in upstream files, add our includes as one block right after the first include (global.h, or line 1 of a `.s` file), never inside upstream's sorted lists. The one include we already placed right after global.h (`src/party_menu.c:2`) never conflicted in 4 merges.
   - Flags and vars: restore upstream's lines in `flags.h`, `vars.h` and `berry.h`. Add `include/constants/verdant_flags.h`, included from config/verdant.h and event_scripts.s, with aliases such as:
-    - `#define FLAG_STAT_EDITOR_IV_UNLOCK FLAG_UNUSED_0x024`, and the same for 0x1AA, 0x1AB and 0x2D9.
+    - `#define FLAG_RECEIVED_MACHO_BRACE_OLDALE FLAG_UNUSED_0x1AA`, and the same for 0x1AB and 0x2D9.
     - `#define FLAG_SYS_QUEST_MENU_GET FLAG_UNUSED_0x863`.
     - `#define FLAG_HIDE_ROUTE104_DEVON_RESEARCHER FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT`.
     - Descriptive names for the IDs our configs claim through their FLAG_UNUSED/VAR_UNUSED names: FLAG_DEXNAV_SEARCHING 0x020, FLAG_EXP_SHARE_ALL_ON 0x021, FLAG_DEXNAV_DETECTOR 0x022, FLAG_DEXNAV_GET 0x023, FLAG_FOLLOWERS_DISABLED 0x02A, VAR_DEXNAV_SPECIES 0x404E, VAR_DEXNAV_STEP_COUNTER 0x4083.

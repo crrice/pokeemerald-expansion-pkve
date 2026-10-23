@@ -169,7 +169,9 @@ I hate grinding. But I like RP. Overall focus on letting the player customize th
 - Overall make them easier to manage earlier than vanilla.
 - And matter more than vanilla.
 - Thinking a "$100 per EV changed" item avail early on.
-- Also make a "free edit EV/IV/nature" item avail in PC for players who just don't want to grind at all?
+- Two stat editors, one screen:
+  - **QoL Stat Editor**, in the PC from the start: freely edits EVs, IVs and nature, for players who don't want to grind at all.
+  - **Stat Editor**, given in the story: starts limited and powers up over time to the same abilities, for players who enjoy a little grind. Design open (`BACKLOG.md`).
 
 - Allow move relearn in menu at some point?
 - Same for tutor moves / egg moves? May tie to quest?

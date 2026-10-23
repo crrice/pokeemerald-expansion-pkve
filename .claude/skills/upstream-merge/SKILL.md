@@ -82,7 +82,7 @@ A build output or generated file in that list gets `git rm --cached` (it stays i
 - **Quest menu:** `src/quests.c`, `include/quests.h`, `include/constants/quests.h`, `FLAG_SYS_QUEST_MENU_GET`. Quest save data is at the end of SaveBlock2. Script opcodes `questmenu`/`subquestmenu`/`returnqueststate` are 0xf0–0xf2 in `data/script_cmd_table.inc`, with 0xe7–0xef reserved as `ScrCmd_nop` placeholders: upstream's new opcodes replace placeholders in order. If upstream ever reaches 0xf0, stop.
 - **Scripted battles:** `src/battle_controller_scripted.c`, `include/scripted_battle.h`, `src/data/scripted_battles.h`, `BATTLE_TYPE_SCRIPTED`. The controller copies code from upstream's recorded-battle controllers, so diff those between the old and new tag and port the changes.
 - **Wally's Ralts:** `struct WallyRaltsData` at the end of SaveBlock3, `TryUpscaleWallyRalts`.
-- **Items:** Wimpy Brace, Exp. Share All, Infinite Candy, EV Trainer key item and the stat editor UI (`src/ui_stat_editor.c`).
+- **Items:** Wimpy Brace, Exp. Share All, Infinite Candy, QoL Stat Editor key item and the stat editor UI (`src/ui_stat_editor.c`).
 - **Species:** Aevian Magikarp/Gyarados forms; the Axew line's Dragon/Steel typing; Axew and Deino evolution levels.
 - **Learnsets:** edits live in `src/data/pokemon/level_up_learnsets/gen_9.h`.
 - **Encounters:** time-of-day tables in `src/data/wild_encounters.json` for Routes 101–104, Serene Pond, Oldale Ruins.

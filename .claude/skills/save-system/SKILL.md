@@ -271,7 +271,6 @@ Every ID we claim from a range upstream also allocates from. This table is the o
 | Flag | 0x021 | `I_EXP_SHARE_FLAG` (Exp. Share All on) | `include/config/verdant.h` |
 | Flag | 0x022 | `DN_FLAG_DETECTOR_MODE` | `include/config/verdant.h` |
 | Flag | 0x023 | `DN_FLAG_DEXNAV_GET` (also `setflag FLAG_UNUSED_0x023` in Birch's lab) | `include/config/verdant.h` |
-| Flag | 0x024 | `FLAG_STAT_EDITOR_IV_UNLOCK` | `include/constants/flags.h` |
 | Flag | 0x02A | `B_FLAG_FOLLOWERS_DISABLED` | `include/config/verdant.h` |
 | Flag | 0x1AA | `FLAG_RECEIVED_MACHO_BRACE_OLDALE` | `include/constants/flags.h` |
 | Flag | 0x1AB | `FLAG_RECEIVED_WIMPY_BRACE_OLDALE` | `include/constants/flags.h` |
@@ -283,7 +282,7 @@ Every ID we claim from a range upstream also allocates from. This table is the o
 | Var value | `VAR_STARTER_MON` 0 / 1 | player picked Axew / Deino (2 is dead) | `CLAUDE.md` → Custom Starters |
 | Script opcode | 0xf0-0xf2 | `questmenu`, `subquestmenu`, `returnqueststate` | `data/script_cmd_table.inc` |
 | Script opcode | 0xe7-0xef | reserved `ScrCmd_nop` placeholders: upstream's next opcodes replace them in order | `data/script_cmd_table.inc` |
-| Item | 996-999 | `ITEM_EV_TRAINER`, `ITEM_WIMPY_BRACE`, `ITEM_EXP_SHARE_ALL`, `ITEM_INFINITE_CANDY` | `include/constants/items.h` |
+| Item | 996-999 | `ITEM_QOL_STAT_EDITOR`, `ITEM_WIMPY_BRACE`, `ITEM_EXP_SHARE_ALL`, `ITEM_INFINITE_CANDY` | `include/constants/items.h` |
 | Item | 874-995 | empty slots, filled with one "????????" range entry | `src/data/items.h` |
 | Species | 1550, 1551 | `SPECIES_MAGIKARP_AEVIAN`, `SPECIES_GYARADOS_AEVIAN` (upstream's Z-A megas shifted to 1552-1574) | `include/constants/species.h` |
 | Berry tree | 90 | `BERRY_TREE_OLDALE_RUINS_1` | `include/constants/berry.h` |

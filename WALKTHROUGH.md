@@ -25,6 +25,7 @@ Haxorus looks part-Steel (axe tusks, armor plating). The typing also removes the
 
 - Reading your journal in the player bedroom will give you the option to set your EXP ALL preference and give the corresponding item.
 - There is an infinite candy in the PC.
+- There is a QoL Stat Editor in the PC: it freely edits your Pokémon's EVs and IVs.
 - Watch the tv to see Dad battle!
 - Professor Birch offers **two** starters: Axew or Deino. Rival takes the other one.
 

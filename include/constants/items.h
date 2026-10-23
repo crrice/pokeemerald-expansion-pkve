@@ -1053,7 +1053,7 @@ enum __attribute__((packed)) Item
     ITEM_GLIMMORANITE = 873,
 
     // Custom items (at end of 1000 item range, counting backwards to avoid upstream conflicts)
-    ITEM_EV_TRAINER = 996,
+    ITEM_QOL_STAT_EDITOR = 996,
     ITEM_WIMPY_BRACE = 997,
     ITEM_EXP_SHARE_ALL = 998,
     ITEM_INFINITE_CANDY = 999,

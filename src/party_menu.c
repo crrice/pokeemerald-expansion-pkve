@@ -3153,7 +3153,7 @@ static void CB2_OpenStatEditor(void)
     StatEditor_Init(CB2_ReturnToPartyMenuFromSummaryScreen);
 }
 
-void ItemUseCB_EVTrainer(u8 taskId, TaskFunc task)
+void ItemUseCB_StatEditor(u8 taskId, TaskFunc task)
 {
     gSpecialVar_0x8004 = gPartyMenu.slotId;
     sPartyMenuInternal->exitCallback = CB2_OpenStatEditor;

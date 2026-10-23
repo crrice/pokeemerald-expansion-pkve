@@ -1443,9 +1443,9 @@ void ItemUseOutOfBattle_Fusion(u8 taskId)
     SetUpItemUseCallback(taskId);
 }
 
-void ItemUseOutOfBattle_EVTrainer(u8 taskId)
+void ItemUseOutOfBattle_StatEditor(u8 taskId)
 {
-    gItemUseCB = ItemUseCB_EVTrainer;
+    gItemUseCB = ItemUseCB_StatEditor;
     SetUpItemUseCallback(taskId);
 }
 

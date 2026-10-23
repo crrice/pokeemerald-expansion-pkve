@@ -23,7 +23,6 @@
 #include "task.h"
 #include "text_window.h"
 #include "trainer_pokemon_sprites.h"
-#include "constants/flags.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
@@ -760,6 +759,22 @@ static void ReloadNewPokemon(u8 taskId)
     gTasks[taskId].data[11] = 0;
 }
 
+#define EDIT_INPUT_INCREASE_STATE       0
+#define EDIT_INPUT_MAX_INCREASE_STATE   1
+#define EDIT_INPUT_DECREASE_STATE       2
+#define EDIT_INPUT_MAX_DECREASE_STATE   3
+
+#define STAT_MINIMUM        0
+#define IV_MAX_SINGLE_STAT  MAX_PER_STAT_IVS
+#define EV_MAX_SINGLE_STAT  MAX_PER_STAT_EVS
+#define EV_MAX_TOTAL        MAX_TOTAL_EVS
+
+#define EDITING_EVS  0
+#define EDITING_IVS  1
+
+#define CHECK_IF_STAT_CANT_INCREASE (((sStatEditorDataPtr->editingStat == ((sStatEditorDataPtr->selector_x == EDITING_EVS) ? (EV_MAX_SINGLE_STAT) : (IV_MAX_SINGLE_STAT))) \
+                                     || ((sStatEditorDataPtr->selector_x == EDITING_EVS) && (sStatEditorDataPtr->evTotal == EV_MAX_TOTAL))))
+
 static void Task_StatEditorMain(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON))
@@ -772,9 +787,7 @@ static void Task_StatEditorMain(u8 taskId)
         gTasks[taskId].func = Task_MenuEditingStat;
         if (sStatEditorDataPtr->editingStat == 0)
             StartSpriteAnim(&gSprites[sStatEditorDataPtr->selectorSpriteId], 1);
-        if ((sStatEditorDataPtr->editingStat == 255 || (sStatEditorDataPtr->evTotal == 510)) && (sStatEditorDataPtr->selector_x == 0))
-            StartSpriteAnim(&gSprites[sStatEditorDataPtr->selectorSpriteId], 2);
-        if ((sStatEditorDataPtr->editingStat == 31) && (sStatEditorDataPtr->selector_x == 1))
+        if (CHECK_IF_STAT_CANT_INCREASE)
             StartSpriteAnim(&gSprites[sStatEditorDataPtr->selectorSpriteId], 2);
         return;
     }
@@ -809,14 +822,7 @@ static void Task_StatEditorMain(u8 taskId)
     if (JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT))
     {
         if (sStatEditorDataPtr->selector_x == 0)
-        {
-            if (!FlagGet(FLAG_STAT_EDITOR_IV_UNLOCK))
-            {
-                PlaySE(SE_FAILURE);
-                return;
-            }
             sStatEditorDataPtr->selector_x = 1;
-        }
         else
             sStatEditorDataPtr->selector_x = 0;
     }
@@ -866,22 +872,6 @@ static void ChangeAndUpdateStat(void)
 
     PrintMonStats();
 }
-
-#define EDIT_INPUT_INCREASE_STATE       0
-#define EDIT_INPUT_MAX_INCREASE_STATE   1
-#define EDIT_INPUT_DECREASE_STATE       2
-#define EDIT_INPUT_MAX_DECREASE_STATE   3
-
-#define STAT_MINIMUM        0
-#define IV_MAX_SINGLE_STAT  MAX_PER_STAT_IVS
-#define EV_MAX_SINGLE_STAT  MAX_PER_STAT_EVS
-#define EV_MAX_TOTAL        MAX_TOTAL_EVS
-
-#define EDITING_EVS  0
-#define EDITING_IVS  1
-
-#define CHECK_IF_STAT_CANT_INCREASE (((sStatEditorDataPtr->editingStat == ((sStatEditorDataPtr->selector_x == EDITING_EVS) ? (EV_MAX_SINGLE_STAT) : (IV_MAX_SINGLE_STAT))) \
-                                     || ((sStatEditorDataPtr->selector_x == EDITING_EVS) && (sStatEditorDataPtr->evTotal == EV_MAX_TOTAL))))
 
 static void HandleEditingStatInput(u32 input)
 {

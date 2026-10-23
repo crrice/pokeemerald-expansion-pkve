@@ -52,6 +52,7 @@ One area at a time: design the table in `BALANCE.md` first, then implement.
 - [ ] [ready] Quest menu: hide locked quests instead of showing "??????" (list building in `src/quests.c`).
 - [ ] [ready] Norman's TV replay marks Cofagrigus and Slaking as seen in the Pokédex. Scripted battles shouldn't touch save data: skip dex updates when `BATTLE_TYPE_SCRIPTED` (or `IsScriptedBattle()`). Done when a fresh save after the broadcast has 0 seen.
 - [ ] [refine] Story-flag logic tests (Petalburg Woods, Berry Thief). Open: Tier 1 script tests or replays.
+- [ ] [refine] Story Stat Editor: a second key item, "Stat Editor", on the same screen as the PC's QoL Stat Editor. It starts limited and powers up over time to the same abilities (EVs, IVs, nature), for players who enjoy a little grind (`BALANCE.md` QOL). Its own item ID; the editor takes its abilities from the item that opened it. Open: the levels (what each one unlocks, and the caps); what powers it up (badge count, which lags on the anti-hero route; story milestones on each route; or an NPC upgrade, which needs a var); who gives it, and when, on both routes; whether caps only limit raising (proposed: a value above the cap stays and can be lowered).
 
 ### Testing tools
 
@@ -176,7 +177,7 @@ What exists today, one line per feature. Details live in git history and the des
 - DexNav enabled (flags/vars assigned, granted in Birch's lab, shown in the start menu)
 - Wally's Ralts persistence (SaveBlock3; applied to every later Wally battle)
 - Aevian Magikarp and Gyarados regional variants
-- Items: EV Trainer (IV editing behind a flag), Wimpy Brace, Exp Share All; Oldale Macho/Wimpy Brace gifts
+- Items: QoL Stat Editor in the PC (free EV and IV editing), Wimpy Brace, Exp Share All; Oldale Macho/Wimpy Brace gifts
 - QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
 - Machop learnset tune (Pound at L1, Low Kick at L6)
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
