@@ -35,6 +35,7 @@ struct StatEditorResources
     u16 speciesID;
     u16 selectedStat;
     u16 selectorSpriteId;
+    u16 natureArrowSpriteId;
     u16 selector_x;
     u16 selector_y;
     u32 editingStat;
@@ -47,6 +48,10 @@ struct StatEditorResources
 
 #define INPUT_SELECT_STAT 0
 #define INPUT_EDIT_STAT 1
+
+// Selector rows: the six stats, then the nature box below them
+#define NUM_STAT_ROWS 6
+#define NATURE_ROW    NUM_STAT_ROWS
 
 enum WindowIds
 {
@@ -239,6 +244,7 @@ void StatEditor_Init(MainCallback callback)
     sStatEditorDataPtr->gfxLoadState = 0;
     sStatEditorDataPtr->savedCallback = callback;
     sStatEditorDataPtr->selectorSpriteId = 0xFF;
+    sStatEditorDataPtr->natureArrowSpriteId = 0xFF;
     sStatEditorDataPtr->partyid = gSpecialVar_0x8004;
 
     SetMainCallback2(StatEditor_RunSetup);
@@ -462,10 +468,24 @@ static void DrawMonIcon(u16 species)
     gSprites[sStatEditorDataPtr->monIconSpriteId].oam.priority = 0;
 }
 
+// The nature box is wider than a stat cell, so its arrows are two sprites:
+// the selector shows the left arrow and this one the right.
+#define NATURE_LEFT_ARROW_X  20
+#define NATURE_RIGHT_ARROW_X 60
+#define NATURE_ARROW_Y       146
+
 static u8 CreateSelector(void)
 {
     if (sStatEditorDataPtr->selectorSpriteId == 0xFF)
         sStatEditorDataPtr->selectorSpriteId = CreateSprite(&sSpriteTemplate_Selector, 188, 30, 0);
+
+    if (sStatEditorDataPtr->natureArrowSpriteId == 0xFF)
+    {
+        sStatEditorDataPtr->natureArrowSpriteId = CreateSprite(&sSpriteTemplate_Selector, NATURE_RIGHT_ARROW_X, NATURE_ARROW_Y, 0);
+        gSprites[sStatEditorDataPtr->natureArrowSpriteId].callback = SpriteCallbackDummy;
+        gSprites[sStatEditorDataPtr->natureArrowSpriteId].invisible = TRUE;
+        StartSpriteAnim(&gSprites[sStatEditorDataPtr->natureArrowSpriteId], 1);
+    }
 
     gSprites[sStatEditorDataPtr->selectorSpriteId].invisible = FALSE;
     StartSpriteAnim(&gSprites[sStatEditorDataPtr->selectorSpriteId], 0);
@@ -477,6 +497,9 @@ static void DestroySelector(void)
     if (sStatEditorDataPtr->selectorSpriteId != 0xFF)
         DestroySprite(&gSprites[sStatEditorDataPtr->selectorSpriteId]);
     sStatEditorDataPtr->selectorSpriteId = 0xFF;
+    if (sStatEditorDataPtr->natureArrowSpriteId != 0xFF)
+        DestroySprite(&gSprites[sStatEditorDataPtr->natureArrowSpriteId]);
+    sStatEditorDataPtr->natureArrowSpriteId = 0xFF;
 }
 
 #define DISTANCE_BETWEEN_STATS_Y 16
@@ -553,6 +576,7 @@ static const u8 sText_MenuLRButtonTextMain[] = _("Cycle Party");
 static const u8 sText_MenuAButtonTextMain[] = _("Edit Stats");
 static const u8 sText_MenuBButtonTextMain[] = _("Back");
 static const u8 sText_MenuDPadButtonTextMain[] = _("Change Stat");
+static const u8 sText_MenuDPadButtonTextNature[] = _("Change");
 
 #define BUTTON_Y 4
 
@@ -579,7 +603,10 @@ static void PrintTitleToWindowEditState(void)
     AddTextPrinterParameterized4(WINDOW_1, FONT_NORMAL, 1, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuTitle);
 
     BlitBitmapToWindow(WINDOW_1, sDPad_ButtonGfx, 75, BUTTON_Y, 24, 8);
-    AddTextPrinterParameterized4(WINDOW_1, FONT_NARROW, 102, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuDPadButtonTextMain);
+    if (sStatEditorDataPtr->selector_y == NATURE_ROW)
+        AddTextPrinterParameterized4(WINDOW_1, FONT_NARROW, 102, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuDPadButtonTextNature);
+    else
+        AddTextPrinterParameterized4(WINDOW_1, FONT_NARROW, 102, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuDPadButtonTextMain);
 
     BlitBitmapToWindow(WINDOW_1, sB_ButtonGfx, 160, BUTTON_Y, 8, 8);
     AddTextPrinterParameterized4(WINDOW_1, FONT_NARROW, 172, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuBButtonTextMain);
@@ -596,6 +623,7 @@ static void PrintMonStats(void)
     u8 text[2];
     u16 level = GetMonData(ReturnPartyMon(), MON_DATA_LEVEL);
     u16 personality = GetMonData(ReturnPartyMon(), MON_DATA_PERSONALITY);
+    u8 color;
     u16 gender = GetGenderFromSpeciesAndPersonality(sStatEditorDataPtr->speciesID, personality);
 
     FillWindowPixelBuffer(WINDOW_2, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
@@ -620,13 +648,22 @@ static void PrintMonStats(void)
     AddTextPrinterParameterized4(WINDOW_2, FONT_NARROW, 16, STARTING_Y + (DISTANCE_BETWEEN_STATS_Y * 5), 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, sText_MenuSpeed);
     AddTextPrinterParameterized4(WINDOW_2, FONT_NARROW, 16, STARTING_Y + (DISTANCE_BETWEEN_STATS_Y * 6), 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, sText_MenuTotal);
 
-    // Actual stats
+    // Actual stats, red/blue for the stats the nature raises/lowers (i is the enum Stat)
+    nature = GetMonData(ReturnPartyMon(), MON_DATA_HIDDEN_NATURE);
     for (i = 0; i < 6; i++)
     {
         currentStat = GetMonData(ReturnPartyMon(), statsToPrintActual[i]);
         sStatEditorDataPtr->normalTotal += currentStat;
+        color = FONT_WHITE;
+        if (gNaturesInfo[nature].statUp != gNaturesInfo[nature].statDown)
+        {
+            if (i == gNaturesInfo[nature].statUp)
+                color = FONT_RED;
+            else if (i == gNaturesInfo[nature].statDown)
+                color = FONT_BLUE;
+        }
         ConvertIntToDecimalStringN(gStringVar2, currentStat, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        AddTextPrinterParameterized4(WINDOW_2, 1, StatPrintData[statsToPrintActual[i]].x, StatPrintData[statsToPrintActual[i]].y, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
+        AddTextPrinterParameterized4(WINDOW_2, 1, StatPrintData[statsToPrintActual[i]].x, StatPrintData[statsToPrintActual[i]].y, 0, 0, sMenuWindowFontColors[color], 0xFF, gStringVar2);
     }
 
     // EVs
@@ -676,7 +713,6 @@ static void PrintMonStats(void)
     }
 
     // Nature
-    nature = GetNature(ReturnPartyMon());
     StringCopy(gStringVar2, gNaturesInfo[nature].name);
     AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 50, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
@@ -723,6 +759,20 @@ static void SelectorCallback(struct Sprite *sprite)
         sprite->invisible = FALSE;
         sprite->data[0] = 0;
     }
+
+    if (sStatEditorDataPtr->selector_y == NATURE_ROW)
+    {
+        // Natures wrap around, so both arrows always show
+        if (sprite->animNum != 2)
+            StartSpriteAnim(sprite, 2);
+        sprite->x = NATURE_LEFT_ARROW_X;
+        sprite->y = NATURE_ARROW_Y;
+        gSprites[sStatEditorDataPtr->natureArrowSpriteId].invisible = sprite->invisible;
+        return;
+    }
+    if (sStatEditorDataPtr->inputMode == INPUT_SELECT_STAT && sprite->animNum != 0)
+        StartSpriteAnim(sprite, 0);
+    gSprites[sStatEditorDataPtr->natureArrowSpriteId].invisible = TRUE;
 
     sStatEditorDataPtr->selectedStat = sStatEditorDataPtr->selector_x + (sStatEditorDataPtr->selector_y * 2);
 
@@ -777,6 +827,15 @@ static void ReloadNewPokemon(u8 taskId)
 
 static void Task_StatEditorMain(u8 taskId)
 {
+    if (JOY_NEW(A_BUTTON) && sStatEditorDataPtr->selector_y == NATURE_ROW)
+    {
+        sStatEditorDataPtr->editingStat = GetMonData(ReturnPartyMon(), MON_DATA_HIDDEN_NATURE);
+        PlaySE(SE_SELECT);
+        sStatEditorDataPtr->inputMode = INPUT_EDIT_STAT;
+        PrintTitleToWindowEditState();
+        gTasks[taskId].func = Task_MenuEditingStat;
+        return;
+    }
     if (JOY_NEW(A_BUTTON))
     {
         sStatEditorDataPtr->editingStat = GetMonData(ReturnPartyMon(), selectedStatToStatEnum[sStatEditorDataPtr->selectedStat]);
@@ -819,7 +878,7 @@ static void Task_StatEditorMain(u8 taskId)
         BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB_BLACK);
         gTasks[taskId].func = Task_StatEditorTurnOff;
     }
-    if (JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT))
+    if ((JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT)) && sStatEditorDataPtr->selector_y != NATURE_ROW)
     {
         if (sStatEditorDataPtr->selector_x == 0)
             sStatEditorDataPtr->selector_x = 1;
@@ -829,13 +888,13 @@ static void Task_StatEditorMain(u8 taskId)
     if (JOY_NEW(DPAD_UP))
     {
         if (sStatEditorDataPtr->selector_y == 0)
-            sStatEditorDataPtr->selector_y = 5;
+            sStatEditorDataPtr->selector_y = NATURE_ROW;
         else
             sStatEditorDataPtr->selector_y--;
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        if (sStatEditorDataPtr->selector_y == 5)
+        if (sStatEditorDataPtr->selector_y == NATURE_ROW)
             sStatEditorDataPtr->selector_y = 0;
         else
             sStatEditorDataPtr->selector_y++;
@@ -940,6 +999,24 @@ static void HandleEditingStatInput(u32 input)
         StartSpriteAnim(&gSprites[sStatEditorDataPtr->selectorSpriteId], 3);
 }
 
+// Sets the nature the way a Mint does: stats change, personality (and with it
+// the original nature, shininess, gender and ability) stays.
+void StatEditor_SetMonNature(struct Pokemon *mon, u8 nature)
+{
+    SetMonData(mon, MON_DATA_HIDDEN_NATURE, &nature);
+    CalculateMonStats(mon);
+}
+
+static void HandleEditingNatureInput(bool32 next)
+{
+    if (next)
+        sStatEditorDataPtr->editingStat = (sStatEditorDataPtr->editingStat + 1) % NUM_NATURES;
+    else
+        sStatEditorDataPtr->editingStat = (sStatEditorDataPtr->editingStat + NUM_NATURES - 1) % NUM_NATURES;
+    StatEditor_SetMonNature(ReturnPartyMon(), sStatEditorDataPtr->editingStat);
+    PrintMonStats();
+}
+
 static void Task_MenuEditingStat(u8 taskId)
 {
     if (JOY_NEW(B_BUTTON))
@@ -949,6 +1026,14 @@ static void Task_MenuEditingStat(u8 taskId)
         PlaySE(SE_SELECT);
         sStatEditorDataPtr->inputMode = INPUT_SELECT_STAT;
         PrintTitleToWindowMainState();
+        return;
+    }
+    if (sStatEditorDataPtr->selector_y == NATURE_ROW)
+    {
+        if (JOY_NEW(DPAD_LEFT))
+            HandleEditingNatureInput(FALSE);
+        else if (JOY_NEW(DPAD_RIGHT))
+            HandleEditingNatureInput(TRUE);
         return;
     }
     if (JOY_NEW(DPAD_LEFT))

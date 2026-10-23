@@ -177,7 +177,7 @@ What exists today, one line per feature. Details live in git history and the des
 - DexNav enabled (flags/vars assigned, granted in Birch's lab, shown in the start menu)
 - Wally's Ralts persistence (SaveBlock3; applied to every later Wally battle)
 - Aevian Magikarp and Gyarados regional variants
-- Items: QoL Stat Editor in the PC (free EV and IV editing), Wimpy Brace, Exp Share All; Oldale Macho/Wimpy Brace gifts
+- Items: QoL Stat Editor in the PC (free EV, IV and nature editing), Wimpy Brace, Exp Share All; Oldale Macho/Wimpy Brace gifts
 - QoL: compact start menu, auto-run toggle (hold B to walk), notebook config, Gen 8 Pokemon enabled
 - Machop learnset tune (Pound at L1, Low Kick at L6)
 - Vanilla Emerald walkthrough (`docs/VANILLA_WALKTHROUGH.txt`) and lookup skill
