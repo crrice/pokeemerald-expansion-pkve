@@ -16105,7 +16105,7 @@ const struct ItemInfo gItemsInfo[] =
     // Our items count down from 999, leaving a gap after upstream's last item.
     // Fill it like ITEM_NONE. If upstream adds an item past ITEM_GLIMMORANITE,
     // -Woverride-init fails the build: raise the lower bound to upstream's new last item.
-    [ITEM_GLIMMORANITE + 1 ... ITEM_QOL_STAT_EDITOR - 1] =
+    [ITEM_GLIMMORANITE + 1 ... ITEM_STAT_EDITOR - 1] =
     {
         .name = ITEM_NAME("????????"),
         .price = 0,
@@ -16116,6 +16116,22 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_QuestionMark,
         .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_STAT_EDITOR] =
+    {
+        .name = ITEM_NAME("Stat Editor"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Edits Pokémon's\n"
+            "EVs, and more as\n"
+            "it gets upgraded."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_StatEditor,
+        .iconPic = gItemIcon_MachoBrace,
+        .iconPalette = gItemIconPalette_MachoBrace,
     },
 
     [ITEM_QOL_STAT_EDITOR] =

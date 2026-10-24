@@ -276,14 +276,16 @@ Every ID we claim from a range upstream also allocates from. This table is the o
 | Flag | 0x1AB | `FLAG_RECEIVED_WIMPY_BRACE_OLDALE` | `include/constants/flags.h` |
 | Flag | 0x2D5 | `FLAG_HIDE_ROUTE104_DEVON_RESEARCHER` (upstream's `FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT`, renamed) | `include/constants/flags.h` |
 | Flag | 0x2D9 | `FLAG_HIDE_ROUTE104_AQUA_GRUNT` | `include/constants/flags.h` |
+| Flag | 0x4EE | `FLAG_STAT_EDITOR_IV_UNLOCK` (story Stat Editor edits IVs and natures) | `include/constants/flags.h` |
+| Flag | 0x4EF | `FLAG_STAT_EDITOR_NATURE_UNLOCK` (story Stat Editor edits natures) | `include/constants/flags.h` |
 | Flag | `SYSTEM_FLAGS` + 0x3 (0x863) | `FLAG_SYS_QUEST_MENU_GET` | `include/constants/flags.h` |
 | Var | 0x404E | `DN_VAR_SPECIES` | `include/config/verdant.h` |
 | Var | 0x4083 | `DN_VAR_STEP_COUNTER` | `include/config/verdant.h` |
 | Var value | `VAR_STARTER_MON` 0 / 1 | player picked Axew / Deino (2 is dead) | `CLAUDE.md` → Custom Starters |
 | Script opcode | 0xf0-0xf2 | `questmenu`, `subquestmenu`, `returnqueststate` | `data/script_cmd_table.inc` |
 | Script opcode | 0xe7-0xef | reserved `ScrCmd_nop` placeholders: upstream's next opcodes replace them in order | `data/script_cmd_table.inc` |
-| Item | 996-999 | `ITEM_QOL_STAT_EDITOR`, `ITEM_WIMPY_BRACE`, `ITEM_EXP_SHARE_ALL`, `ITEM_INFINITE_CANDY` | `include/constants/items.h` |
-| Item | 874-995 | empty slots, filled with one "????????" range entry | `src/data/items.h` |
+| Item | 995-999 | `ITEM_STAT_EDITOR`, `ITEM_QOL_STAT_EDITOR`, `ITEM_WIMPY_BRACE`, `ITEM_EXP_SHARE_ALL`, `ITEM_INFINITE_CANDY` | `include/constants/items.h` |
+| Item | 874-994 | empty slots, filled with one "????????" range entry | `src/data/items.h` |
 | Species | 1550, 1551 | `SPECIES_MAGIKARP_AEVIAN`, `SPECIES_GYARADOS_AEVIAN` (upstream's Z-A megas shifted to 1552-1574) | `include/constants/species.h` |
 | Berry tree | 90 | `BERRY_TREE_OLDALE_RUINS_1` | `include/constants/berry.h` |
 | Battle-type bit | `1 << 30` | `BATTLE_TYPE_SCRIPTED` (upstream's `BATTLE_TYPE_30`; bit 31 is taken, so it's the last free bit) | `include/constants/battle.h` |

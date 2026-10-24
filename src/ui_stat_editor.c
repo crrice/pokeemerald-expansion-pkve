@@ -8,6 +8,7 @@
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "international_string_util.h"
+#include "item_menu.h"
 #include "main.h"
 #include "malloc.h"
 #include "menu.h"
@@ -23,6 +24,7 @@
 #include "task.h"
 #include "text_window.h"
 #include "trainer_pokemon_sprites.h"
+#include "constants/flags.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
@@ -44,6 +46,8 @@ struct StatEditorResources
     u16 ivTotal;
     u16 partyid;
     u16 inputMode;
+    bool8 canEditNatures;
+    bool8 canEditIVs;
 };
 
 #define INPUT_SELECT_STAT 0
@@ -233,6 +237,19 @@ static const struct SpriteTemplate sSpriteTemplate_Selector =
     .callback = SelectorCallback
 };
 
+// What each editor item can edit (BALANCE.md QOL). The QoL Stat Editor edits
+// everything; the story Stat Editor starts with EVs and gains natures, then IVs.
+// The IV upgrade includes natures, so the flags can be set in either order.
+bool32 StatEditor_CanEditNatures(enum Item item)
+{
+    return item == ITEM_QOL_STAT_EDITOR || FlagGet(FLAG_STAT_EDITOR_NATURE_UNLOCK) || FlagGet(FLAG_STAT_EDITOR_IV_UNLOCK);
+}
+
+bool32 StatEditor_CanEditIVs(enum Item item)
+{
+    return item == ITEM_QOL_STAT_EDITOR || FlagGet(FLAG_STAT_EDITOR_IV_UNLOCK);
+}
+
 void StatEditor_Init(MainCallback callback)
 {
     if ((sStatEditorDataPtr = AllocZeroed(sizeof(struct StatEditorResources))) == NULL)
@@ -246,6 +263,8 @@ void StatEditor_Init(MainCallback callback)
     sStatEditorDataPtr->selectorSpriteId = 0xFF;
     sStatEditorDataPtr->natureArrowSpriteId = 0xFF;
     sStatEditorDataPtr->partyid = gSpecialVar_0x8004;
+    sStatEditorDataPtr->canEditNatures = StatEditor_CanEditNatures(gSpecialVar_ItemId);
+    sStatEditorDataPtr->canEditIVs = StatEditor_CanEditIVs(gSpecialVar_ItemId);
 
     SetMainCallback2(StatEditor_RunSetup);
 }
@@ -825,6 +844,12 @@ static void ReloadNewPokemon(u8 taskId)
 #define CHECK_IF_STAT_CANT_INCREASE (((sStatEditorDataPtr->editingStat == ((sStatEditorDataPtr->selector_x == EDITING_EVS) ? (EV_MAX_SINGLE_STAT) : (IV_MAX_SINGLE_STAT))) \
                                      || ((sStatEditorDataPtr->selector_x == EDITING_EVS) && (sStatEditorDataPtr->evTotal == EV_MAX_TOTAL))))
 
+// A locked nature row stays on screen, but the selector skips it
+static u32 LastSelectorRow(void)
+{
+    return sStatEditorDataPtr->canEditNatures ? NATURE_ROW : NATURE_ROW - 1;
+}
+
 static void Task_StatEditorMain(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON) && sStatEditorDataPtr->selector_y == NATURE_ROW)
@@ -881,20 +906,28 @@ static void Task_StatEditorMain(u8 taskId)
     if ((JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT)) && sStatEditorDataPtr->selector_y != NATURE_ROW)
     {
         if (sStatEditorDataPtr->selector_x == 0)
+        {
+            // Locked IVs stay on screen, but the selector can't reach them
+            if (!sStatEditorDataPtr->canEditIVs)
+            {
+                PlaySE(SE_FAILURE);
+                return;
+            }
             sStatEditorDataPtr->selector_x = 1;
+        }
         else
             sStatEditorDataPtr->selector_x = 0;
     }
     if (JOY_NEW(DPAD_UP))
     {
         if (sStatEditorDataPtr->selector_y == 0)
-            sStatEditorDataPtr->selector_y = NATURE_ROW;
+            sStatEditorDataPtr->selector_y = LastSelectorRow();
         else
             sStatEditorDataPtr->selector_y--;
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        if (sStatEditorDataPtr->selector_y == NATURE_ROW)
+        if (sStatEditorDataPtr->selector_y == LastSelectorRow())
             sStatEditorDataPtr->selector_y = 0;
         else
             sStatEditorDataPtr->selector_y++;

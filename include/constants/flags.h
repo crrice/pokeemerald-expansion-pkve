@@ -2434,6 +2434,10 @@
 
 #endif
 
+// Verdant Emerald flags, claimed through upstream's unused names (ID registry: save-system skill)
+#define FLAG_STAT_EDITOR_NATURE_UNLOCK  FLAG_UNUSED_0x4EF  // story Stat Editor edits natures
+#define FLAG_STAT_EDITOR_IV_UNLOCK      FLAG_UNUSED_0x4EE  // story Stat Editor edits IVs (and natures)
+
 #if TESTING
 #define TESTING_FLAGS_START                     0x5000
 #define TESTING_FLAG_SLEEP_CLAUSE               (TESTING_FLAGS_START + 0x0)

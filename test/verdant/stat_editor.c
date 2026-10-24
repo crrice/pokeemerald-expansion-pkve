@@ -1,5 +1,6 @@
 #include "global.h"
 #include "test/test.h"
+#include "event_data.h"
 #include "pokemon.h"
 #include "ui_stat_editor.h"
 
@@ -27,4 +28,33 @@ TEST("Verdant: Stat Editor sets the nature like a Mint")
 
     StatEditor_SetMonNature(&mon, NATURE_MODEST);
     EXPECT_GT(adamantAtk, GetMonData(&mon, MON_DATA_ATK)); // stats follow the edited nature
+}
+
+// What each editor item can edit (BALANCE.md QOL). Save blocks start cleared,
+// so no unlock flag is set until a test sets it.
+TEST("Verdant: QoL Stat Editor edits natures and IVs from the start")
+{
+    EXPECT(StatEditor_CanEditNatures(ITEM_QOL_STAT_EDITOR));
+    EXPECT(StatEditor_CanEditIVs(ITEM_QOL_STAT_EDITOR));
+}
+
+TEST("Verdant: Stat Editor starts with EVs, then gains natures, then IVs")
+{
+    EXPECT(!StatEditor_CanEditNatures(ITEM_STAT_EDITOR));
+    EXPECT(!StatEditor_CanEditIVs(ITEM_STAT_EDITOR));
+
+    FlagSet(FLAG_STAT_EDITOR_NATURE_UNLOCK);
+    EXPECT(StatEditor_CanEditNatures(ITEM_STAT_EDITOR));
+    EXPECT(!StatEditor_CanEditIVs(ITEM_STAT_EDITOR));
+
+    FlagSet(FLAG_STAT_EDITOR_IV_UNLOCK);
+    EXPECT(StatEditor_CanEditNatures(ITEM_STAT_EDITOR));
+    EXPECT(StatEditor_CanEditIVs(ITEM_STAT_EDITOR));
+}
+
+TEST("Verdant: Stat Editor's IV upgrade includes natures")
+{
+    FlagSet(FLAG_STAT_EDITOR_IV_UNLOCK);
+    EXPECT(StatEditor_CanEditNatures(ITEM_STAT_EDITOR));
+    EXPECT(StatEditor_CanEditIVs(ITEM_STAT_EDITOR));
 }

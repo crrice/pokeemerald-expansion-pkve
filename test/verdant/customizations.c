@@ -144,6 +144,15 @@ TEST("Verdant: QoL Stat Editor item data")
     EXPECT(GetItemFieldFunc(ITEM_QOL_STAT_EDITOR) == ItemUseOutOfBattle_StatEditor);
 }
 
+TEST("Verdant: Stat Editor item data")
+{
+    EXPECT_EQ(StringCompare(GetItemName(ITEM_STAT_EDITOR), COMPOUND_STRING("Stat Editor")), 0);
+    EXPECT_EQ(GetItemPocket(ITEM_STAT_EDITOR), POCKET_KEY_ITEMS);
+    EXPECT_EQ(GetItemImportance(ITEM_STAT_EDITOR), 1);
+    EXPECT_EQ(GetItemType(ITEM_STAT_EDITOR), ITEM_USE_PARTY_MENU);
+    EXPECT(GetItemFieldFunc(ITEM_STAT_EDITOR) == ItemUseOutOfBattle_StatEditor);
+}
+
 TEST("Verdant: Exp. Share All item data")
 {
     EXPECT_EQ(GetItemPocket(ITEM_EXP_SHARE_ALL), POCKET_KEY_ITEMS);
