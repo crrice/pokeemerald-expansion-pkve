@@ -16139,9 +16139,9 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("QoL Stat Editor"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "Freely edits your\n"
-            "Pokémon's EVs,\n"
-            "IVs and nature."),
+            "Freely edits EVs,\n"
+            "IVs, natures and\n"
+            "abilities."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_PARTY_MENU,

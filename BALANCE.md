@@ -170,8 +170,8 @@ I hate grinding. But I like RP. Overall focus on letting the player customize th
 - And matter more than vanilla.
 - Thinking a "$100 per EV changed" item avail early on.
 - Two stat editors, one screen:
-  - **QoL Stat Editor**, in the PC from the start: freely edits EVs, IVs and nature, for players who don't want to grind at all.
-  - **Stat Editor**, given in the story, for players who enjoy a little grind. Same screen, three phases: EVs only when given; quests and story upgrade it to EVs and nature, then to EVs, IVs and nature (the same as the QoL one). Locked parts stay on screen but can't be selected. Where it's given and what upgrades it are open (`BACKLOG.md`).
+  - **QoL Stat Editor**, in the PC from the start: freely edits EVs, IVs, nature and ability (hidden abilities included), for players who don't want to grind at all.
+  - **Stat Editor**, given in the story, for players who enjoy a little grind. Same screen, four phases: EVs only when given; quests and story upgrade it to EVs and nature, then EVs, IVs and nature, then all of those plus ability (the same as the QoL one). Locked parts stay on screen but can't be selected. Where it's given and what upgrades it are open (`BACKLOG.md`).
 
 - Allow move relearn in menu at some point?
 - Same for tutor moves / egg moves? May tie to quest?

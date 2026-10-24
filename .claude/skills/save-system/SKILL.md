@@ -232,7 +232,7 @@ The most common way to persist simple data.
 ```c
 // In include/constants/flags.h: rename the next free flag from the top of
 // 0x493-0x4EF (see "ID registry" below) and add a row to the registry
-#define FLAG_MY_EVENT_HAPPENED FLAG_UNUSED_0x4EF
+#define FLAG_MY_EVENT_HAPPENED FLAG_UNUSED_0x4EC
 
 // In scripts:
 setflag FLAG_MY_EVENT_HAPPENED
@@ -276,6 +276,7 @@ Every ID we claim from a range upstream also allocates from. This table is the o
 | Flag | 0x1AB | `FLAG_RECEIVED_WIMPY_BRACE_OLDALE` | `include/constants/flags.h` |
 | Flag | 0x2D5 | `FLAG_HIDE_ROUTE104_DEVON_RESEARCHER` (upstream's `FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT`, renamed) | `include/constants/flags.h` |
 | Flag | 0x2D9 | `FLAG_HIDE_ROUTE104_AQUA_GRUNT` | `include/constants/flags.h` |
+| Flag | 0x4ED | `FLAG_STAT_EDITOR_ABILITY_UNLOCK` (story Stat Editor edits abilities, IVs and natures) | `include/constants/flags.h` |
 | Flag | 0x4EE | `FLAG_STAT_EDITOR_IV_UNLOCK` (story Stat Editor edits IVs and natures) | `include/constants/flags.h` |
 | Flag | 0x4EF | `FLAG_STAT_EDITOR_NATURE_UNLOCK` (story Stat Editor edits natures) | `include/constants/flags.h` |
 | Flag | `SYSTEM_FLAGS` + 0x3 (0x863) | `FLAG_SYS_QUEST_MENU_GET` | `include/constants/flags.h` |

@@ -37,7 +37,7 @@ struct StatEditorResources
     u16 speciesID;
     u16 selectedStat;
     u16 selectorSpriteId;
-    u16 natureArrowSpriteId;
+    u16 boxArrowSpriteId;
     u16 selector_x;
     u16 selector_y;
     u32 editingStat;
@@ -48,14 +48,18 @@ struct StatEditorResources
     u16 inputMode;
     bool8 canEditNatures;
     bool8 canEditIVs;
+    bool8 canEditAbilities;
 };
 
 #define INPUT_SELECT_STAT 0
 #define INPUT_EDIT_STAT 1
 
-// Selector rows: the six stats, then the nature box below them
+// Selector rows: the six stats, then the ability and nature boxes under the
+// Pokémon (on the Speed and Total lines)
 #define NUM_STAT_ROWS 6
-#define NATURE_ROW    NUM_STAT_ROWS
+#define ABILITY_ROW   NUM_STAT_ROWS
+#define NATURE_ROW    (NUM_STAT_ROWS + 1)
+#define LAST_ROW      NATURE_ROW
 
 enum WindowIds
 {
@@ -238,16 +242,41 @@ static const struct SpriteTemplate sSpriteTemplate_Selector =
 };
 
 // What each editor item can edit (BALANCE.md QOL). The QoL Stat Editor edits
-// everything; the story Stat Editor starts with EVs and gains natures, then IVs.
-// The IV upgrade includes natures, so the flags can be set in either order.
+// everything; the story Stat Editor starts with EVs and gains natures, IVs, then
+// abilities. Each upgrade flag includes the phases before it, so story events can
+// set them in any order.
+enum StatEditorPhase
+{
+    STAT_EDITOR_PHASE_EVS,
+    STAT_EDITOR_PHASE_NATURES,
+    STAT_EDITOR_PHASE_IVS,
+    STAT_EDITOR_PHASE_ABILITIES,
+};
+
+static enum StatEditorPhase GetPhase(enum Item item)
+{
+    if (item == ITEM_QOL_STAT_EDITOR || FlagGet(FLAG_STAT_EDITOR_ABILITY_UNLOCK))
+        return STAT_EDITOR_PHASE_ABILITIES;
+    if (FlagGet(FLAG_STAT_EDITOR_IV_UNLOCK))
+        return STAT_EDITOR_PHASE_IVS;
+    if (FlagGet(FLAG_STAT_EDITOR_NATURE_UNLOCK))
+        return STAT_EDITOR_PHASE_NATURES;
+    return STAT_EDITOR_PHASE_EVS;
+}
+
 bool32 StatEditor_CanEditNatures(enum Item item)
 {
-    return item == ITEM_QOL_STAT_EDITOR || FlagGet(FLAG_STAT_EDITOR_NATURE_UNLOCK) || FlagGet(FLAG_STAT_EDITOR_IV_UNLOCK);
+    return GetPhase(item) >= STAT_EDITOR_PHASE_NATURES;
 }
 
 bool32 StatEditor_CanEditIVs(enum Item item)
 {
-    return item == ITEM_QOL_STAT_EDITOR || FlagGet(FLAG_STAT_EDITOR_IV_UNLOCK);
+    return GetPhase(item) >= STAT_EDITOR_PHASE_IVS;
+}
+
+bool32 StatEditor_CanEditAbilities(enum Item item)
+{
+    return GetPhase(item) >= STAT_EDITOR_PHASE_ABILITIES;
 }
 
 void StatEditor_Init(MainCallback callback)
@@ -261,10 +290,11 @@ void StatEditor_Init(MainCallback callback)
     sStatEditorDataPtr->gfxLoadState = 0;
     sStatEditorDataPtr->savedCallback = callback;
     sStatEditorDataPtr->selectorSpriteId = 0xFF;
-    sStatEditorDataPtr->natureArrowSpriteId = 0xFF;
+    sStatEditorDataPtr->boxArrowSpriteId = 0xFF;
     sStatEditorDataPtr->partyid = gSpecialVar_0x8004;
     sStatEditorDataPtr->canEditNatures = StatEditor_CanEditNatures(gSpecialVar_ItemId);
     sStatEditorDataPtr->canEditIVs = StatEditor_CanEditIVs(gSpecialVar_ItemId);
+    sStatEditorDataPtr->canEditAbilities = StatEditor_CanEditAbilities(gSpecialVar_ItemId);
 
     SetMainCallback2(StatEditor_RunSetup);
 }
@@ -487,23 +517,25 @@ static void DrawMonIcon(u16 species)
     gSprites[sStatEditorDataPtr->monIconSpriteId].oam.priority = 0;
 }
 
-// The nature box is wider than a stat cell, so its arrows are two sprites:
-// the selector shows the left arrow and this one the right.
-#define NATURE_LEFT_ARROW_X  20
-#define NATURE_RIGHT_ARROW_X 60
-#define NATURE_ARROW_Y       146
+// The ability and nature boxes are wider than a stat cell, so their arrows are
+// two sprites: the selector shows the left arrow and this one the right.
+#define BOX_LEFT_ARROW_X  20
+#define BOX_RIGHT_ARROW_X 60
+#define ABILITY_ARROW_Y   130
+#define NATURE_ARROW_Y    146
+#define BOX_TEXT_WIDTH    59 // box text starts at x 12, the right arrow at x 71
 
 static u8 CreateSelector(void)
 {
     if (sStatEditorDataPtr->selectorSpriteId == 0xFF)
         sStatEditorDataPtr->selectorSpriteId = CreateSprite(&sSpriteTemplate_Selector, 188, 30, 0);
 
-    if (sStatEditorDataPtr->natureArrowSpriteId == 0xFF)
+    if (sStatEditorDataPtr->boxArrowSpriteId == 0xFF)
     {
-        sStatEditorDataPtr->natureArrowSpriteId = CreateSprite(&sSpriteTemplate_Selector, NATURE_RIGHT_ARROW_X, NATURE_ARROW_Y, 0);
-        gSprites[sStatEditorDataPtr->natureArrowSpriteId].callback = SpriteCallbackDummy;
-        gSprites[sStatEditorDataPtr->natureArrowSpriteId].invisible = TRUE;
-        StartSpriteAnim(&gSprites[sStatEditorDataPtr->natureArrowSpriteId], 1);
+        sStatEditorDataPtr->boxArrowSpriteId = CreateSprite(&sSpriteTemplate_Selector, BOX_RIGHT_ARROW_X, NATURE_ARROW_Y, 0);
+        gSprites[sStatEditorDataPtr->boxArrowSpriteId].callback = SpriteCallbackDummy;
+        gSprites[sStatEditorDataPtr->boxArrowSpriteId].invisible = TRUE;
+        StartSpriteAnim(&gSprites[sStatEditorDataPtr->boxArrowSpriteId], 1);
     }
 
     gSprites[sStatEditorDataPtr->selectorSpriteId].invisible = FALSE;
@@ -516,9 +548,9 @@ static void DestroySelector(void)
     if (sStatEditorDataPtr->selectorSpriteId != 0xFF)
         DestroySprite(&gSprites[sStatEditorDataPtr->selectorSpriteId]);
     sStatEditorDataPtr->selectorSpriteId = 0xFF;
-    if (sStatEditorDataPtr->natureArrowSpriteId != 0xFF)
-        DestroySprite(&gSprites[sStatEditorDataPtr->natureArrowSpriteId]);
-    sStatEditorDataPtr->natureArrowSpriteId = 0xFF;
+    if (sStatEditorDataPtr->boxArrowSpriteId != 0xFF)
+        DestroySprite(&gSprites[sStatEditorDataPtr->boxArrowSpriteId]);
+    sStatEditorDataPtr->boxArrowSpriteId = 0xFF;
 }
 
 #define DISTANCE_BETWEEN_STATS_Y 16
@@ -595,7 +627,7 @@ static const u8 sText_MenuLRButtonTextMain[] = _("Cycle Party");
 static const u8 sText_MenuAButtonTextMain[] = _("Edit Stats");
 static const u8 sText_MenuBButtonTextMain[] = _("Back");
 static const u8 sText_MenuDPadButtonTextMain[] = _("Change Stat");
-static const u8 sText_MenuDPadButtonTextNature[] = _("Change");
+static const u8 sText_MenuDPadButtonTextBox[] = _("Change");
 
 #define BUTTON_Y 4
 
@@ -622,8 +654,8 @@ static void PrintTitleToWindowEditState(void)
     AddTextPrinterParameterized4(WINDOW_1, FONT_NORMAL, 1, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuTitle);
 
     BlitBitmapToWindow(WINDOW_1, sDPad_ButtonGfx, 75, BUTTON_Y, 24, 8);
-    if (sStatEditorDataPtr->selector_y == NATURE_ROW)
-        AddTextPrinterParameterized4(WINDOW_1, FONT_NARROW, 102, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuDPadButtonTextNature);
+    if (sStatEditorDataPtr->selector_y >= NUM_STAT_ROWS)
+        AddTextPrinterParameterized4(WINDOW_1, FONT_NARROW, 102, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuDPadButtonTextBox);
     else
         AddTextPrinterParameterized4(WINDOW_1, FONT_NARROW, 102, 0, 0, 0, sMenuWindowFontColors[FONT_WHITE], TEXT_SKIP_DRAW, sText_MenuDPadButtonTextMain);
 
@@ -736,8 +768,8 @@ static void PrintMonStats(void)
     AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 50, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
     // Ability
-    StringCopy(gStringVar2, gAbilitiesInfo[gSpeciesInfo[sStatEditorDataPtr->speciesID].abilities[GetMonData(ReturnPartyMon(), MON_DATA_ABILITY_NUM)]].name);
-    AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 34, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
+    StringCopy(gStringVar2, gAbilitiesInfo[GetMonAbility(ReturnPartyMon())].name);
+    AddTextPrinterParameterized4(WINDOW_3, GetFontIdToFit(gStringVar2, FONT_SMALL_NARROW, 0, BOX_TEXT_WIDTH), 4, 34, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
     PutWindowTilemap(WINDOW_3);
     CopyWindowToVram(WINDOW_3, 3);
@@ -779,19 +811,20 @@ static void SelectorCallback(struct Sprite *sprite)
         sprite->data[0] = 0;
     }
 
-    if (sStatEditorDataPtr->selector_y == NATURE_ROW)
+    if (sStatEditorDataPtr->selector_y >= NUM_STAT_ROWS)
     {
-        // Natures wrap around, so both arrows always show
+        // Abilities and natures wrap around, so both arrows always show
         if (sprite->animNum != 2)
             StartSpriteAnim(sprite, 2);
-        sprite->x = NATURE_LEFT_ARROW_X;
-        sprite->y = NATURE_ARROW_Y;
-        gSprites[sStatEditorDataPtr->natureArrowSpriteId].invisible = sprite->invisible;
+        sprite->x = BOX_LEFT_ARROW_X;
+        sprite->y = (sStatEditorDataPtr->selector_y == ABILITY_ROW) ? ABILITY_ARROW_Y : NATURE_ARROW_Y;
+        gSprites[sStatEditorDataPtr->boxArrowSpriteId].y = sprite->y;
+        gSprites[sStatEditorDataPtr->boxArrowSpriteId].invisible = sprite->invisible;
         return;
     }
     if (sStatEditorDataPtr->inputMode == INPUT_SELECT_STAT && sprite->animNum != 0)
         StartSpriteAnim(sprite, 0);
-    gSprites[sStatEditorDataPtr->natureArrowSpriteId].invisible = TRUE;
+    gSprites[sStatEditorDataPtr->boxArrowSpriteId].invisible = TRUE;
 
     sStatEditorDataPtr->selectedStat = sStatEditorDataPtr->selector_x + (sStatEditorDataPtr->selector_y * 2);
 
@@ -844,17 +877,22 @@ static void ReloadNewPokemon(u8 taskId)
 #define CHECK_IF_STAT_CANT_INCREASE (((sStatEditorDataPtr->editingStat == ((sStatEditorDataPtr->selector_x == EDITING_EVS) ? (EV_MAX_SINGLE_STAT) : (IV_MAX_SINGLE_STAT))) \
                                      || ((sStatEditorDataPtr->selector_x == EDITING_EVS) && (sStatEditorDataPtr->evTotal == EV_MAX_TOTAL))))
 
-// A locked nature row stays on screen, but the selector skips it
-static u32 LastSelectorRow(void)
+// Locked rows stay on screen, but the selector skips them
+static bool32 IsRowSelectable(u32 row)
 {
-    return sStatEditorDataPtr->canEditNatures ? NATURE_ROW : NATURE_ROW - 1;
+    if (row == ABILITY_ROW)
+        return sStatEditorDataPtr->canEditAbilities;
+    if (row == NATURE_ROW)
+        return sStatEditorDataPtr->canEditNatures;
+    return TRUE;
 }
 
 static void Task_StatEditorMain(u8 taskId)
 {
-    if (JOY_NEW(A_BUTTON) && sStatEditorDataPtr->selector_y == NATURE_ROW)
+    if (JOY_NEW(A_BUTTON) && sStatEditorDataPtr->selector_y >= NUM_STAT_ROWS)
     {
-        sStatEditorDataPtr->editingStat = GetMonData(ReturnPartyMon(), MON_DATA_HIDDEN_NATURE);
+        if (sStatEditorDataPtr->selector_y == NATURE_ROW)
+            sStatEditorDataPtr->editingStat = GetMonData(ReturnPartyMon(), MON_DATA_HIDDEN_NATURE);
         PlaySE(SE_SELECT);
         sStatEditorDataPtr->inputMode = INPUT_EDIT_STAT;
         PrintTitleToWindowEditState();
@@ -903,7 +941,7 @@ static void Task_StatEditorMain(u8 taskId)
         BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB_BLACK);
         gTasks[taskId].func = Task_StatEditorTurnOff;
     }
-    if ((JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT)) && sStatEditorDataPtr->selector_y != NATURE_ROW)
+    if ((JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT)) && sStatEditorDataPtr->selector_y < NUM_STAT_ROWS)
     {
         if (sStatEditorDataPtr->selector_x == 0)
         {
@@ -920,17 +958,23 @@ static void Task_StatEditorMain(u8 taskId)
     }
     if (JOY_NEW(DPAD_UP))
     {
-        if (sStatEditorDataPtr->selector_y == 0)
-            sStatEditorDataPtr->selector_y = LastSelectorRow();
-        else
-            sStatEditorDataPtr->selector_y--;
+        do
+        {
+            if (sStatEditorDataPtr->selector_y == 0)
+                sStatEditorDataPtr->selector_y = LAST_ROW;
+            else
+                sStatEditorDataPtr->selector_y--;
+        } while (!IsRowSelectable(sStatEditorDataPtr->selector_y));
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        if (sStatEditorDataPtr->selector_y == LastSelectorRow())
-            sStatEditorDataPtr->selector_y = 0;
-        else
-            sStatEditorDataPtr->selector_y++;
+        do
+        {
+            if (sStatEditorDataPtr->selector_y == LAST_ROW)
+                sStatEditorDataPtr->selector_y = 0;
+            else
+                sStatEditorDataPtr->selector_y++;
+        } while (!IsRowSelectable(sStatEditorDataPtr->selector_y));
     }
 }
 
@@ -1050,6 +1094,41 @@ static void HandleEditingNatureInput(bool32 next)
     PrintMonStats();
 }
 
+// Moves to the species' next or previous ability, hidden included, skipping empty
+// slots and slots that repeat the current ability. Like an Ability Capsule or
+// Patch, only the slot changes. FALSE if the species has no other ability.
+bool32 StatEditor_CycleMonAbility(struct Pokemon *mon, bool32 next)
+{
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Ability current = GetMonAbility(mon);
+    u32 abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
+    u32 i;
+
+    for (i = 0; i < NUM_ABILITY_SLOTS - 1; i++)
+    {
+        if (next)
+            abilityNum = (abilityNum + 1) % NUM_ABILITY_SLOTS;
+        else
+            abilityNum = (abilityNum + NUM_ABILITY_SLOTS - 1) % NUM_ABILITY_SLOTS;
+        if (GetSpeciesAbility(species, abilityNum) != ABILITY_NONE && GetSpeciesAbility(species, abilityNum) != current)
+        {
+            SetMonData(mon, MON_DATA_ABILITY_NUM, &abilityNum);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+static void HandleEditingAbilityInput(bool32 next)
+{
+    if (!StatEditor_CycleMonAbility(ReturnPartyMon(), next))
+    {
+        PlaySE(SE_FAILURE);
+        return;
+    }
+    PrintMonStats();
+}
+
 static void Task_MenuEditingStat(u8 taskId)
 {
     if (JOY_NEW(B_BUTTON))
@@ -1059,6 +1138,14 @@ static void Task_MenuEditingStat(u8 taskId)
         PlaySE(SE_SELECT);
         sStatEditorDataPtr->inputMode = INPUT_SELECT_STAT;
         PrintTitleToWindowMainState();
+        return;
+    }
+    if (sStatEditorDataPtr->selector_y == ABILITY_ROW)
+    {
+        if (JOY_NEW(DPAD_LEFT))
+            HandleEditingAbilityInput(FALSE);
+        else if (JOY_NEW(DPAD_RIGHT))
+            HandleEditingAbilityInput(TRUE);
         return;
     }
     if (sStatEditorDataPtr->selector_y == NATURE_ROW)
