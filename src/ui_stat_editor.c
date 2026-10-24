@@ -523,7 +523,21 @@ static void DrawMonIcon(u16 species)
 #define BOX_RIGHT_ARROW_X 60
 #define ABILITY_ARROW_Y   130
 #define NATURE_ARROW_Y    146
-#define BOX_TEXT_WIDTH    59 // box text starts at x 12, the right arrow at x 71
+
+// Fits str in the ability/nature box: the narrowest font that fits, and if even
+// that is too wide, the name cut short (a few long ability names lose a letter
+// or two). Returns the font to print it in.
+u32 StatEditor_FitBoxText(u8 *str)
+{
+    u32 fontId = GetFontIdToFit(str, FONT_SMALL_NARROW, 0, STAT_EDITOR_BOX_TEXT_WIDTH);
+    u32 length = StringLength(str);
+
+    while (length > 0 && GetStringWidth(fontId, str, 0) > STAT_EDITOR_BOX_TEXT_WIDTH)
+        str[--length] = EOS;
+    while (length > 0 && str[length - 1] == CHAR_SPACE)
+        str[--length] = EOS;
+    return fontId;
+}
 
 static u8 CreateSelector(void)
 {
@@ -769,7 +783,7 @@ static void PrintMonStats(void)
 
     // Ability
     StringCopy(gStringVar2, gAbilitiesInfo[GetMonAbility(ReturnPartyMon())].name);
-    AddTextPrinterParameterized4(WINDOW_3, GetFontIdToFit(gStringVar2, FONT_SMALL_NARROW, 0, BOX_TEXT_WIDTH), 4, 34, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
+    AddTextPrinterParameterized4(WINDOW_3, StatEditor_FitBoxText(gStringVar2), 4, 34, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
     PutWindowTilemap(WINDOW_3);
     CopyWindowToVram(WINDOW_3, 3);

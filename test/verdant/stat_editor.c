@@ -2,6 +2,8 @@
 #include "test/test.h"
 #include "event_data.h"
 #include "pokemon.h"
+#include "string_util.h"
+#include "text.h"
 #include "ui_stat_editor.h"
 
 // The stat editor changes a nature the way a Mint does (BALANCE.md QOL): the
@@ -132,4 +134,22 @@ TEST("Verdant: Stat Editor can't change the ability of a species with only one")
     EXPECT(!StatEditor_CycleMonAbility(&mon, TRUE));
     EXPECT(!StatEditor_CycleMonAbility(&mon, FALSE));
     EXPECT_EQ(GetMonData(&mon, MON_DATA_ABILITY_NUM), 0);
+}
+
+// Long ability names drop to a narrower font, and the few still too wide are cut
+// short, so none runs under the box's right arrow.
+TEST("Verdant: Every ability name fits the Stat Editor's ability box")
+{
+    u32 i, fontId;
+    enum Ability ability = ABILITY_NONE;
+    u8 name[ABILITY_NAME_LENGTH + 1];
+
+    for (i = 1; i < ABILITIES_COUNT; i++)
+    {
+        PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].name) { ability = i; }
+    }
+    StringCopy(name, gAbilitiesInfo[ability].name);
+    fontId = StatEditor_FitBoxText(name);
+    EXPECT_LE(GetStringWidth(fontId, name, 0), STAT_EDITOR_BOX_TEXT_WIDTH);
+    EXPECT_EQ(StringCompareN(name, gAbilitiesInfo[ability].name, StringLength(name)), 0); // only cut short, never changed
 }
